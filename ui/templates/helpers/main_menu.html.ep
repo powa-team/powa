@@ -1,0 +1,23 @@
+% my $cr = current_route;
+% my @dbs = @{stash 'dbs'};
+% my $cur_db = stash 'dbname';
+% $cur_db = '' if !defined $cur_db;
+
+% if ($user_level ne "guest" ) {
+  <div class="sidebar">
+    <ul class="nav nav-sidebar">
+      <li class="<%= ( $cr eq "site_home" ? "active" : "") %>">
+        <%= link_to site_home => begin %>
+          <i class="glyphicon glyphicon-home"></i> All databases
+        <% end %>
+      </li>
+      <% foreach my $d ( @dbs ) { %>
+        <li class="<%= ( $cur_db eq $d ? "active" : "") %>">
+          <%= link_to statement_showdb => { dbname => $d } => begin %>
+            <i class="glyphicon glyphicon-hdd"></i> <%= $d %>
+          <% end %>
+        </li>
+      <% } %>
+    </ul>
+  </div>
+% }

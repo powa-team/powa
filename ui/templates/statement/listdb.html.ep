@@ -1,0 +1,20 @@
+% layout config 'layout';
+% my @databases = @{stash 'databases'};
+
+<div class="row">
+  <div class="span6">
+    <div class="box" id="server_list">
+        <b><%= 'List of databases' %> :</b><br />
+        <% if (scalar(@databases)) { %>
+          <ul>
+            <% foreach my $d (@databases) { %>
+              <%   my %line = %{$d}; %>
+                <li><%= link_to statement_showdb => { dbname => $line{dbname} } => begin %><%= $line{dbname} %></li><% end %>
+            <% } %>
+          </ul>
+        <% } else { %>
+        <p>No database found.</p>
+        <% } %>
+    </div>
+  </div>
+</div>

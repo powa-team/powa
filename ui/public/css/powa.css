@@ -1,0 +1,203 @@
+body {
+    background-color: #232323;
+}
+
+#main {
+    min-height: 400px;
+    color: #FFFFFF;
+}
+
+#main-title {
+    color: #D2D2D2;
+}
+
+/* Box
+-------------------------------------------------- */
+.box {
+    color: #BBBBBB;
+    background-color: #fff;
+    background-color: #404040;
+    padding: 15px;
+    margin-bottom: 20px;
+}
+
+.box h2 {
+    margin-top: 0;
+    font-size: 25px;
+    line-height: 30px;
+}
+
+.nav-sidebar > .active > a {
+    color: #fff;
+    background-color: #428bca;
+}
+
+.box-content {
+    clear: both;
+    padding-top: 0px;
+}
+
+/* Tables for key value descriptions
+-------------------------------------------------- */
+.table-desc th,
+.table-desc td {
+    border-top: 0;
+}
+
+.table-desc tbody tr:nth-child(odd) td,
+.table-desc tbody tr:nth-child(odd) th {
+  background-color: #f9f9fd;
+}
+
+/* Upload
+-------------------------------------------------- */
+.after {
+  clear: both;
+}
+
+.progress {
+  width: 45%;
+}
+
+.footer {
+    background-color: #fff;
+    margin-top: 45px;
+    padding: 35px 0 36px;
+    border-top: 1px solid #e5e5e5;
+}
+
+.footer p {
+    margin-bottom: 0;
+    color: #555;
+}
+
+.controls p {
+  padding-top: 5px;
+}
+
+/* Query textareas
+--------------------------------------------------- */
+.code-font {
+  font-family: Menlo, Monaco, Consolas, "Courier New", monospace;
+}
+
+/* Graphs
+--------------------------------------------------- */
+.graph_container {
+  background-color: #fff;
+  margin-bottom: 30px;
+  clear: right;
+  border: 1px solid #e5e5e5;
+  padding: 10px 10px;
+}
+
+.plot {
+    height: 300px;
+}
+
+.input-daterange-to {
+  display: inline-block;
+  min-width: 16px;
+  height: 34px;
+  padding: 4px 3px;
+  font-weight: normal;
+  line-height: 21px;
+  text-align: center;
+  text-shadow: 0 1px 0 #ffffff;
+  vertical-align: middle;
+  background-color: #eeeeee;
+  border: 1px solid #ccc;
+}
+
+.graph-legend {
+  padding-top: 5px;
+  overflow: auto;
+  color: #222222;
+}
+
+label.deactivated {
+  text-decoration: line-through
+}
+
+/* Messages
+--------------------------------------------------- */
+#messages ul {
+    margin: 5px;
+}
+
+.messages_success {
+    border: 1px solid #cfc;
+    background-color: #efe;
+    color: #090;
+}
+
+.messages_failure {
+    border: 1px solid #fcc;
+    background-color: #fee;
+    color: #800;
+}
+
+.messages_debug {
+    border: 1px solid #ccc;
+    background-color: #eee;
+    color: #888;
+}
+
+/* Other
+--------------------------------------------------- */
+.help-block {
+    font-size: 12px;
+    font-style: italic;
+}
+
+.strong {
+    font-weight: bold;
+}
+
+ul.scales {
+    margin:0;padding:0;
+      list-style: none;
+}
+
+ul.scales li {
+    display:inline;
+      padding-right:15px;
+}
+
+.scales {
+    color: #000000;
+}
+
+.dateinput {
+  width: 140px;
+}
+
+.scales label{
+  display: inline;
+}
+
+a.warning {
+  color: darkorange;
+}
+
+a.critical{
+  color: darkred;
+}
+
+#dbdata td:hover {
+  cursor: pointer;
+}
+table.tablesorter thead tr .header {
+  background-image: url(/img/bg.gif);
+  background-repeat: no-repeat;
+  background-position: center right;
+  cursor: pointer;
+}
+
+table.tablesorter thead tr .headerSortUp {
+  background-image: url(/img/asc.gif);
+}
+
+table.tablesorter thead tr .headerSortDown {
+  background-image: url(/img/desc.gif);
+}

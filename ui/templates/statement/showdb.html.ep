@@ -1,0 +1,136 @@
+% layout config 'layout';
+% content_for header => begin
+<script type="text/javascript" src="<%= url_for '/js/statementdb.js' %>"></script>
+%end
+%= javascript begin
+  var graphDataUrl = '<%= url_for 'statement_dbdata_agg' %>';
+% end
+
+<%= link_to site_home => begin %> « <%= 'Back to all databases' %><% end %>
+
+<div class="row">
+  <div class="container-fluid scales">
+    <div class="btn-toolbar" role="toolbar">
+
+      <div class="btn-group">
+        <input id="sel_year" class="btn btn-default" type="button" value="Year" />
+        <input id="sel_month" class="btn btn-default" type="button" value="Month" />
+        <input id="sel_week" class="btn btn-default" type="button" value="Week" />
+        <input id="sel_day" class="btn btn-default" type="button" value="Day" />
+      </div>
+
+      <div class="btn-group">
+        <button class="btn btn-default go-backward"><i class="glyphicon glyphicon-fast-backward"></i></button>
+        <button class="btn btn-default go-forward"><i class="glyphicon glyphicon-fast-forward"></i></button>
+      </div>
+
+      <div class="btn-group">
+        <div class="btn-group">
+          <div class="input-group date datepick" id="fromdatepick">
+            <span class="input-group-addon"><span class="glyphicon glyphicon-calendar"></span></span>
+            <input id="fromdate" type="text" class="form-control"/>
+          </div>
+        </div>
+
+        <span class="btn-group input-daterange-to">
+          to
+        </span>
+
+        <div class="btn-group">
+          <div class="input-group date datepick" id="todatepick">
+            <input id="todate" type="text" class="form-control"/>
+            <span class="input-group-addon"><span class="glyphicon glyphicon-calendar"></span></span>
+          </div>
+        </div>
+      </div>
+
+      <div class="btn-group">
+        <input type="button" id="sel_custom" class="btn default" value="Custom" />
+      </div>
+      <%= content_for 'graph_nav_right' %>
+    </div>
+  </div>
+</div>
+
+<div class="row container-fluid">
+  <div class="graph_container col-md-6" data-graphid="call_<%= stash 'dbname' %>"
+    data-graphurl="<%= url_for('statement_dbdata_agg') %>">
+    <div class="grapher-header row-fluid" style="margin-bottom: 5px">
+      <span></span>
+      <div class="pull-right">
+        <div class="btn-toolbar" role="toolbar">
+          <div class="btn-group">
+            <a href="#" data-graphrole="offon-series"
+              class="btn btn-default btn-xs"
+              title="Show/Hide series"
+              ><i class="glyphicon glyphicon-eye-open"></i></a>
+            <a href="#" data-graphrole="invert-series"
+              class="btn btn-default btn-xs"
+              title="Invert Sel."
+              ><i class="glyphicon glyphicon-eye-close"></i></a>
+            <a href="#" data-graphrole="export-graph"
+              class="btn btn-default btn-xs save"
+              title="Save"
+              ><i class="glyphicon glyphicon-download-alt"></i></a>
+          </div>
+
+        </div>
+      </div>
+    </div>
+
+    <div class="container-fluid">
+      <div data-graphrole="plot"></div>
+      <div class="graph-legend" data-graphrole="legend"></div>
+    </div>
+  </div>
+
+  <div class="graph_container col-md-6" data-graphid="blks_<%= stash 'dbname' %>"
+    data-graphurl="<%= url_for('statement_dbdata_agg') %>">
+    <div class="grapher-header row-fluid" style="margin-bottom: 5px">
+      <span></span>
+      <div class="pull-right">
+        <div class="btn-toolbar" role="toolbar">
+          <div class="btn-group">
+            <a href="#" data-graphrole="offon-series"
+              class="btn btn-default btn-xs"
+              title="Show/Hide series"
+              ><i class="glyphicon glyphicon-eye-open"></i></a>
+            <a href="#" data-graphrole="invert-series"
+              class="btn btn-default btn-xs"
+              title="Invert Sel."
+              ><i class="glyphicon glyphicon-eye-close"></i></a>
+            <a href="#" data-graphrole="export-graph"
+              class="btn btn-default btn-xs save"
+              title="Save"
+              ><i class="glyphicon glyphicon-download-alt"></i></a>
+          </div>
+
+        </div>
+      </div>
+    </div>
+
+    <div class="container-fluid">
+      <div data-graphrole="plot"></div>
+      <div class="graph-legend" data-graphrole="legend"></div>
+    </div>
+  </div>
+</div>
+
+<div class="row">
+    <div class="box" id="server_list">
+        <b>Details for databases <u><span id="dbname"><%= stash 'dbname' %></span></u>:</b><br />
+            <table id="dbdata" class="table table-condensed table-hover tablesorter">
+                <thead>
+                    <tr>
+                        <th>Total Calls</th>
+                        <th>Total runtime</th>
+                        <th>Total blocks read</th>
+                        <th>Total blocks hit</th>
+                        <th>Query</th>
+                    </tr>
+                </thead>
+                <tbody>
+                </tbody>
+            </table>
+    </div>
+</div>

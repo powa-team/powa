@@ -1,0 +1,36 @@
+% layout config 'layout';
+
+<div class="container">
+  <h2>Login</h2>
+  <div class="col-md-3 box">
+    <%= form_for user_login => (method => 'POST') => begin %>
+      <fieldset>
+        <div class="control-group">
+          <label class="control-label" for="username">Username:</label>
+          <div class="controls">
+            <%= text_field 'username', type => 'text', class => 'form-control', id => 'username' %>
+          </div>
+        </div>
+
+        <div class="control-group">
+          <label class="control-label" for="password">Password:</label>
+          <div class="controls">
+            <%= password_field 'password', type => 'password', class => 'form-control', id => 'password' %>
+          </div>
+        </div>
+
+        <div class="control-group">
+          <div class="controls">
+            <label class="checkbox" for="stay_connected">
+              <%= check_box 'stay_connected' => 1, id => 'stay_connected' %>
+              Stay connected ?
+            </label>
+          </div>
+        </div>
+        <div class="btn-group pull-right">
+          <%= submit_button 'Login', name => 'login', class => 'btn btn-primary' %>
+        </div>
+      </fieldset>
+    <% end %>
+  </div>
+</div>

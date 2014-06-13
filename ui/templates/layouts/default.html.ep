@@ -1,0 +1,120 @@
+% my $lang = session 'user_lang';
+%#   languages($lang);
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <base href="/" />
+    <title><%= config->{title} %></title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="powa">
+    <meta name="author" content="Julien Rouhaud/.">
+
+    <link rel="shortcut icon" href="<%= url_for '/' %>img/favicon.ico" type="image/x-icon" />
+
+    <link rel="stylesheet" media="all" type="text/css" href="<%= url_for '/css/bootstrap.min.css' %>" />
+    <link rel="stylesheet" media="all" type="text/css" href="<%= url_for '/css/bootstrap-theme.min.css' %>" />
+    <link rel="stylesheet" media="all" type="text/css" href="<%= url_for '/css/bootstrap-datetimepicker.min.css' %>" />
+    <link rel="stylesheet" media="all" type="text/css" href="<%= url_for '/css/powa.css' %>" />
+
+    <!-- Use HTML5 shim, for IE6-8 support of HTML5 elements -->
+    <!--[if lt IE 9]>
+      <script src="<%= url_for '/' %>js/html5.js"></script>
+    <![endif]-->
+
+    % #<script type="text/javascript" src="<%= url_for '/js/jquery.min.js' %>"></script>
+    % #<script type="text/javascript" src="<%= url_for '/js/bootstrap.min.js' %>"></script>
+    % #<script type="text/javascript" src="<%= url_for '/js/bootstrap-typeahead.js' %>"></script>
+    % #<script type="text/javascript" src="<%= url_for '/js/powa.js' %>"></script>
+
+    <%= content_for 'header' %>
+
+  </head>
+
+  <body>
+    <div class="container-fluid">
+      <div class="row">
+        <div class="col-md-6">
+          <!-- Title -->
+          <h3 id="main-title">PoWA</h3>
+        </div>
+
+        <div class="col-md-6">
+          <!-- user menu -->
+          %= user_menu
+        </div>
+      </div>
+    </div>
+
+    <div class="container-fluid">
+      %= display_messages
+    </div>
+
+    <div class="container-fluid" id="main">
+      <div class="row">
+        <div class="col-md-2">
+          <!-- Main menu -->
+          %= main_menu
+        </div>
+        <div class="col-md-10">
+          <div id="content">
+            %= content
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <script type="text/javascript" src="<%= url_for '/js/flotr2.min.js' %>"></script>
+    <script type="text/javascript" src="<%= url_for '/js/moment.min.js' %>"></script>
+    <script type="text/javascript" src="<%= url_for '/js/jquery.min.js' %>"></script>
+    <script type="text/javascript" src="<%= url_for '/js/jquery.tablesorter.min.js' %>"></script>
+    <script type="text/javascript" src="<%= url_for '/js/bootstrap.min.js' %>"></script>
+    <script type="text/javascript" src="<%= url_for '/js/bootstrap-typeahead.js' %>"></script>
+    <script type="text/javascript" src="<%= url_for '/js/bootstrap-datetimepicker.min.js' %>"></script>
+    <script type="text/javascript" src="<%= url_for '/js/powa.js' %>"></script>
+    <script type="text/javascript" src="<%= url_for '/js/grapher.js' %>"></script>
+    %= content_for 'body_scripts'
+
+
+
+
+
+
+% #    <div class="navbar navbar-fixed-top navbar-inverse">
+% #      <div class="navbar-inner">
+% #    <div class="container">
+% #      <!-- user menu -->
+% #      <%= user_menu %>
+% #
+% #      <!-- Title -->
+% #      <span class="brand">Powa</span>
+% #
+% #      <!-- Main menu -->
+% #      <%= top_menu %>
+% #        </div>
+% #      </div>
+% #    </div>
+% #
+% #    <div class="container">
+% #      <%= display_messages %>
+% #    </div>
+% #
+% #    <div class="container" id="main">
+% #      <%= content %>
+% #    </div>
+% #
+% #    <div class="footer">
+% #      <div class="container-fluid">
+% #	<div class="pull-right">
+% #	  <a href="https://twitter.com/dalibo" class="twitter-follow-button" data-show-count="false">Follow @dalibo</a>
+% #          <script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0];if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src="//platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script>
+% #	</div>
+% #
+% #	<p>Powered by <a href="http://www.mojolicious.org" title="mojolicious web framework">Mojolicious</a></p>
+% #	<p>Design based on <a href="http://twitter.github.com/bootstrap/" title="bootstrap">Bootstrap</a></p>
+% #
+% #      </div>
+% #    </div>
+  </body>
+</html>
