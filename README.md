@@ -35,9 +35,11 @@ The more you coalesce, the more PostgreSQL can compress. But the more it has
 to uncompact when queried. Defaults to 100.
 
 Reset the stats:
+------------------------
 
 SELECT powa_stats_reset(); (in the powa database of course)
 
 Set up the UI:
+------------------------
 
 Read ui/README.md
