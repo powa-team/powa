@@ -1,4 +1,4 @@
-PostgreSQK Workload Analyzer
+PostgreSQL Workload Analyzer
 ============================
 
 PoWA is an extension designed to historize informations given by the
