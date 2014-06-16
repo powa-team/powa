@@ -132,6 +132,8 @@ BEGIN
            array_agg(records)
       FROM (SELECT md5query, unnest(records) AS records FROM source) AS tmp
      GROUP BY md5query;
+    DELETE FROM powa_last_aggregation;
+    INSERT INTO powa_last_aggregation VALUES(now());
 END;
 $PROC$ LANGUAGE plpgsql;
 
