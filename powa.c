@@ -154,9 +154,14 @@ powa_main(Datum main_arg)
 		INSTR_TIME_SET_CURRENT(end);
 		INSTR_TIME_SUBTRACT(end,begin);
 		/* Wait powa.frequency, compensate for work time of last snapshot */
-		WaitLatch(&MyProc->procLatch,
+                /* If we got off schedule (because of a compact or delete,
+                   just do another operation right now */
+                if (powa_frequency-INSTR_TIME_GET_MILLISEC(end) >0)
+                {
+		     WaitLatch(&MyProc->procLatch,
 		                WL_LATCH_SET | WL_TIMEOUT | WL_POSTMASTER_DEATH,
 		                powa_frequency-INSTR_TIME_GET_MILLISEC(end));
+                }
 	}
 	proc_exit(0);
 }
