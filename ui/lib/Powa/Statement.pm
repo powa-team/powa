@@ -156,6 +156,9 @@ sub dbdata_agg {
     $properties->{legend}{position} = "ne";
     $properties->{title} = "POWA - $section";
     $properties->{yaxis}{unit} = '';
+    if ( $section eq "call" ){
+        $properties->{yaxis}{unit} = 's';
+    }
     $properties->{yaxis}{autoscale} = $json->true;
     $properties->{yaxis}{autoscaleMargin} = 0.2;
     if ( $section eq "blks" ) {
