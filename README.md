@@ -34,6 +34,13 @@ Here are the configuration parameters:
 The more you coalesce, the more PostgreSQL can compress. But the more it has
 to uncompact when queried. Defaults to 100.
 
+If you can afford it, put a rather high work_mem for the database powa. It will help, as the queries used to display the ui are doing lots of sampling, implying lots of sorts.
+
+We use this:
+ALTER DATABASE powa SET work_mem TO '256MB';
+
+It's only used for the duration of the queries anyway, this is not statically allocated memory.
+
 Reset the stats:
 ------------------------
 
@@ -43,3 +50,4 @@ Set up the UI:
 ------------------------
 
 Read ui/README.md
+
