@@ -105,18 +105,21 @@ sub dbdata_agg {
 
     my $tmp;
     my $groupby = "";
+    my $blksize = "";
     if ( $section eq "call") {
         $tmp = "sum(total_runtime)/extract(epoch from total_mesure_interval) as runtime";
         $groupby = "GROUP BY ts,total_mesure_interval";
     } else {
-        $tmp = "(shared_blks_read+local_blks_read+temp_blks_read) as total_blks_read,
-            (shared_blks_hit+local_blks_hit) as total_blks_hit";
+        $blksize = ", (SELECT current_setting('block_size')::numeric AS blksize) setting";
+        $tmp = "(shared_blks_read+local_blks_read+temp_blks_read)*blksize as total_blks_read,
+            (shared_blks_hit+local_blks_hit)*blksize as total_blks_hit";
     }
 
     $sql = $dbh->prepare(
         "SELECT (extract(epoch FROM ts)*1000)::bigint,
             $tmp
         FROM powa_getstatdata_sample_db(to_timestamp(?), to_timestamp(?), ?, 300)
+        $blksize
         $groupby
         ORDER BY 1
         "
@@ -146,8 +149,8 @@ sub dbdata_agg {
     if ( $section eq "call") {
         push @{$data}, { data => $series->{'runtime'}, label => 'query runtime per second' };
     } else {
-        push @{$data}, { data => $series->{'total_blks_read'}, label => 'total_blks_read' };
-        push @{$data}, { data => $series->{'total_blks_hit'}, label => 'total_blks_hit' };
+        push @{$data}, { data => $series->{'total_blks_read'}, label => 'total_blks_read (in B)' };
+        push @{$data}, { data => $series->{'total_blks_hit'}, label => 'total_blks_hit (in B)' };
     }
 
     $dbh->disconnect();
@@ -155,9 +158,10 @@ sub dbdata_agg {
     $properties->{legend}{show} = $json->false;
     $properties->{legend}{position} = "ne";
     $properties->{title} = "POWA - $section";
-    $properties->{yaxis}{unit} = '';
     if ( $section eq "call" ){
         $properties->{yaxis}{unit} = 's';
+    } else {
+        $properties->{yaxis}{unit} = 'B';
     }
     $properties->{yaxis}{autoscale} = $json->true;
     $properties->{yaxis}{autoscaleMargin} = 0.2;
@@ -185,10 +189,12 @@ sub querydata {
     my $md5query = substr $id, 3;
 
     my $tmp = "";
+    my $blksize = ", (SELECT current_setting('block_size')::numeric AS blksize) setting";
+    $blksize = "" if ($section eq "GEN");
     $tmp = "round((total_runtime/CASE total_calls WHEN 0 THEN 1 ELSE total_calls END)::numeric,2), rows" if ($section eq "GEN");
-    $tmp = "shared_blks_hit, shared_blks_read, shared_blks_dirtied, shared_blks_written" if ($section eq "SHA");
-    $tmp = "local_blks_hit, local_blks_read, local_blks_dirtied, shared_blks_written" if ($section eq "LOC");
-    $tmp = "temp_blks_read, temp_blks_written, blk_read_time, blk_write_time" if ($section eq "TMP");
+    $tmp = "shared_blks_hit*blksize, shared_blks_read*blksize, shared_blks_dirtied*blksize, shared_blks_written*blksize" if ($section eq "SHA");
+    $tmp = "local_blks_hit*blksize, local_blks_read*blksize, local_blks_dirtied*blksize, shared_blks_written*blksize" if ($section eq "LOC");
+    $tmp = "temp_blks_read*blksize, temp_blks_written*blksize, blk_read_time*blksize, blk_write_time*blksize" if ($section eq "TMP");
 
 
     $from = substr $from, 0, -3;
@@ -197,6 +203,7 @@ sub querydata {
         "SELECT (extract(epoch FROM ts)*1000)::bigint,
         $tmp
         FROM powa_getstatdata_sample(to_timestamp(?), to_timestamp(?), ?, 300)
+        $blksize
         ORDER BY ts
         "
     );
@@ -258,22 +265,22 @@ sub querydata {
             push @{$data}, { data => $series->{'rows'}, label => 'rows' };
         }
         if ( $section eq "SHA" ){
-            push @{$data}, { data => $series->{'shared_blks_hit'}, label => 'shared_blks_hit' };
-            push @{$data}, { data => $series->{'shared_blks_read'}, label => 'shared_blks_read' };
-            push @{$data}, { data => $series->{'shared_blks_dirtied'}, label => 'shared_blks_dirtied' };
-            push @{$data}, { data => $series->{'shared_blks_written'}, label => 'shared_blks_written' };
+            push @{$data}, { data => $series->{'shared_blks_hit'}, label => 'shared_blks_hit (in B)' };
+            push @{$data}, { data => $series->{'shared_blks_read'}, label => 'shared_blks_read (in B)' };
+            push @{$data}, { data => $series->{'shared_blks_dirtied'}, label => 'shared_blks_dirtied (in B)' };
+            push @{$data}, { data => $series->{'shared_blks_written'}, label => 'shared_blks_written (in B)' };
         }
         if ( $section eq "LOC" ){
-            push @{$data}, { data => $series->{'local_blks_hit'}, label => 'local_blks_hit' };
-            push @{$data}, { data => $series->{'local_blks_read'}, label => 'local_blks_read' };
-            push @{$data}, { data => $series->{'local_blks_dirtied'}, label => 'local_blks_dirtied' };
-            push @{$data}, { data => $series->{'local_blks_written'}, label => 'local_blks_written' };
+            push @{$data}, { data => $series->{'local_blks_hit'}, label => 'local_blks_hit (in B)' };
+            push @{$data}, { data => $series->{'local_blks_read'}, label => 'local_blks_read (in B)' };
+            push @{$data}, { data => $series->{'local_blks_dirtied'}, label => 'local_blks_dirtied (in B)' };
+            push @{$data}, { data => $series->{'local_blks_written'}, label => 'local_blks_written (in B)' };
         }
         if ( $section eq "TMP" ){
-            push @{$data}, { data => $series->{'temp_blks_read'}, label => 'temp_blks_read' };
-            push @{$data}, { data => $series->{'temp_blks_written'}, label => 'temp_blks_written' };
-            push @{$data}, { data => $series->{'blk_read_time'}, label => 'blk_read_time' };
-            push @{$data}, { data => $series->{'blk_write_time'}, label => 'blk_write_time' };
+            push @{$data}, { data => $series->{'temp_blks_read'}, label => 'temp_blks_read (in B)' };
+            push @{$data}, { data => $series->{'temp_blks_written'}, label => 'temp_blks_written (in B)' };
+            push @{$data}, { data => $series->{'blk_read_time'}, label => 'blk_read_time (in B)' };
+            push @{$data}, { data => $series->{'blk_write_time'}, label => 'blk_write_time (in B)' };
         }
 
     $dbh->disconnect();
@@ -281,7 +288,11 @@ sub querydata {
     $properties->{legend}{show} = $json->false;
     $properties->{legend}{position} = "ne";
     $properties->{title} = "POWA $section";
-    $properties->{yaxis}{unit} = '';
+    if ($section eq "GEN"){
+        $properties->{yaxis}{unit} = '';
+    } else {
+        $properties->{yaxis}{unit} = 'B';
+    }
     $properties->{yaxis}{autoscale} = $json->true;
     $properties->{yaxis}{autoscaleMargin} = 0.2;
     $self->render( json => {
