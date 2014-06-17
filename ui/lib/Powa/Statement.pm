@@ -106,8 +106,8 @@ sub dbdata_agg {
     my $tmp;
     my $groupby = "";
     if ( $section eq "call") {
-        $tmp = "total_calls, sum(total_runtime)/extract(epoch from total_mesure_interval) as runtime";
-        $groupby = "GROUP BY ts,total_calls,total_mesure_interval";
+        $tmp = "sum(total_runtime)/extract(epoch from total_mesure_interval) as runtime";
+        $groupby = "GROUP BY ts,total_mesure_interval";
     } else {
         $tmp = "(shared_blks_read+local_blks_read+temp_blks_read) as total_blks_read,
             (shared_blks_hit+local_blks_hit) as total_blks_hit";
@@ -135,8 +135,7 @@ sub dbdata_agg {
     }
     while ( my @tab = $sql->fetchrow_array() ) {
         if ( $section eq "call") {
-            push @{$series->{'total_calls'}},      [ 0 + $tab[0], 0.0 + $tab[1] ];
-            push @{$series->{'runtime'}},[ 0 + $tab[0], 0.0 + $tab[2] ];
+            push @{$series->{'runtime'}},[ 0 + $tab[0], 0.0 + $tab[1] ];
         } else {
             push @{$series->{'total_blks_read'}},  [ 0 + $tab[0], 0.0 + $tab[1] ];
             push @{$series->{'total_blks_hit'}},   [ 0 + $tab[0], 0.0 + $tab[2] ];
@@ -145,7 +144,6 @@ sub dbdata_agg {
     $sql->finish();
 
     if ( $section eq "call") {
-        push @{$data}, { data => $series->{'total_calls'}, label => 'total_calls' };
         push @{$data}, { data => $series->{'runtime'}, label => 'query runtime per second' };
     } else {
         push @{$data}, { data => $series->{'total_blks_read'}, label => 'total_blks_read' };
