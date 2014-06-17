@@ -187,7 +187,7 @@ sub querydata {
     $from = substr $from, 0, -3;
     $to = substr $to, 0, -3;
     $sql = $dbh->prepare(
-        "SELECT ((extract(epoch FROM ts) + extract(timezone FROM ts))*1000)::bigint,
+        "SELECT (extract(epoch FROM ts)*1000)::bigint,
         $tmp
         FROM powa_getstatdata_sample(to_timestamp(?), to_timestamp(?), ?, 300)
         ORDER BY ts
