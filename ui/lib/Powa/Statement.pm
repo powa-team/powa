@@ -14,7 +14,7 @@ sub listdb {
     my $sql;
 
     $sql = $dbh->prepare(
-        "SELECT DISTINCT dbname FROM powa_statements");
+        "SELECT DISTINCT dbname FROM powa_statements ORDER BY dbname");
     $sql->execute();
     my $databases = [];
     while ( my ( $dbname ) = $sql->fetchrow() ) {
