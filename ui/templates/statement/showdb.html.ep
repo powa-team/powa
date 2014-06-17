@@ -118,7 +118,7 @@
 
 <div class="row">
     <div class="box" id="server_list">
-        <b>Details for databases <u><span id="dbname"><%= stash 'dbname' %></span></u>:</b><br />
+        <b>Details for database <u><span id="dbname"><%= stash 'dbname' %></span></u>:</b><br />
             <table id="dbdata" class="table table-condensed table-hover tablesorter">
                 <thead>
                     <tr>
