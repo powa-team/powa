@@ -159,7 +159,7 @@ sub dbdata_agg {
     $properties->{legend}{position} = "ne";
     $properties->{title} = "POWA - $section";
     if ( $section eq "call" ){
-        $properties->{yaxis}{unit} = 's';
+        $properties->{yaxis}{unit} = 'ms';
     } else {
         $properties->{yaxis}{unit} = 'B';
     }
