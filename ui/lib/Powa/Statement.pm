@@ -190,11 +190,12 @@ sub querydata {
 
     my $tmp = "";
     my $blksize = ", (SELECT current_setting('block_size')::numeric AS blksize) setting";
-    $blksize = "" if ($section eq "GEN");
+    $blksize = "" if ($section eq "GEN") or ($section eq "TIM");
     $tmp = "round((total_runtime/CASE total_calls WHEN 0 THEN 1 ELSE total_calls END)::numeric,2), rows" if ($section eq "GEN");
     $tmp = "shared_blks_hit*blksize, shared_blks_read*blksize, shared_blks_dirtied*blksize, shared_blks_written*blksize" if ($section eq "SHA");
     $tmp = "local_blks_hit*blksize, local_blks_read*blksize, local_blks_dirtied*blksize, shared_blks_written*blksize" if ($section eq "LOC");
-    $tmp = "temp_blks_read*blksize, temp_blks_written*blksize, blk_read_time*blksize, blk_write_time*blksize" if ($section eq "TMP");
+    $tmp = "temp_blks_read*blksize, temp_blks_written*blksize" if ($section eq "TMP");
+    $tmp = "blk_read_time, blk_write_time" if ($section eq "TIM");
 
 
     $from = substr $from, 0, -3;
@@ -231,6 +232,8 @@ sub querydata {
     if ( $section eq "TMP" ){
         $series->{'temp_blks_read'} = [];
         $series->{'temp_blks_written'} = [];
+    }
+    if ( $section eq "TIM" ){
         $series->{'blk_read_time'} = [];
         $series->{'blk_write_time'} = [];
     }
@@ -254,8 +257,10 @@ sub querydata {
         if ( $section eq "TMP" ){
             push @{$series->{'temp_blks_read'}},        [ 0 + $tab[0], 0.0 + $tab[1] ];
             push @{$series->{'temp_blks_written'}},     [ 0 + $tab[0], 0.0 + $tab[2] ];
-            push @{$series->{'blk_read_time'}},         [ 0 + $tab[0], 0.0 + $tab[3] ];
-            push @{$series->{'blk_write_time'}},        [ 0 + $tab[0], 0.0 + $tab[4] ];
+        }
+        if ( $section eq "TIM" ){
+            push @{$series->{'blk_read_time'}},         [ 0 + $tab[0], 0.0 + $tab[1] ];
+            push @{$series->{'blk_write_time'}},        [ 0 + $tab[0], 0.0 + $tab[2] ];
         }
     };
     $sql->finish();
@@ -279,8 +284,10 @@ sub querydata {
         if ( $section eq "TMP" ){
             push @{$data}, { data => $series->{'temp_blks_read'}, label => 'temp_blks_read (in B)' };
             push @{$data}, { data => $series->{'temp_blks_written'}, label => 'temp_blks_written (in B)' };
-            push @{$data}, { data => $series->{'blk_read_time'}, label => 'blk_read_time (in B)' };
-            push @{$data}, { data => $series->{'blk_write_time'}, label => 'blk_write_time (in B)' };
+        }
+        if ( $section eq "TIM" ){
+            push @{$data}, { data => $series->{'blk_read_time'}, label => 'blk_read_time' };
+            push @{$data}, { data => $series->{'blk_write_time'}, label => 'blk_write_time' };
         }
 
     $dbh->disconnect();
@@ -290,6 +297,8 @@ sub querydata {
     $properties->{title} = "POWA $section";
     if ($section eq "GEN"){
         $properties->{yaxis}{unit} = '';
+    } elsif ($section eq "TIM"){
+        $properties->{yaxis}{unit} = 's';
     } else {
         $properties->{yaxis}{unit} = 'B';
     }

@@ -59,7 +59,7 @@
   </div>
 </div>
 
-<% foreach my $section ('GEN','SHA','LOC','TMP') { %>
+<% foreach my $section ('GEN','SHA','LOC','TMP','TIM') { %>
   <div class="graph_container" data-graphid="<%= $section . stash('md5query') %>"
     data-graphurl="<%= url_for('statement_querydata') %>">
     <div class="grapher-header row-fluid" style="margin-bottom: 5px">
