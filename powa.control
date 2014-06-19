@@ -1,6 +1,6 @@
 # wh_nagios extension
 comment = 'PostgreSQL Workload Analyser-core'
-default_version = '1.0'
+default_version = '1.1'
 module_pathname = '$libdir/powa'
 requires = 'plpgsql, pg_stat_statements, btree_gist'
 superuser = true
