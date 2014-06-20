@@ -23,7 +23,15 @@ sub update_info {
     my $self = shift;
     my $data = ref $_[0] ? $_[0] : {@_};
 
-    foreach my $info (qw/username password admin/) {
+    # Does the cookie expires ?
+    if ( defined $data->{'stay_connected'} ){
+        $self->target->session(expiration => 0);
+    } else {
+        # Default expiration : 1 hour
+        $self->target->session(expiration => 3600);
+    }
+
+    foreach my $info (qw/username password/) {
         if ( exists $data->{$info} ) {
             $self->target->session( 'user_' . $info => $data->{$info} );
         }
@@ -36,7 +44,7 @@ sub remove_info {
     my $self = shift;
 
     map { delete $self->target->session->{$_} }
-        qw(user_username user_password user_admin);
+        qw(user_username user_password);
 }
 
 sub is_authd {

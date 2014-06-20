@@ -111,8 +111,8 @@ sub dbdata_agg {
         $groupby = "GROUP BY ts,total_mesure_interval";
     } else {
         $blksize = ", (SELECT current_setting('block_size')::numeric AS blksize) setting";
-        $tmp = "(shared_blks_read+local_blks_read+temp_blks_read)*blksize as total_blks_read,
-            (shared_blks_hit+local_blks_hit)*blksize as total_blks_hit";
+        $tmp = "((shared_blks_read+local_blks_read+temp_blks_read)*blksize)/extract(epoch from total_mesure_interval) as total_blks_read,
+            ((shared_blks_hit+local_blks_hit)*blksize)/extract(epoch from total_mesure_interval) as total_blks_hit";
     }
 
     $sql = $dbh->prepare(
@@ -149,8 +149,8 @@ sub dbdata_agg {
     if ( $section eq "call") {
         push @{$data}, { data => $series->{'runtime'}, label => 'query runtime per second' };
     } else {
-        push @{$data}, { data => $series->{'total_blks_read'}, label => 'total_blks_read (in B)' };
-        push @{$data}, { data => $series->{'total_blks_hit'}, label => 'total_blks_hit (in B)' };
+        push @{$data}, { data => $series->{'total_blks_read'}, label => 'Total read (in Bps)' };
+        push @{$data}, { data => $series->{'total_blks_hit'}, label => 'Total hit (in Bps)' };
     }
 
     $dbh->disconnect();
@@ -161,7 +161,7 @@ sub dbdata_agg {
     if ( $section eq "call" ){
         $properties->{yaxis}{unit} = 'ms';
     } else {
-        $properties->{yaxis}{unit} = 'B';
+        $properties->{yaxis}{unit} = 'Bps';
     }
     $properties->{yaxis}{autoscale} = $json->true;
     $properties->{yaxis}{autoscaleMargin} = 0.2;
@@ -192,9 +192,9 @@ sub querydata {
     my $blksize = ", (SELECT current_setting('block_size')::numeric AS blksize) setting";
     $blksize = "" if ($section eq "GEN") or ($section eq "TIM");
     $tmp = "round((total_runtime/CASE total_calls WHEN 0 THEN 1 ELSE total_calls END)::numeric,2), rows" if ($section eq "GEN");
-    $tmp = "shared_blks_hit*blksize, shared_blks_read*blksize, shared_blks_dirtied*blksize, shared_blks_written*blksize" if ($section eq "SHA");
-    $tmp = "local_blks_hit*blksize, local_blks_read*blksize, local_blks_dirtied*blksize, shared_blks_written*blksize" if ($section eq "LOC");
-    $tmp = "temp_blks_read*blksize, temp_blks_written*blksize" if ($section eq "TMP");
+    $tmp = "(shared_blks_hit*blksize)/extract(epoch from total_mesure_interval), (shared_blks_read*blksize)/extract(epoch from total_mesure_interval), (shared_blks_dirtied*blksize)/extract(epoch from total_mesure_interval), (shared_blks_written*blksize)/extract(epoch from total_mesure_interval)" if ($section eq "SHA");
+    $tmp = "(local_blks_hit*blksize)/extract(epoch from total_mesure_interval), (local_blks_read*blksize)/extract(epoch from total_mesure_interval), (local_blks_dirtied*blksize)/extract(epoch from total_mesure_interval), (shared_blks_written*blksize)/extract(epoch from total_mesure_interval)" if ($section eq "LOC");
+    $tmp = "(temp_blks_read*blksize)/extract(epoch from total_mesure_interval), (temp_blks_written*blksize)/extract(epoch from total_mesure_interval)" if ($section eq "TMP");
     $tmp = "blk_read_time, blk_write_time" if ($section eq "TIM");
 
 
@@ -270,24 +270,24 @@ sub querydata {
             push @{$data}, { data => $series->{'rows'}, label => 'rows' };
         }
         if ( $section eq "SHA" ){
-            push @{$data}, { data => $series->{'shared_blks_hit'}, label => 'shared_blks_hit (in B)' };
-            push @{$data}, { data => $series->{'shared_blks_read'}, label => 'shared_blks_read (in B)' };
-            push @{$data}, { data => $series->{'shared_blks_dirtied'}, label => 'shared_blks_dirtied (in B)' };
-            push @{$data}, { data => $series->{'shared_blks_written'}, label => 'shared_blks_written (in B)' };
+            push @{$data}, { data => $series->{'shared_blks_hit'}, label => 'Shared hit (in Bps)' };
+            push @{$data}, { data => $series->{'shared_blks_read'}, label => 'Shared read (in Bps)' };
+            push @{$data}, { data => $series->{'shared_blks_dirtied'}, label => 'Shared dirtied (in Bps)' };
+            push @{$data}, { data => $series->{'shared_blks_written'}, label => 'Shared written (in Bps)' };
         }
         if ( $section eq "LOC" ){
-            push @{$data}, { data => $series->{'local_blks_hit'}, label => 'local_blks_hit (in B)' };
-            push @{$data}, { data => $series->{'local_blks_read'}, label => 'local_blks_read (in B)' };
-            push @{$data}, { data => $series->{'local_blks_dirtied'}, label => 'local_blks_dirtied (in B)' };
-            push @{$data}, { data => $series->{'local_blks_written'}, label => 'local_blks_written (in B)' };
+            push @{$data}, { data => $series->{'local_blks_hit'}, label => 'Local hit (in Bps)' };
+            push @{$data}, { data => $series->{'local_blks_read'}, label => 'Local read (in Bps)' };
+            push @{$data}, { data => $series->{'local_blks_dirtied'}, label => 'Local dirtied (in Bps)' };
+            push @{$data}, { data => $series->{'local_blks_written'}, label => 'Local written (in Bps)' };
         }
         if ( $section eq "TMP" ){
-            push @{$data}, { data => $series->{'temp_blks_read'}, label => 'temp_blks_read (in B)' };
-            push @{$data}, { data => $series->{'temp_blks_written'}, label => 'temp_blks_written (in B)' };
+            push @{$data}, { data => $series->{'temp_blks_read'}, label => 'Temp read (in Bps)' };
+            push @{$data}, { data => $series->{'temp_blks_written'}, label => 'Temp written (in Bps)' };
         }
         if ( $section eq "TIM" ){
-            push @{$data}, { data => $series->{'blk_read_time'}, label => 'blk_read_time' };
-            push @{$data}, { data => $series->{'blk_write_time'}, label => 'blk_write_time' };
+            push @{$data}, { data => $series->{'blk_read_time'}, label => 'Read time' };
+            push @{$data}, { data => $series->{'blk_write_time'}, label => 'Write time' };
         }
 
     $dbh->disconnect();
@@ -298,9 +298,9 @@ sub querydata {
     if ($section eq "GEN"){
         $properties->{yaxis}{unit} = '';
     } elsif ($section eq "TIM"){
-        $properties->{yaxis}{unit} = 's';
+        $properties->{yaxis}{unit} = 'ms';
     } else {
-        $properties->{yaxis}{unit} = 'B';
+        $properties->{yaxis}{unit} = 'Bps';
     }
     $properties->{yaxis}{autoscale} = $json->true;
     $properties->{yaxis}{autoscaleMargin} = 0.2;
