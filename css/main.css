@@ -391,9 +391,13 @@ footer .footer-below {
     outline: 0;
 }
 
+.modal-body {
+    max-height: 800px;
+}
+
 .portfolio-modal .modal-content {
     padding: 100px 0;
-    min-height: 100%;
+/*    min-height: 100%;*/
     border: 0;
     border-radius: 0;
     text-align: center;
