@@ -1,0 +1,10 @@
+# Site settings
+title: PoWA 
+email: contact@dalibo.com
+description: "PoWA is PostgreSQL Workload Analyzer that gathers performance stats and provides real-time charts and graph to help monitor and tune your PostgreSQL servers. Is is similar to Oracle AWR or SQL Server MDW."
+twitter_username: dalibo
+github_username:  dalibo
+
+# Build settings
+markdown: kramdown
+permalink: pretty

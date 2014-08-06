@@ -1,0 +1,9 @@
+---
+layout: default
+modal-id: 5
+date: 2014-07-14
+img: safe.png
+alt: image-alt
+description: Graphs are entirely dynamic ! you can zoom in/out and mouse over a point int the graph to get the query runtime for a specific moment.
+
+---

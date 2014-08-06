@@ -1,0 +1,8 @@
+---
+layout: default
+modal-id: 3 
+date: 2014-07-13
+img: submarine.png
+description: Watch your servers stats over a classic time period (day, week, month, year) or define your own time range
+
+---
