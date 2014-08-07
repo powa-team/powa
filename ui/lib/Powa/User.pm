@@ -43,7 +43,7 @@ sub login {
                 username => $form_data->{username},
                 password => $form_data->{password},
                 stay_connected => $form_data->{stay_connected});
-
+            $dbh->disconnect();
             if ( (defined $self->flash('saved_route')) && (defined $self->flash('stack')) ){
                 return $self->redirect_to($self->flash('saved_route'), $self->flash('stack'));
             } else {
