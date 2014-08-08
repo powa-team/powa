@@ -14,7 +14,7 @@ sub register {
     my ( $self, $app, $config ) = @_;
 
     # data source name
-    my $dsn = $config->{dsn};
+    my $dsn = $config->{database}->{dsn};
 
     # Check if we have a split dsn with fallback on defaults
     unless ($dsn) {
@@ -42,12 +42,12 @@ sub register {
             # Return a new database connection handle
             $dbh =
                 DBI->connect( $self->conninfo, $username, $password,
-                $config->{options} || {} );
+                $config->{database}->{options} || {} );
 
             return 0 if (!$dbh);
 
             # Check if we are a super-user, only when connecting
-            if ( not defined $ctrl->session('user_username') ) {
+            if ( ( not defined $config->{base_timestamp} ) and ( not defined $ctrl->session('user_username') ) ) {
                 $sql = $dbh->prepare(qq{
                     SELECT (COUNT(*) = 1)::int
                     FROM pg_roles

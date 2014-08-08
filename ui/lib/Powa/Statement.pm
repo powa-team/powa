@@ -32,9 +32,11 @@ sub listdb {
 
 sub showdb {
     my $self = shift;
-    my $dbh  = $self->database();
+    my $base_timestamp = undef;
 
-    $self->render();
+    $base_timestamp = $self->config->{base_timestamp} if ( defined $self->config->{base_timestamp} );
+
+    $self->render( 'base_timestamp' => $base_timestamp );
 }
 
 sub showdbquery {
@@ -42,6 +44,7 @@ sub showdbquery {
     my $dbh  = $self->database();
     my $dbname = $self->param('dbname');
     my $md5query = $self->param('md5query');
+    my $base_timestamp = undef;
 
     my $sql = $dbh->prepare(
         "SELECT query FROM powa_statements WHERE dbname = ? AND md5query = ?"
@@ -52,7 +55,9 @@ sub showdbquery {
 
     my $query = highlight_code( $query_raw );
 
-    $self->stash( query => b($query) );
+    $base_timestamp = $self->config->{base_timestamp} if ( defined $self->config->{base_timestamp} );
+
+    $self->stash( query => b($query), base_timestamp => $base_timestamp );
 
     $sql->finish();
 
@@ -380,6 +385,10 @@ sub highlight_code {
         WHITESPACE WITHOUT WORK WRAPPER XMLATTRIBUTES XMLCONCAT XMLELEMENT XMLEXISTS XMLFOREST XMLPARSE
         XMLPI XMLROOT XMLSERIALIZE YEAR YES ZONE
     );
+
+    foreach my $k (@pg_keywords) {
+            push(@KEYWORDS1, $k) if (!grep(/^$k$/i, @KEYWORDS1));
+    }
 
     my @KEYWORDS2 = (
         'ascii',      'age',

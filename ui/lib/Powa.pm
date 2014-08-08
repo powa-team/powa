@@ -25,7 +25,7 @@ sub startup {
     }
 
     # startup database connection
-    $self->plugin( 'database', $config->{database} || {} );
+    $self->plugin( 'database', $config || {} );
 
     # Load HTML Messaging plugin
     $self->plugin('messages');

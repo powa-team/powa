@@ -54,44 +54,50 @@ $(document).ready(function () {
   });
 
   $('.scales .btn').click(function (e) {
-    var fromDate = new Date();
-    var toDate = new Date();
+    var toDate;
+    var base_timestamp = $(this).parents('.scales').data('base-timestamp');
+    if ( base_timestamp !== undefined ) {
+      toDate = moment(base_timestamp);
+    } else {
+      toDate = moment();
+    }
+    var fromDate = moment(toDate);
     var frompick = $('#fromdatepick').data('DateTimePicker');
     var topick = $('#todatepick').data('DateTimePicker');
     var error = false;
 
     switch($(this).attr('id')) {
-      case 'sel_year':
-          fromDate.setYear(fromDate.getYear() + 1900 - 1);
-        break;
-        case 'sel_month':
-          fromDate.setMonth(fromDate.getMonth() - 1);
-        break;
-        case 'sel_week':
-          fromDate.setDate(fromDate.getDate() - 7);
-        break;
-        case 'sel_day':
-          fromDate.setDate(fromDate.getDate() - 1);
-        break;
-        case 'sel_custom':
-          if (frompick.getDate() === null ) {
-            alert('you must set the starting date.');
-            return false;
-          }
-          if (topick.getDate() === null)
-            /* set the toDate to the current day */
-            topick.setDate(toDate.getDate());
-          else
-            toDate = topick.getDate();
+      case 'sel_month':
+        fromDate.subtract('month',1);
+      break;
+      case 'sel_week':
+        fromDate.subtract('day',7);
+      break;
+      case 'sel_day':
+        fromDate.subtract('day',1);
+      break;
+      case 'sel_hour':
+        fromDate.subtract('hour',1);
+      break;
+      case 'sel_custom':
+        if (frompick.getDate() === null ) {
+          alert('you must set the starting date.');
+          return false;
+        }
+        if (topick.getDate() === null)
+          /* set the toDate to the current day */
+          topick.setDate(toDate.toDate());
+        else
+          toDate = topick.getDate();
 
-          fromDate = frompick.getDate();
-        break;
-        default:
-          error = true;
+        fromDate = frompick.getDate();
+      break;
+      default:
+        error = true;
     }
     if ( !error) {
-      frompick.setDate(fromDate);
-      topick.setDate(toDate);
+      frompick.setDate(fromDate.toDate());
+      topick.setDate(toDate.toDate());
 
       load(); //overloaded in specific template
     }
@@ -141,10 +147,6 @@ $(document).ready(function () {
 
   /* by default, display data from the last hour */
   if ($('#todatepick').length != 0){
-    var _date = new Date();
-    $('#todatepick').data('DateTimePicker').setDate(_date);
-    _date.setHours(_date.getHours()-1);
-    $('#fromdatepick').data('DateTimePicker').setDate(_date);
-    $('#sel_custom').click();
+    $('#sel_hour').click();
   }
 });

@@ -1,11 +1,9 @@
 % layout config 'layout';
 % content_for header => begin
   <script type="text/javascript" src="<%= url_for '/js/statementdbquery.js' %>"></script>
-  %= javascript begin
-    var graphDataUrl = '<%= url_for 'statement_querydata' %>';
-  % end
 %end
 % my $query = stash 'query';
+% my $base_timestamp = stash 'base_timestamp';
 
 <%= link_to statement_showdb => { dbname => param 'dbname' } => begin %> « <%= 'Back to database' %> <%= param 'dbname' %><% end %>
 
@@ -18,14 +16,14 @@
 
 
 <div class="row">
-  <div class="container-fluid scales">
+  <div class="container-fluid scales"<%= ( defined $base_timestamp ? b(" data-base-timestamp=\"$base_timestamp\""): '' ) %>>
     <div class="btn-toolbar" role="toolbar">
 
       <div class="btn-group">
-        <input id="sel_year" class="btn btn-default" type="button" value="Year" />
         <input id="sel_month" class="btn btn-default" type="button" value="Month" />
         <input id="sel_week" class="btn btn-default" type="button" value="Week" />
         <input id="sel_day" class="btn btn-default" type="button" value="Day" />
+        <input id="sel_hour" class="btn btn-default" type="button" value="Hour" />
       </div>
 
       <div class="btn-group">
