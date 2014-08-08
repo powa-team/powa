@@ -10,8 +10,10 @@
 <%= link_to statement_showdb => { dbname => param 'dbname' } => begin %> « <%= 'Back to database' %> <%= param 'dbname' %><% end %>
 
 <div class="box">
-<b>Query :</b><br />
-<%= $query %>
+  <b>Query :</b><br />
+  <div class="sql sql-largesize">
+    <%= $query %>
+  </div>
 </div>
 
 

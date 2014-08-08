@@ -201,3 +201,28 @@ table.tablesorter thead tr .headerSortUp {
 table.tablesorter thead tr .headerSortDown {
   background-image: url(/img/desc.gif);
 }
+
+/* SQL beautifier
+--------------------------------------------------- */
+.sql {
+  font-family:monospace;
+  background-color: #ffffff;
+  color: #000000;
+  padding: 5px;
+}
+.sql .imp {font-weight: bold; color: red;}
+.sql .kw1 {color: #993333; font-weight: bold; text-transform: uppercase;}
+.sql .kw2 {color: #993333; font-style: italic;}
+.sql .kw3 {color: #993333; text-transform: uppercase;}
+.sql .co1 {color: #808080; font-style: italic;}
+.sql .co2 {color: #808080; font-style: italic;}
+.sql .coMULTI {color: #808080; font-style: italic;}
+.sql .es0 {color: #000099; font-weight: bold;}
+.sql .br0 {color: #66cc66;}
+.sql .sy0 {color: #000000;}
+.sql .st0 {color: #ff0000;}
+.sql .nu0 {color: #cc66cc;}
+.sql span.xtra { display:block; }
+.sql-smallsize  {width: 450px; }
+.sql-middlesize  {width: 650px; }
+.sql-largesize  {width: 100%; }

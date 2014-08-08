@@ -131,6 +131,14 @@ $(document).ready(function () {
     $('#sel_custom').click();
   });
 
+  $('.sql').dblclick(function () {
+    if (this.style == undefined || this.style.whiteSpace == 'pre') {
+      this.style.whiteSpace ='normal';
+    } else {
+      this.style.whiteSpace = 'pre';
+    }
+  });
+
   /* by default, display data from the last hour */
   if ($('#todatepick').length != 0){
     var _date = new Date();
