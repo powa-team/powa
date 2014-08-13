@@ -86,7 +86,7 @@ DECLARE
   funcname text;
 BEGIN
     -- For all snapshot functions in the powa_functions table, execute
-    FOR funcname IN SELECT function_name 
+    FOR funcname IN SELECT function_name
                  FROM powa_functions
                  WHERE operation='snapshot' LOOP
       -- Call all of them, with no parameter
@@ -136,7 +136,7 @@ BEGIN
                         WHERE powa_statements.md5query = md5(a.rolname||d.datname||s.query));
 
     INSERT INTO powa_statements_history_current
-    SELECT md5(rolname||datname||query), 
+    SELECT md5(rolname||datname||query),
            ROW(now(),sum(calls),sum(total_time),sum(rows),sum(shared_blks_hit),sum(shared_blks_read),
                  sum(shared_blks_dirtied),sum(shared_blks_written),sum(local_blks_hit),sum(local_blks_read),
                  sum(local_blks_dirtied),sum(local_blks_written),sum(temp_blks_read),sum(temp_blks_written),
@@ -185,7 +185,7 @@ BEGIN
             SELECT psh.md5query, psh.coalesce_range, unnest(records) AS records
             FROM powa_statements_history psh
             WHERE coalesce_range && tstzrange(ts_start,ts_end,'[]') OR coalesce_range is null
-        ) AS unnested 
+        ) AS unnested
         WHERE tstzrange(ts_start,ts_end,'[]') @> (records).ts
         UNION ALL
         SELECT powa_statements_history_current.md5query, (powa_statements_history_current.record).*
@@ -358,7 +358,7 @@ BEGIN
             FROM powa_statements_history psh
             WHERE ( coalesce_range && tstzrange(ts_start,ts_end,'[]') OR coalesce_range is null )
             AND psh.md5query IN (SELECT powa_statements.md5query FROM powa_statements WHERE powa_statements.dbname=pdbname)
-        ) AS unnested 
+        ) AS unnested
         WHERE tstzrange(ts_start,ts_end,'[]') @> (records).ts
         UNION ALL
         SELECT powa_statements_history_current.md5query,(powa_statements_history_current.record).*
