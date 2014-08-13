@@ -61,6 +61,11 @@ CREATE TABLE powa_statements_history (
 
 CREATE INDEX powa_statements_history_query_ts ON powa_statements_history USING gist (md5query,coalesce_range);
 
+CREATE TABLE powa_statements_history_current (
+    md5query text,
+    record powa_statement_history_record
+);
+
 CREATE SEQUENCE powa_coalesce_sequence INCREMENT BY 1
   START WITH 1
   CYCLE;
@@ -130,12 +135,12 @@ BEGIN
                          FROM powa_statements
                         WHERE powa_statements.md5query = md5(a.rolname||d.datname||s.query));
 
-    INSERT INTO powa_statements_history
-    SELECT md5(rolname||datname||query), NULL,
-           ARRAY[ROW(now(),sum(calls),sum(total_time),sum(rows),sum(shared_blks_hit),sum(shared_blks_read),
+    INSERT INTO powa_statements_history_current
+    SELECT md5(rolname||datname||query), 
+           ROW(now(),sum(calls),sum(total_time),sum(rows),sum(shared_blks_hit),sum(shared_blks_read),
                  sum(shared_blks_dirtied),sum(shared_blks_written),sum(local_blks_hit),sum(local_blks_read),
                  sum(local_blks_dirtied),sum(local_blks_written),sum(temp_blks_read),sum(temp_blks_written),
-                 sum(blk_read_time),sum(blk_write_time))::powa_statement_history_record]
+                 sum(blk_read_time),sum(blk_write_time))::powa_statement_history_record
       FROM pg_stat_statements
       JOIN pg_authid ON (pg_stat_statements.userid=pg_authid.oid)
       JOIN pg_database ON (pg_stat_statements.dbid=pg_database.oid)
@@ -156,18 +161,14 @@ $PROC$ LANGUAGE plpgsql;
 CREATE OR REPLACE FUNCTION powa_statements_aggregate() RETURNS void AS $PROC$
 BEGIN
     RAISE DEBUG 'running powa_statements_aggregate';
-    WITH
-    source AS (
-        DELETE FROM powa_statements_history
-         WHERE coalesce_range IS NULL
-        RETURNING *
-    )
+    LOCK TABLE powa_statements_history_current IN SHARE MODE; -- prevent any other update
     INSERT INTO powa_statements_history
-    SELECT md5query,
-           tstzrange(min((records).ts), max((records).ts),'[]'),
-           array_agg(records)
-      FROM (SELECT md5query, unnest(records) AS records FROM source) AS tmp
+      SELECT md5query,
+           tstzrange(min((record).ts), max((record).ts),'[]'),
+           array_agg(record)
+      FROM powa_statements_history_current
      GROUP BY md5query;
+    TRUNCATE powa_statements_history_current;
 END;
 $PROC$ LANGUAGE plpgsql;
 
@@ -184,7 +185,12 @@ BEGIN
             SELECT psh.md5query, psh.coalesce_range, unnest(records) AS records
             FROM powa_statements_history psh
             WHERE coalesce_range && tstzrange(ts_start,ts_end,'[]') OR coalesce_range is null
-        ) AS unnested where tstzrange(ts_start,ts_end,'[]') @> (records).ts
+        ) AS unnested 
+        WHERE tstzrange(ts_start,ts_end,'[]') @> (records).ts
+        UNION ALL
+        SELECT powa_statements_history_current.md5query, (powa_statements_history_current.record).*
+        FROM powa_statements_history_current
+        WHERE tstzrange(ts_start,ts_end,'[]') @> (record).ts
     ),
     statements_history_differential AS (
         SELECT sh.md5query, sh.ts, ps.query, ps.dbname,
@@ -220,16 +226,24 @@ AS $function$
 BEGIN
     RETURN QUERY
     WITH statements_history AS (
-        SELECT row_number() over (order by (unnested.records).ts) as number, (unnested.records).*
+        SELECT (unnested.records).*
         FROM (
             SELECT psh.coalesce_range, unnest(records) AS records
             FROM powa_statements_history psh
             WHERE md5query=pmd5query
             AND (coalesce_range && tstzrange(ts_start, ts_end,'[]') OR coalesce_range is null)
         ) AS unnested
-        where tstzrange(ts_start, ts_end,'[]') @> (records).ts
+        WHERE tstzrange(ts_start, ts_end,'[]') @> (records).ts
+        UNION ALL
+        SELECT (record).*
+        FROM powa_statements_history_current
+        WHERE tstzrange(ts_start, ts_end,'[]') @> (record).ts
     ),
-    sampled_statements_history AS ( SELECT * FROM statements_history WHERE number % (int8larger((SELECT count(*) FROM statements_history)/(samples+1),1) )=0 ),
+    statements_history_number AS (
+        SELECT row_number() over (order by statements_history.ts) as number, *
+        FROM statements_history
+    ),
+    sampled_statements_history AS ( SELECT * FROM statements_history_number WHERE number % (int8larger((SELECT count(*) FROM statements_history)/(samples+1),1) )=0 ),
 
     statements_history_differential AS (
         SELECT  sh.ts,
@@ -265,7 +279,7 @@ AS $function$
 BEGIN
     RETURN QUERY
     WITH db_statements_history AS (
-        SELECT dense_rank() over (order by (unnested.records).ts) as number, (unnested.records).*
+        SELECT (records).*
         FROM (
             SELECT psh.coalesce_range, unnest(records) AS records
             FROM powa_statements_history psh
@@ -273,9 +287,17 @@ BEGIN
             WHERE dbname = p_datname
             AND (coalesce_range && tstzrange(ts_start, ts_end,'[]') OR coalesce_range is null)
         ) AS unnested
-        where tstzrange(ts_start, ts_end,'[]') @> (records).ts
+        WHERE tstzrange(ts_start, ts_end,'[]') @> (records).ts
+        UNION ALL
+        SELECT (record).*
+        FROM powa_statements_history_current
+        WHERE tstzrange(ts_start, ts_end,'[]') @> (record).ts
     ),
-    sampled_db_statements_history AS ( SELECT * FROM db_statements_history WHERE number % (int8larger((SELECT max(number) FROM db_statements_history)/(samples+1),1) )=0 ),
+    db_statements_history_ranked AS (
+        SELECT dense_rank() over (order by db_statements_history.ts) as number, *
+        FROM db_statements_history
+    ),
+    sampled_db_statements_history AS ( SELECT * FROM db_statements_history_ranked WHERE number % (int8larger((SELECT max(number) FROM db_statements_history_ranked)/(samples+1),1) )=0 ),
     grouped_db_statements_history AS (
       SELECT sum(s.calls)::bigint as calls,
              sum(s.total_time)::bigint as total_time,
@@ -336,7 +358,12 @@ BEGIN
             FROM powa_statements_history psh
             WHERE ( coalesce_range && tstzrange(ts_start,ts_end,'[]') OR coalesce_range is null )
             AND psh.md5query IN (SELECT powa_statements.md5query FROM powa_statements WHERE powa_statements.dbname=pdbname)
-        ) AS unnested where tstzrange(ts_start,ts_end,'[]') @> (records).ts
+        ) AS unnested 
+        WHERE tstzrange(ts_start,ts_end,'[]') @> (records).ts
+        UNION ALL
+        SELECT powa_statements_history_current.md5query,(powa_statements_history_current.record).*
+        FROM powa_statements_history_current
+        WHERE tstzrange(ts_start,ts_end,'[]') @> (record).ts
     )
     SELECT s.md5query,
     s.query,
@@ -360,6 +387,7 @@ CREATE OR REPLACE FUNCTION public.powa_stats_reset()
 AS $function$
 BEGIN
     TRUNCATE TABLE powa_statements_history;
+    TRUNCATE TABLE powa_statements_history_current;
     TRUNCATE TABLE powa_statements;
     RETURN true;
 END
