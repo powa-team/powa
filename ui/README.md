@@ -11,9 +11,8 @@ Prerequisites
 The versions showed have been tested, it may work with older versions
 
 * Perl 5.10
-* Mojolicious 2.98
-* Mojolicious::Plugin::I18N
-* PostgreSQL 9.2
+* Mojolicious 4.75
+* PostgreSQL 9.3
 * A CGI/Perl webserver
 
 Install
