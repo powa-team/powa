@@ -8,7 +8,9 @@ body {
 }
 
 #main-title {
-    color: #D2D2D2;
+    text-indent: -9999px;
+    background: url(../img/powa-logo-white.png) no-repeat;
+    display: block;
 }
 
 /* Box
