@@ -1,6 +1,6 @@
 ## 1.1 (2014-08-18)
 
-** POWA is now production ready**
+**POWA is now production ready**
 
 Features:
 
@@ -19,7 +19,7 @@ Bug fixes:
 
 ## 1.0 (2014-06-13)
 
-** Hello World ! This is the first public release of POWA **
+**Hello World ! This is the first public release of POWA**
 
 Features:
 
