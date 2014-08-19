@@ -318,7 +318,7 @@ sub querydata {
     $section_h = 'Shared blocks' if ( $section eq 'SHA' );
     $section_h = 'Local blocks' if ( $section eq 'LOC' );
     $section_h = 'Temporary blocks' if ( $section eq 'TMP' );
-    $section_h = 'Read and write' if ( $section eq 'TIM' );
+    $section_h = 'Read / write time' if ( $section eq 'TIM' );
     my $properties = {};
     $properties->{legend}{show} = $json->false;
     $properties->{legend}{position} = "ne";
