@@ -13,15 +13,15 @@ Installation
 - Make sure you have installed and configured pg_stat_statements
 - create a dedicated database (powa for instance)
 - create extension powa in this databse
-- add "powa" in the shared_preload_libraries
-- configure guc
+- add "powa" in the shared_preload_libraries in postgresql.conf (you should already have configured "pg_stat_statements")
+- configure GUC in postgresql.conf (see the §Configuration below)
 - restart instance
 
 Configuration:
 ------------------------
 
 
-Here are the configuration parameters:
+Here are the configuration parameters (GUC) available:
 
 * powa.frequency : Defines the frequency of the snapshots. Minimum 5s. You can use the usual postgresql time abbreviations. If not specified, the unit is seconds. Defaults to 5 minutes.
 

@@ -25,6 +25,9 @@ Install other prerequisites: Mojolicious is available on CPAN and
 sometimes packages, for example the package in Debian is
 `libmojolicious-perl`
 
+If the needed version is not available anymore on you distribution, you can
+download Mojolicious 4.75 [here](http://backpan.perl.org/authors/id/S/SR/SRI/Mojolicious-4.75.tar.gz).
+
 Copy `powa.conf-dist` to `powa.conf` and edit it.
 
 To quickly run the UI, do not activate `rewrite` in the config (this
