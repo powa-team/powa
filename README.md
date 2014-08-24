@@ -65,7 +65,7 @@ For more details, please read : http://pgsnaga.blogspot.fr/2011/10/performance-i
 
 - And finally the POWA GUI will have an impact too if you run it on the PostgreSQL instance, but it really depends on many user will have access to it.
 
-All in all, we strongly feel that the performance impact of POWA is nothing compared to being in the dark and not knowing what is running on your database. It's also much lower than enabling `log_statement_min_duration = 0` of course.
+All in all, we strongly feel that the performance impact of POWA is nothing compared to being in the dark and not knowing what is running on your database. 
 
 
 
