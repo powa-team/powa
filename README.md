@@ -52,3 +52,20 @@ Set up the UI:
 
 Read [ui/README.md](https://github.com/dalibo/powa/blob/master/ui/README.md).
 
+
+Impact on performances
+---------------------------
+
+Using POWA will have a small negative impact on your PostgreSQL server performances. It is hard to evaluate precisely this impact but we can analyze it in 3 parts :
+
+- First of all, you need to activate the `pg_stat_statements` module. This module itself may slow down your instance, but some benchmarks show that the impact is not that big. 
+For more details, please read : http://pgsnaga.blogspot.fr/2011/10/performance-impact-of-pgstatstatements.html 
+
+- Second, the POWA collector should have a very low impact, but of course that depends on the frequency at which you collect data. If you do it every 5 seconds, you'll definitely see something. At 5 minutes, the impact should be minimal. 
+
+- And finally the POWA GUI will have an impact too if you run it on the PostgreSQL instance, but it really depends on many user will have access to it.
+
+All in all, we strongly feel that the performance impact of POWA is nothing compared to being in the dark and not knowing what is running on your database. It's also much lower than enabling `log_statement_min_duration = 0` of course.
+
+
+
