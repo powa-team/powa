@@ -105,6 +105,7 @@ sub dbdata_agg {
     my $from = $self->param("from");
     my $to   = $self->param("to");
     my $json = Mojo::JSON->new;
+    my $section_h;
     my $sql;
 
     my $section = substr $id, 0, 4;
@@ -164,10 +165,14 @@ sub dbdata_agg {
     }
 
     $dbh->disconnect();
+
+    $section_h = 'Calls' if ( $section eq "call" );
+    $section_h = 'Blocks' if ( $section eq "blks" );
+
     my $properties = {};
     $properties->{legend}{show} = $json->false;
     $properties->{legend}{position} = "ne";
-    $properties->{title} = "POWA - $section";
+    $properties->{title} = "POWA : $section_h (on database $dbname)";
     if ( $section eq "call" ){
         $properties->{yaxis}{unit} = 'ms';
     } else {
@@ -193,10 +198,17 @@ sub querydata {
     my $from = $self->param("from");
     my $to   = $self->param("to");
     my $json = Mojo::JSON->new;
+    my $dbname;
+    my $section_h;
     my $sql;
 
     my $section = substr $id, 0, 3;
     my $md5query = substr $id, 3;
+
+    $sql = $dbh->prepare("SELECT dbname FROM powa_statements WHERE md5query = ?");
+    $sql->execute( $md5query );
+    $dbname = $sql->fetchrow();
+    $sql->finish();
 
     my $tmp = "";
     my $blksize = ", (SELECT current_setting('block_size')::numeric AS blksize) setting";
@@ -301,10 +313,16 @@ sub querydata {
         }
 
     $dbh->disconnect();
+
+    $section_h = 'General' if ( $section eq 'GEN' );
+    $section_h = 'Shared blocks' if ( $section eq 'SHA' );
+    $section_h = 'Local blocks' if ( $section eq 'LOC' );
+    $section_h = 'Temporary blocks' if ( $section eq 'TMP' );
+    $section_h = 'Read / write time' if ( $section eq 'TIM' );
     my $properties = {};
     $properties->{legend}{show} = $json->false;
     $properties->{legend}{position} = "ne";
-    $properties->{title} = "POWA $section";
+    $properties->{title} = "POWA : $section_h (on database $dbname)";
     if ($section eq "GEN"){
         $properties->{yaxis}{unit} = '';
     } elsif ($section eq "TIM"){

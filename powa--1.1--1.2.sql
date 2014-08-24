@@ -9,75 +9,64 @@ SET client_min_messages = warning;
 SET escape_string_warning = off;
 SET search_path = public, pg_catalog;
 
-CREATE TYPE powa_statement_history_record AS (
-    ts timestamp with time zone,
-    calls bigint,
-    total_time double precision,
-    rows bigint,
-    shared_blks_hit bigint,
-    shared_blks_read bigint,
-    shared_blks_dirtied bigint,
-    shared_blks_written bigint,
-    local_blks_hit bigint,
-    local_blks_read bigint,
-    local_blks_dirtied bigint,
-    local_blks_written bigint,
-    temp_blks_read bigint,
-    temp_blks_written bigint,
-    blk_read_time double precision,
-    blk_write_time double precision
-);
+-- We need to block these two tables to calculate aggregates and have no surprise when the upgrade finishes
+LOCK TABLE powa_statements_history;
+LOCK TABLE powa_statements_history_current;
 
-CREATE TABLE powa_last_aggregation (
-    aggts timestamp with time zone
-);
-
-INSERT INTO powa_last_aggregation(aggts) VALUES (current_timestamp);
-
-CREATE TABLE powa_last_purge (
-    purgets timestamp with time zone
-);
-
-INSERT INTO powa_last_purge (purgets) VALUES (current_timestamp);
-
-CREATE TABLE powa_statements (
-    md5query text NOT NULL,
-    rolname text NOT NULL,
-    dbname text NOT NULL,
-    query text NOT NULL
-);
-
-ALTER TABLE ONLY powa_statements
-    ADD CONSTRAINT powa_statements_pkey PRIMARY KEY (md5query);
-
-CREATE INDEX powa_statements_dbname_idx ON powa_statements(dbname);
-
-
-CREATE TABLE powa_statements_history (
-    md5query text,
+CREATE TABLE powa_statements_history_db (
+    dbname text,
     coalesce_range tstzrange,
     records powa_statement_history_record[]
 );
 
-CREATE INDEX powa_statements_history_query_ts ON powa_statements_history USING gist (md5query,coalesce_range);
+WITH unnested AS (
+    SELECT dbname, coalesce_range, unnest(records) as record
+    FROM powa_statements_history
+    JOIN powa_statements USING (md5query)
+   ),
+   aggregated AS (
+    SELECT dbname, coalesce_range,
+    ROW((record).ts,sum((record).calls),sum((record).total_time),sum((record).rows),sum((record).shared_blks_hit),sum((record).shared_blks_read),
+                    sum((record).shared_blks_dirtied),sum((record).shared_blks_written),sum((record).local_blks_hit),sum((record).local_blks_read),
+                    sum((record).local_blks_dirtied),sum((record).local_blks_written),sum((record).temp_blks_read),sum((record).temp_blks_written),
+                    sum((record).blk_read_time),sum((record).blk_write_time))::powa_statement_history_record as record
+    FROM unnested
+    GROUP BY dbname, coalesce_range, (record).ts
+    )
+INSERT INTO powa_statements_history_db
+ SELECT dbname, coalesce_range, array_agg(record)
+ FROM aggregated
+ GROUP BY dbname, coalesce_range;
 
-CREATE TABLE powa_statements_history_current (
-    md5query text,
+CREATE INDEX powa_statements_history_db_ts ON powa_statements_history_db USING gist (dbname,coalesce_range);
+
+CREATE TABLE powa_statements_history_current_db (
+    dbname text,
     record powa_statement_history_record
 );
 
-CREATE SEQUENCE powa_coalesce_sequence INCREMENT BY 1
-  START WITH 1
-  CYCLE;
+-- A bit complicated, unnecessarily, just to be kept consistent with the one for coalesced records
+WITH last_stats AS (
+    SELECT dbname, record
+    FROM powa_statements_history_current
+    JOIN powa_statements USING (md5query)
+   ),
+   aggregated AS (
+    SELECT dbname,
+    ROW((record).ts,sum((record).calls),sum((record).total_time),sum((record).rows),sum((record).shared_blks_hit),sum((record).shared_blks_read),
+                    sum((record).shared_blks_dirtied),sum((record).shared_blks_written),sum((record).local_blks_hit),sum((record).local_blks_read),
+                    sum((record).local_blks_dirtied),sum((record).local_blks_written),sum((record).temp_blks_read),sum((record).temp_blks_written),
+                    sum((record).blk_read_time),sum((record).blk_write_time))::powa_statement_history_record as record
+    FROM last_stats
+    GROUP BY dbname, (record).ts
+    )
+INSERT INTO powa_statements_history_current_db
+ SELECT dbname, record
+ FROM aggregated;
 
 
-CREATE TABLE powa_functions (
-    operation TEXT,
-    function_name TEXT,
-    CHECK (operation IN ('snapshot','aggregate','purge'))
-);
+-- Recreate all functions. Pasted from the 1.2 script
 
-INSERT INTO powa_functions VALUES ('snapshot','powa_take_statements_snapshot'),('aggregate','powa_statements_aggregate'),('purge','powa_statements_purge');
 
 CREATE OR REPLACE FUNCTION powa_take_snapshot() RETURNS void AS $PROC$
 DECLARE
@@ -124,27 +113,52 @@ $PROC$ LANGUAGE plpgsql;
 
 CREATE OR REPLACE FUNCTION powa_take_statements_snapshot() RETURNS void AS $PROC$
 DECLARE
+    result boolean;
+    ignore_regexp text:='^[[:space:]]*(DEALLOCATE|BEGIN)'; -- Ignore deallocate or begin at beginning of statement
 BEGIN
+    -- In this function, we capture statements, and also aggregate counters by database
+    -- so that the first screens of powa stay reactive even though there may be thousands
+    -- of different statements
     RAISE DEBUG 'running powa_take_statements_snapshot';
-    INSERT INTO powa_statements (md5query,rolname,dbname,query)
-    SELECT DISTINCT  md5(rolname||datname||query),rolname,datname,query
-      FROM pg_stat_statements s
-      JOIN pg_authid a ON (s.userid=a.oid)
-      JOIN pg_database d ON (s.dbid=d.oid)
-     WHERE NOT EXISTS (SELECT 1
-                         FROM powa_statements
-                        WHERE powa_statements.md5query = md5(a.rolname||d.datname||s.query));
+    WITH capture AS(
+            SELECT rolname, datname, pg_stat_statements.*
+            FROM pg_stat_statements
+            JOIN pg_authid ON (pg_stat_statements.userid=pg_authid.oid)
+            JOIN pg_database ON (pg_stat_statements.dbid=pg_database.oid)
+            WHERE pg_stat_statements.query !~* ignore_regexp
+         ),
+         missing_statements AS(
+             INSERT INTO powa_statements (md5query,rolname,dbname,query)
+               SELECT DISTINCT md5(rolname||datname||query),rolname,datname,query
+               FROM capture
+               WHERE NOT EXISTS (SELECT 1
+                                 FROM powa_statements
+                                 WHERE powa_statements.md5query = md5(rolname||datname||query))
 
-    INSERT INTO powa_statements_history_current
-    SELECT md5(rolname||datname||query),
-           ROW(now(),sum(calls),sum(total_time),sum(rows),sum(shared_blks_hit),sum(shared_blks_read),
-                 sum(shared_blks_dirtied),sum(shared_blks_written),sum(local_blks_hit),sum(local_blks_read),
-                 sum(local_blks_dirtied),sum(local_blks_written),sum(temp_blks_read),sum(temp_blks_written),
-                 sum(blk_read_time),sum(blk_write_time))::powa_statement_history_record
-      FROM pg_stat_statements
-      JOIN pg_authid ON (pg_stat_statements.userid=pg_authid.oid)
-      JOIN pg_database ON (pg_stat_statements.dbid=pg_database.oid)
-     GROUP BY md5(rolname||datname||query),now();
+         ),
+         by_query AS (
+
+            INSERT INTO powa_statements_history_current
+              SELECT md5(rolname||datname||query),
+                     ROW(now(),sum(calls),sum(total_time),sum(rows),sum(shared_blks_hit),sum(shared_blks_read),
+                        sum(shared_blks_dirtied),sum(shared_blks_written),sum(local_blks_hit),sum(local_blks_read),
+                        sum(local_blks_dirtied),sum(local_blks_written),sum(temp_blks_read),sum(temp_blks_written),
+                        sum(blk_read_time),sum(blk_write_time))::powa_statement_history_record AS record
+              FROM capture
+              GROUP BY md5(rolname||datname||query),now()
+         ),
+         by_database AS (
+
+            INSERT INTO powa_statements_history_current_db
+              SELECT datname,
+                     ROW(now(),sum(calls),sum(total_time),sum(rows),sum(shared_blks_hit),sum(shared_blks_read),
+                        sum(shared_blks_dirtied),sum(shared_blks_written),sum(local_blks_hit),sum(local_blks_read),
+                        sum(local_blks_dirtied),sum(local_blks_written),sum(temp_blks_read),sum(temp_blks_written),
+                        sum(blk_read_time),sum(blk_write_time))::powa_statement_history_record AS record
+              FROM capture
+              GROUP BY datname,now()
+        )
+        SELECT true::boolean INTO result; -- For now we don't care. What could we do on error except crash anyway?
 END;
 $PROC$ language plpgsql;
 
@@ -153,7 +167,7 @@ BEGIN
     RAISE DEBUG 'running powa_statements_purge';
     -- Delete obsolete datas. We only bother with already coalesced data
     DELETE FROM powa_statements_history WHERE upper(coalesce_range)< (now() - current_setting('powa.retention')::interval);
-    -- Update last purge timestamp
+    DELETE FROM powa_statements_history_db WHERE upper(coalesce_range)< (now() - current_setting('powa.retention')::interval);
     -- FIXME maybe we should cleanup the powa_statements table ? But it will take a while: unnest all records...
 END;
 $PROC$ LANGUAGE plpgsql;
@@ -161,6 +175,7 @@ $PROC$ LANGUAGE plpgsql;
 CREATE OR REPLACE FUNCTION powa_statements_aggregate() RETURNS void AS $PROC$
 BEGIN
     RAISE DEBUG 'running powa_statements_aggregate';
+    -- aggregate statements table
     LOCK TABLE powa_statements_history_current IN SHARE MODE; -- prevent any other update
     INSERT INTO powa_statements_history
       SELECT md5query,
@@ -169,7 +184,16 @@ BEGIN
       FROM powa_statements_history_current
      GROUP BY md5query;
     TRUNCATE powa_statements_history_current;
-END;
+    -- aggregate db table
+    LOCK TABLE powa_statements_history_current_db IN SHARE MODE; -- prevent any other update
+    INSERT INTO powa_statements_history_db
+      SELECT dbname,
+           tstzrange(min((record).ts), max((record).ts),'[]'),
+           array_agg(record)
+      FROM powa_statements_history_current_db
+     GROUP BY dbname;
+    TRUNCATE powa_statements_history_current_db;
+ END;
 $PROC$ LANGUAGE plpgsql;
 
 CREATE OR REPLACE FUNCTION powa_getstatdata (IN ts_start timestamptz, IN ts_end timestamptz)
@@ -278,47 +302,27 @@ CREATE OR REPLACE FUNCTION public.powa_getstatdata_sample_db(ts_start timestamp 
 AS $function$
 BEGIN
     RETURN QUERY
-    WITH db_statements_history AS (
-        SELECT (records).*
+    WITH statements_history AS (
+        SELECT (unnested.records).*
         FROM (
             SELECT psh.coalesce_range, unnest(records) AS records
-            FROM powa_statements_history psh
-            JOIN powa_statements ps ON (ps.md5query = psh.md5query)
-            WHERE dbname = p_datname
+            FROM powa_statements_history_db psh
+            WHERE dbname=p_datname
             AND (coalesce_range && tstzrange(ts_start, ts_end,'[]') OR coalesce_range is null)
         ) AS unnested
         WHERE tstzrange(ts_start, ts_end,'[]') @> (records).ts
         UNION ALL
         SELECT (record).*
-        FROM powa_statements_history_current
+        FROM powa_statements_history_current_db
         WHERE tstzrange(ts_start, ts_end,'[]') @> (record).ts
     ),
-    db_statements_history_ranked AS (
-        SELECT dense_rank() over (order by db_statements_history.ts) as number, *
-        FROM db_statements_history
+    statements_history_number AS (
+        SELECT row_number() over (order by statements_history.ts) as number, *
+        FROM statements_history
     ),
-    sampled_db_statements_history AS ( SELECT * FROM db_statements_history_ranked WHERE number % (int8larger((SELECT max(number) FROM db_statements_history_ranked)/(samples+1),1) )=0 ),
-    grouped_db_statements_history AS (
-      SELECT sum(s.calls)::bigint as calls,
-             sum(s.total_time)::bigint as total_time,
-             s.ts,
-             sum(s.rows)::bigint as rows,
-             sum(s.shared_blks_read)::bigint as shared_blks_read,
-             sum(s.shared_blks_hit)::bigint as shared_blks_hit,
-             sum(s.shared_blks_dirtied)::bigint as shared_blks_dirtied,
-             sum(s.shared_blks_written)::bigint as shared_blks_written,
-             sum(s.local_blks_read)::bigint as local_blks_read,
-             sum(s.local_blks_hit)::bigint as local_blks_hit,
-             sum(s.local_blks_dirtied)::bigint as local_blks_dirtied,
-             sum(s.local_blks_written)::bigint as local_blks_written,
-             sum(s.temp_blks_read)::bigint as temp_blks_read,
-             sum(s.temp_blks_written)::bigint as temp_blks_written,
-             sum(s.blk_read_time)::bigint as blk_read_time,
-             sum(s.blk_write_time)::bigint as blk_write_time
-             FROM sampled_db_statements_history s
-             GROUP BY s.ts
-    ),
-    db_statements_history_differential AS (
+    sampled_statements_history AS ( SELECT * FROM statements_history_number WHERE number % (int8larger((SELECT count(*) FROM statements_history)/(samples+1),1) )=0 ),
+
+    statements_history_differential AS (
         SELECT  sh.ts,
         int8larger(lead(calls) over (querygroup) - calls,0) calls,
         float8larger(lead(total_time) over (querygroup) - total_time,0) runtime,
@@ -336,11 +340,11 @@ BEGIN
         int8larger(lead(sh.temp_blks_written) over (querygroup) - sh.temp_blks_written,0) temp_blks_written,
         float8larger(lead(sh.blk_read_time) over (querygroup) - sh.blk_read_time,0) blk_read_time,
         float8larger(lead(sh.blk_write_time) over (querygroup) - sh.blk_write_time,0) blk_write_time
-        FROM grouped_db_statements_history sh
+        FROM sampled_statements_history sh
         WINDOW querygroup AS (ORDER BY sh.ts)
     )
 
-    SELECT * FROM db_statements_history_differential WHERE calls IS NOT NULL;
+    SELECT * FROM statements_history_differential WHERE calls IS NOT NULL;
 END
 $function$
 ;
@@ -388,6 +392,8 @@ AS $function$
 BEGIN
     TRUNCATE TABLE powa_statements_history;
     TRUNCATE TABLE powa_statements_history_current;
+    TRUNCATE TABLE powa_statements_history_db;
+    TRUNCATE TABLE powa_statements_history_current_db;
     TRUNCATE TABLE powa_statements;
     RETURN true;
 END

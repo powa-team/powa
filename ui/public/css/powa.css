@@ -10,6 +10,7 @@ body {
 #main-title {
     text-indent: -9999px;
     background: url(../img/powa-logo-white.png) no-repeat;
+    height: 45px;
     display: block;
 }
 

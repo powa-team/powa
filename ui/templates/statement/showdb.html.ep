@@ -51,67 +51,38 @@
 </div>
 
 <div class="row container-fluid">
-  <div class="graph_container col-md-6" data-graphid="call_<%= stash 'dbname' %>"
-    data-graphurl="<%= url_for('statement_dbdata_agg') %>">
-    <div class="grapher-header row-fluid" style="margin-bottom: 5px">
-      <span></span>
-      <div class="pull-right">
-        <div class="btn-toolbar" role="toolbar">
-          <div class="btn-group">
-            <a href="#" data-graphrole="offon-series"
-              class="btn btn-default btn-xs"
-              title="Show/Hide series"
-              ><i class="glyphicon glyphicon-eye-open"></i></a>
-            <a href="#" data-graphrole="invert-series"
-              class="btn btn-default btn-xs"
-              title="Invert Sel."
-              ><i class="glyphicon glyphicon-eye-close"></i></a>
-            <a href="#" data-graphrole="export-graph"
-              class="btn btn-default btn-xs save"
-              title="Save"
-              ><i class="glyphicon glyphicon-download-alt"></i></a>
-          </div>
+  <% foreach my $section ('call','blks') { %>
+    <div class="graph_container col-md-6" data-graphid="<%= $section %>_<%= stash 'dbname' %>"
+      data-graphurl="<%= url_for('statement_dbdata_agg') %>">
+      <div class="grapher-header row-fluid" style="margin-bottom: 5px">
+        <span></span>
+        <div class="pull-right">
+          <div class="btn-toolbar" role="toolbar">
+            <div class="btn-group">
+              <a href="#" data-graphrole="offon-series"
+                class="btn btn-default btn-xs"
+                title="Show/Hide series"
+                ><i class="glyphicon glyphicon-eye-open"></i></a>
+              <a href="#" data-graphrole="invert-series"
+                class="btn btn-default btn-xs"
+                title="Invert Sel."
+                ><i class="glyphicon glyphicon-eye-close"></i></a>
+              <a href="#" data-graphrole="export-graph"
+                class="btn btn-default btn-xs save"
+                title="Save"
+                ><i class="glyphicon glyphicon-download-alt"></i></a>
+            </div>
 
+          </div>
         </div>
       </div>
-    </div>
 
-    <div class="container-fluid">
-      <div data-graphrole="plot"></div>
-      <div class="graph-legend" data-graphrole="legend"></div>
-    </div>
-  </div>
-
-  <div class="graph_container col-md-6" data-graphid="blks_<%= stash 'dbname' %>"
-    data-graphurl="<%= url_for('statement_dbdata_agg') %>">
-    <div class="grapher-header row-fluid" style="margin-bottom: 5px">
-      <span></span>
-      <div class="pull-right">
-        <div class="btn-toolbar" role="toolbar">
-          <div class="btn-group">
-            <a href="#" data-graphrole="offon-series"
-              class="btn btn-default btn-xs"
-              title="Show/Hide series"
-              ><i class="glyphicon glyphicon-eye-open"></i></a>
-            <a href="#" data-graphrole="invert-series"
-              class="btn btn-default btn-xs"
-              title="Invert Sel."
-              ><i class="glyphicon glyphicon-eye-close"></i></a>
-            <a href="#" data-graphrole="export-graph"
-              class="btn btn-default btn-xs save"
-              title="Save"
-              ><i class="glyphicon glyphicon-download-alt"></i></a>
-          </div>
-
-        </div>
+      <div class="container-fluid">
+        <div data-graphrole="plot"></div>
+        <div class="graph-legend" data-graphrole="legend"></div>
       </div>
     </div>
-
-    <div class="container-fluid">
-      <div data-graphrole="plot"></div>
-      <div class="graph-legend" data-graphrole="legend"></div>
-    </div>
-  </div>
+  % }
 </div>
 
 <div class="row">
