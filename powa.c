@@ -27,6 +27,8 @@
 PG_MODULE_MAGIC;
 
 void _PG_init(void);
+void die_on_too_small_frequency(void);
+
 
 static bool got_sigterm = false;
 
@@ -35,9 +37,19 @@ static void powa_sigterm(SIGNAL_ARGS);
 static void powa_sighup(SIGNAL_ARGS);
 
 static int powa_frequency;
+static int min_powa_frequency=5000;
 static int powa_retention;
 static int powa_coalesce;
 static char *powa_database = NULL;
+
+void die_on_too_small_frequency(void)
+{
+	if (powa_frequency > 0 && powa_frequency < min_powa_frequency)
+        {
+            elog (LOG,"POWA frequency cannot be smaller than %i milliseconds",min_powa_frequency);
+            exit(1);
+        }
+}
 
 void
 _PG_init(void)
@@ -50,7 +62,7 @@ _PG_init(void)
                                                         NULL,
                                                         &powa_frequency,
                                                         300000,
-                                                        5000,
+                                                        -1,
                                                         INT_MAX/1000,
                                                         PGC_SUSET,
                                                         GUC_UNIT_MS,
@@ -94,7 +106,6 @@ _PG_init(void)
                                                         NULL,
                                                         NULL,
                                                         NULL);
-	
 	/* Register the worker processes */
 	worker.bgw_flags = BGWORKER_SHMEM_ACCESS|BGWORKER_BACKEND_DATABASE_CONNECTION;
 	worker.bgw_start_time = BgWorkerStart_RecoveryFinished; /* Must write to the database */
@@ -116,12 +127,23 @@ powa_main(Datum main_arg)
         static char* q2 = "SET application_name = 'POWA collector'";
 	instr_time begin;
 	instr_time end;
+        long time_to_wait;
 
+        die_on_too_small_frequency();
 	/* Set up signal handlers, then unblock signalsl */
 	pqsignal(SIGHUP, powa_sighup);
 	pqsignal(SIGTERM, powa_sigterm);
 
 	BackgroundWorkerUnblockSignals();
+
+        /* We only connect when powa_frequency >0. If not, powa has been deactivated */
+        if (powa_frequency < 0)
+        {
+            elog(LOG, "POWA is deactivated (powa.frequency = %i), exiting",powa_frequency);
+            exit(1);
+        }
+        // We got here: it means powa_frequency > 0. Let's connect
+
 
 	/* Connect to POWA database */
 	BackgroundWorkerInitializeConnection(powa_database, NULL);
@@ -141,6 +163,14 @@ powa_main(Datum main_arg)
 	   calculate a quite stable interval between each measure */
 	while (!got_sigterm)
 	{
+                /* We can get here with a new value of powa_frequency
+                   because of a reload. Let's suicide to disconnect
+                   if this value is <0 */
+                if (powa_frequency <0)
+                {
+                    elog(LOG, "POWA exits to disconnect from the database now");
+                    exit(1);
+                }
 		INSTR_TIME_SET_CURRENT(begin);
 		ResetLatch(&MyProc->procLatch);
 		StartTransactionCommand();
@@ -156,11 +186,12 @@ powa_main(Datum main_arg)
 		/* Wait powa.frequency, compensate for work time of last snapshot */
                 /* If we got off schedule (because of a compact or delete,
                    just do another operation right now */
-                if (powa_frequency-INSTR_TIME_GET_MILLISEC(end) >0)
+                time_to_wait=powa_frequency-INSTR_TIME_GET_MILLISEC(end);
+                if (time_to_wait >0)
                 {
 		     WaitLatch(&MyProc->procLatch,
 		                WL_LATCH_SET | WL_TIMEOUT | WL_POSTMASTER_DEATH,
-		                powa_frequency-INSTR_TIME_GET_MILLISEC(end));
+		                time_to_wait);
                 }
 	}
 	proc_exit(0);
@@ -182,5 +213,6 @@ powa_sighup(SIGNAL_ARGS)
 {
 	{
 		ProcessConfigFile(PGC_SIGHUP);
+                die_on_too_small_frequency();
 	}
 }

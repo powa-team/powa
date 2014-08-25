@@ -24,7 +24,7 @@ Configuration:
 
 Here are the configuration parameters (GUC) available:
 
-* `powa.frequency` : Defines the frequency of the snapshots. Minimum 5s. You can use the usual postgresql time abbreviations. If not specified, the unit is seconds. Defaults to 5 minutes.
+* `powa.frequency` : Defines the frequency of the snapshots. Minimum 5s. You can use the usual postgresql time abbreviations. If not specified, the unit is seconds. Defaults to 5 minutes. Setting it to -1 will disable powa (powa will still start, but it won't collect anything anymore, and wont connect to the database).
 
 * `powa.retention` : Automatically purge data older than that. If not specified, the unit is minutes. Defaults to 1 day.
 
