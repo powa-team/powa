@@ -24,7 +24,7 @@ Configuration:
 
 Here are the configuration parameters (GUC) available:
 
-* `powa.frequency` : Defines the frequency of the snapshots. Minimum 5s. You can use the usual postgresql time abbreviations. If not specified, the unit is seconds. Defaults to 5 minutes.
+* `powa.frequency` : Defines the frequency of the snapshots. Minimum 5s. You can use the usual postgresql time abbreviations. If not specified, the unit is seconds. Defaults to 5 minutes. Setting it to -1 will disable powa (powa will still start, but it won't collect anything anymore, and wont connect to the database).
 
 * `powa.retention` : Automatically purge data older than that. If not specified, the unit is minutes. Defaults to 1 day.
 
@@ -65,7 +65,7 @@ For more details, please read : http://pgsnaga.blogspot.fr/2011/10/performance-i
 
 - And finally the POWA GUI will have an impact too if you run it on the PostgreSQL instance, but it really depends on many user will have access to it.
 
-All in all, we strongly feel that the performance impact of POWA is nothing compared to being in the dark and not knowing what is running on your database. It's also much lower than enabling `log_statement_min_duration = 0` of course.
+All in all, we strongly feel that the performance impact of POWA is nothing compared to being in the dark and not knowing what is running on your database. 
 
 
 
