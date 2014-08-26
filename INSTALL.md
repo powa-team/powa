@@ -11,32 +11,38 @@ The following documentation describes the detailed installation steps to install
 Download PoWA from the website
 ------------------------------
 
-`wget https://github.com/dalibo/powa/archive/REL_1_1.zip`
-
+```
+wget https://github.com/dalibo/powa/archive/REL_1_1.zip
+```
 
 Unpack the downloaded file
 --------------------------
 
-`cd /usr/src`
-`unzip powa-REL_1_1.zip`
-
+```
+cd /usr/src
+unzip powa-REL_1_1.zip
+```
 
 Compile and install the software
 --------------------------------
 
 Before proceeding, be sure to have a compiler installed and the appropriate PostgreSQL development packages.
 
-`cd /usr/src/powa-REL_1_1`
-`make`
+```
+cd /usr/src/powa-REL_1_1
+make
+```
 
 If everything goes fine, you will have this kind of output :
 ```
 gcc -Wall -Wmissing-prototypes -Wpointer-arith -Wdeclaration-after-statement -Wendif-labels -Wmissing-format-attribute -Wformat-security -fno-strict-aliasing -fwrapv -fexcess-precision=standard -g -fpic -I. -I. -I/home/thomas/postgresql/postgresql-9.3.4/include/server -I/home/thomas/postgresql/postgresql-9.3.4/include/internal -D_GNU_SOURCE -I/usr/include/libxml2   -c -o powa.o powa.c
-  gcc -Wall -Wmissing-prototypes -Wpointer-arith -Wdeclaration-after-statement -Wendif-labels -Wmissing-format-attribute -Wformat-security -fno-strict-aliasing -fwrapv -fexcess-precision=standard -g -fpic -L/home/thomas/postgresql/postgresql-9.3.4/lib -Wl,--as-needed -Wl,-rpath,'/home/thomas/postgresql/postgresql-9.3.4/lib',--enable-new-dtags  -shared -o powa.so powa.o
+gcc -Wall -Wmissing-prototypes -Wpointer-arith -Wdeclaration-after-statement -Wendif-labels -Wmissing-format-attribute -Wformat-security -fno-strict-aliasing -fwrapv -fexcess-precision=standard -g -fpic -L/home/thomas/postgresql/postgresql-9.3.4/lib -Wl,--as-needed -Wl,-rpath,'/home/thomas/postgresql/postgresql-9.3.4/lib',--enable-new-dtags  -shared -o powa.so powa.o
 ```
 
 Install the software :
-`make install`
+```
+make install
+```
 
 It should output something like the following :
 ```
