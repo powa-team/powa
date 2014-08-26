@@ -10,6 +10,8 @@ PoWA requires PostgreSQL 9.3 or more.
 Installation
 --------------
 
+For a detailed installation procedure, please read [INSTALL.md](https://github.com/dalibo/powa/blob/master/INSTALL.md).
+
 - make install in the main directory
 - Make sure you have installed and configured `pg_stat_statements`
 - create a dedicated database (powa for instance)
