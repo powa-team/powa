@@ -57,7 +57,7 @@ It should output something like the following :
 ```
 
 
-Create a PoWA database and create requires extensions
+Create a PoWA database and create required extensions
 -----------------------------------------------------
 
 First, connect to PostgreSQL as administrator :
