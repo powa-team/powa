@@ -62,11 +62,15 @@ body {
   width: 45%;
 }
 
-.footer {
-    background-color: #fff;
+.global-footer {
     margin-top: 45px;
     padding: 35px 0 36px;
-    border-top: 1px solid #e5e5e5;
+    color: #ffffff;
+}
+
+.logo-small {
+  width: 100px;
+  height: 30px;
 }
 
 .footer p {

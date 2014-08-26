@@ -4,6 +4,9 @@ use Mojo::Base 'Mojolicious';
 # This program is open source, licensed under the PostgreSQL Licence.
 # For license terms, see the LICENSE file.
 
+use vars qw($VERSION);
+$VERSION = '1.2';
+
 # This method will run once at server start
 sub startup {
     my $self = shift;
