@@ -14,6 +14,9 @@ sub listdb {
     my $self = shift;
     my $dbh  = $self->database();
     my $sql;
+    my $base_timestamp = undef;
+
+    $base_timestamp = $self->config->{base_timestamp} if ( defined $self->config->{base_timestamp} );
 
     $sql = $dbh->prepare(
         "SELECT DISTINCT dbname FROM powa_statements ORDER BY dbname");
@@ -24,7 +27,7 @@ sub listdb {
     }
     $sql->finish();
 
-    $self->stash( databases => $databases );
+    $self->stash( 'base_timestamp' => $base_timestamp );
 
     $dbh->disconnect();
     $self->render();
@@ -65,6 +68,40 @@ sub showdbquery {
     $self->render();
 }
 
+sub listdbdata {
+    my $self = shift;
+    my $dbh  = $self->database();
+    my $from = $self->param("from");
+    my $to   = $self->param("to");
+    my $sql;
+
+    $from = substr $from, 0, -3;
+    $to = substr $to, 0, -3;
+    $sql = $dbh->prepare(
+        "SELECT datname, sum(total_calls), sum(total_runtime),
+            sum(total_blks_read), sum(total_blks_hit), count(query)
+        FROM (
+            SELECT datname, (powa_getstatdata_db(to_timestamp(?), to_timestamp(?), datname)).*
+            FROM pg_database
+        ) s
+        GROUP BY datname
+        ORDER BY sum(total_calls) DESC
+        "
+    );
+    $sql->execute($from,$to);
+
+    my $stats = [];
+    while ( my @row = $sql->fetchrow_array() ) {
+        push @{$stats}, {
+            row => \@row
+        };
+    }
+    $sql->finish();
+
+    $dbh->disconnect();
+    $self->render( json => { data => $stats });
+}
+
 sub dbdata {
     my $self = shift;
     my $dbh  = $self->database();
@@ -97,6 +134,110 @@ sub dbdata {
     $self->render( json => { data => $stats });
 }
 
+
+sub listdbdata_agg {
+    my $self = shift;
+    my $dbh  = $self->database();
+    my $id   = $self->param("id");
+    my $from = $self->param("from");
+    my $to   = $self->param("to");
+    my $json = Mojo::JSON->new;
+    my $section_h;
+    my $sql;
+
+    $from = substr $from, 0, -3;
+    $to = substr $to, 0, -3;
+
+    $sql = $dbh->prepare("SELECT DISTINCT dbname FROM powa_statements ORDER BY dbname");
+    $sql->execute();
+    my $datnames = $sql->fetchall_arrayref();
+    $sql->finish();
+
+    my $tmp;
+    my $groupby = "";
+    my $blksize = "";
+
+    # Handle case total_mesure_interval is 0 second to avoid division by zero error
+    my $total_mesure_interval = "CASE WHEN total_mesure_interval = '0 second' THEN '1 second'::interval ELSE total_mesure_interval END";
+
+    if ( $id eq "call") {
+        $tmp = "sum(total_runtime)/extract(epoch from $total_mesure_interval) as runtime";
+        $groupby = "GROUP BY ts,datname,total_mesure_interval";
+    } else {
+        $blksize = ", (SELECT current_setting('block_size')::numeric AS blksize) setting";
+        $tmp = "((shared_blks_read+local_blks_read+temp_blks_read)*blksize)/extract(epoch from $total_mesure_interval) as total_blks_read,
+            ((shared_blks_hit+local_blks_hit)*blksize)/extract(epoch from $total_mesure_interval) as total_blks_hit";
+    }
+
+    $sql = $dbh->prepare(
+        "SELECT (extract(epoch FROM ts)*1000)::bigint, datname,
+            $tmp
+        FROM (
+            SELECT datname,(powa_getstatdata_sample_db(to_timestamp(?), to_timestamp(?), datname, 300)).*
+            FROM pg_database
+            ORDER BY datname
+        ) s
+        $blksize
+        $groupby
+        ORDER BY 1,2
+        "
+    );
+    $sql->execute($from,$to);
+
+    my $data = [];
+    my $series = {};
+    use Data::Dumper;
+    foreach my $d (@{$datnames}) {
+        if ( $id eq "call") {
+            $series->{@{$d}[0] . "_total_calls"} = [];
+            $series->{@{$d}[0] . "_runtime"} = [];
+        } else {
+            $series->{@{$d}[0] . "_total_blks_read"} = [];
+            $series->{@{$d}[0] . "_total_blks_hit"} = [];
+        }
+    }
+    while ( my @tab = $sql->fetchrow_array() ) {
+        if ( $id eq "call") {
+            push @{$series->{$tab[1] . '_runtime'}},[ 0 + $tab[0], 0.0 + $tab[2] ];
+        } else {
+            push @{$series->{$tab[1] . '_total_blks_read'}},  [ 0 + $tab[0], 0.0 + $tab[2] ];
+            push @{$series->{$tab[1] . '_total_blks_hit'}},   [ 0 + $tab[0], 0.0 + $tab[3] ];
+        }
+        }
+    $sql->finish();
+
+    foreach my $d (@{$datnames}) {
+        if ( $id eq "call") {
+            push @{$data}, { data => $series->{@{$d}[0] . '_runtime'}, label => "query runtime per second on @{$d}[0]" };
+        } else {
+            push @{$data}, { data => $series->{@{$d}[0]. '_total_blks_read'}, label => "Total read (in Bps) on @{$d}[0]" };
+            push @{$data}, { data => $series->{@{$d}[0]. '_total_blks_hit'}, label => "Total hit (in Bps) on @{$d}[0]" };
+        }
+    }
+
+    $dbh->disconnect();
+
+    my $properties = {};
+    $properties->{legend}{show} = $json->false;
+    $properties->{legend}{position} = "ne";
+    if ( $id eq "call" ){
+         $section_h = 'Calls';
+        $properties->{yaxis}{unit} = 'ms';
+    } else {
+        $section_h = 'Blocks' if ( $id eq "blks" );
+        $properties->{yaxis}{unit} = 'Bps';
+        $properties->{lines}{stacked} = $json->true;
+        $properties->{lines}{fill} = $json->true;
+    }
+    $properties->{title} = "POWA : $section_h (all databases)";
+    $properties->{yaxis}{autoscale} = $json->true;
+    $properties->{yaxis}{autoscaleMargin} = 0.2;
+
+    $self->render( json => {
+        series      => $data,
+        properties  => $properties
+    } );
+}
 
 sub dbdata_agg {
     my $self = shift;
