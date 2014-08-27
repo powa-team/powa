@@ -7,10 +7,15 @@ to gather useful information on a specified time interval.
 
 PoWA requires PostgreSQL 9.3 or more.
 
+Connecting on the GUI requires a PostgreSQL user with SUPERUSER and LOGIN privileges.
+
 Installation
 --------------
 
 For a detailed installation procedure, please read [INSTALL.md](https://github.com/dalibo/powa/blob/master/INSTALL.md).
+
+Optionally, you can create a dedicated user for PoWA. For instance, connected on PostgreSQL :
+`CREATE USER powa SUPERUSER ENCRYPTED PASSWORD 'mypassword'` (don't forget to change the password).
 
 - make install in the main directory
 - Make sure you have installed and configured `pg_stat_statements`
@@ -18,7 +23,9 @@ For a detailed installation procedure, please read [INSTALL.md](https://github.c
 - create extension powa in this databse
 - add "powa" in the `shared_preload_libraries` in postgresql.conf (you should already have configured "`pg_stat_statements`")
 - configure GUC in postgresql.conf (see the §Configuration below)
+- configure connections in pg_hba.conf to allow connection from the server that will run the GUI
 - restart instance
+
 
 Configuration:
 ------------------------

@@ -89,8 +89,10 @@ powa=# \dt
 ```
 
 
-Modify the configuration file
------------------------------
+Modify the configuration files
+------------------------------
+
+In `postgresql.conf`:
 
 Change the `shared_preload_libraries` appropriately :
 ```
@@ -99,6 +101,12 @@ shared_preload_libraries = 'powa,pg_stat_statements'# (change requires restart)
 
 Other GUC variables are available. Read [README.md](https://github.com/dalibo/powa/blob/master/README.md) for further details.
 
+In `pg_hba.conf`:
+
+Add an entry if needed for the PostgreSQL user(s) that need to connect on the GUI.
+For instance, assuming a `local connection` on database `powa`, allowing any user:
+
+`host    powa    all     127.0.0.1/32    md5`
 
 Restart PostgreSQL
 ------------------
