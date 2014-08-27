@@ -14,5 +14,7 @@
         }
     },
 
-    "layout" : "default"
+    "layout" : "default",
+   
+    "google_analytics_id" : ""
 }
