@@ -59,6 +59,12 @@
     </div>
 
     <div class="container-fluid">
+      % if ( $Mojolicious::VERSION < 4.5 or $Mojolicious::VERSION >= 5.00 ) {
+        <div class="alert alert-danger" role="alert">
+          PoWA requires Mojolicious >= 4.5 and < 5.00.<br />
+          Your version is <%= $Mojolicious::VERSION %>.
+        </div>
+      % }
       %= display_messages
     </div>
 
