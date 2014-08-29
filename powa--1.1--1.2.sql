@@ -120,7 +120,7 @@ BEGIN
     -- so that the first screens of powa stay reactive even though there may be thousands
     -- of different statements
     RAISE DEBUG 'running powa_take_statements_snapshot';
-    WITH capture AS(
+    WITH capture AS(                                  
             SELECT rolname, datname, pg_stat_statements.*
             FROM pg_stat_statements
             JOIN pg_authid ON (pg_stat_statements.userid=pg_authid.oid)
@@ -134,28 +134,28 @@ BEGIN
                WHERE NOT EXISTS (SELECT 1
                                  FROM powa_statements
                                  WHERE powa_statements.md5query = md5(rolname||datname||query))
-
+    
          ),
          by_query AS (
-
+            
             INSERT INTO powa_statements_history_current
               SELECT md5(rolname||datname||query),
                      ROW(now(),sum(calls),sum(total_time),sum(rows),sum(shared_blks_hit),sum(shared_blks_read),
                         sum(shared_blks_dirtied),sum(shared_blks_written),sum(local_blks_hit),sum(local_blks_read),
                         sum(local_blks_dirtied),sum(local_blks_written),sum(temp_blks_read),sum(temp_blks_written),
                         sum(blk_read_time),sum(blk_write_time))::powa_statement_history_record AS record
-              FROM capture
+              FROM capture      
               GROUP BY md5(rolname||datname||query),now()
          ),
          by_database AS (
-
+            
             INSERT INTO powa_statements_history_current_db
               SELECT datname,
                      ROW(now(),sum(calls),sum(total_time),sum(rows),sum(shared_blks_hit),sum(shared_blks_read),
                         sum(shared_blks_dirtied),sum(shared_blks_written),sum(local_blks_hit),sum(local_blks_read),
                         sum(local_blks_dirtied),sum(local_blks_written),sum(temp_blks_read),sum(temp_blks_written),
                         sum(blk_read_time),sum(blk_write_time))::powa_statement_history_record AS record
-              FROM capture
+              FROM capture      
               GROUP BY datname,now()
         )
         SELECT true::boolean INTO result; -- For now we don't care. What could we do on error except crash anyway?
@@ -261,7 +261,8 @@ BEGIN
         UNION ALL
         SELECT (record).*
         FROM powa_statements_history_current
-        WHERE tstzrange(ts_start, ts_end,'[]') @> (record).ts
+        WHERE md5query=pmd5query
+         AND tstzrange(ts_start, ts_end,'[]') @> (record).ts
     ),
     statements_history_number AS (
         SELECT row_number() over (order by statements_history.ts) as number, *
@@ -315,7 +316,7 @@ BEGIN
         SELECT (record).*
         FROM powa_statements_history_current_db
         WHERE dbname=p_datname
-        AND tstzrange(ts_start, ts_end,'[]') @> (record).ts
+          AND tstzrange(ts_start, ts_end,'[]') @> (record).ts
     ),
     statements_history_number AS (
         SELECT row_number() over (order by statements_history.ts) as number, *
@@ -366,9 +367,10 @@ BEGIN
         ) AS unnested
         WHERE tstzrange(ts_start,ts_end,'[]') @> (records).ts
         UNION ALL
-        SELECT powa_statements_history_current.md5query,(powa_statements_history_current.record).*
-        FROM powa_statements_history_current
+        SELECT psc.md5query,(psc.record).*
+        FROM powa_statements_history_current psc
         WHERE tstzrange(ts_start,ts_end,'[]') @> (record).ts
+        AND psc.md5query IN (SELECT powa_statements.md5query FROM powa_statements WHERE powa_statements.dbname=pdbname)
     )
     SELECT s.md5query,
     s.query,

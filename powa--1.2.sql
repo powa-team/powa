@@ -285,7 +285,8 @@ BEGIN
         UNION ALL
         SELECT (record).*
         FROM powa_statements_history_current
-        WHERE tstzrange(ts_start, ts_end,'[]') @> (record).ts
+        WHERE md5query=pmd5query
+         AND tstzrange(ts_start, ts_end,'[]') @> (record).ts
     ),
     statements_history_number AS (
         SELECT row_number() over (order by statements_history.ts) as number, *
@@ -390,9 +391,10 @@ BEGIN
         ) AS unnested
         WHERE tstzrange(ts_start,ts_end,'[]') @> (records).ts
         UNION ALL
-        SELECT powa_statements_history_current.md5query,(powa_statements_history_current.record).*
-        FROM powa_statements_history_current
+        SELECT psc.md5query,(psc.record).*
+        FROM powa_statements_history_current psc
         WHERE tstzrange(ts_start,ts_end,'[]') @> (record).ts
+        AND psc.md5query IN (SELECT powa_statements.md5query FROM powa_statements WHERE powa_statements.dbname=pdbname)
     )
     SELECT s.md5query,
     s.query,
