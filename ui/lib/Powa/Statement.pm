@@ -119,7 +119,6 @@ sub dbdata {
         ORDER BY total_calls DESC
         "
     );
-    my $log = Mojo::Log->new;
     $sql->execute($from,$to,$dbname);
 
     my $stats = [];
@@ -276,7 +275,6 @@ sub dbdata_agg {
         ORDER BY 1
         "
     );
-    my $log = Mojo::Log->new;
     $sql->execute($from,$to,$dbname);
 
     my $data = [];
