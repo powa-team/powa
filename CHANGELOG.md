@@ -6,13 +6,13 @@ Features:
 
   - Various UI improvments
   - More documentation
-  - New demo mode 
+  - New demo mode
   - Plugin support
   - The code is now under the PostgreSQL license
   - New website
-  - New logo 
+  - New logo
 
-Bug fixes: 
+Bug fixes:
 
   - Use a temporary table for unpacked records to avoid unnecessary bloat
 
@@ -27,4 +27,4 @@ Features:
   - Graph and dynamic charts
   - Packed the code as an extension
   - PL functions
-  
+

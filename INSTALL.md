@@ -67,7 +67,7 @@ psql (9.3.5)
 Type "help" for help.
 postgres=# create database powa;
 CREATE DATABASE
-postgres=# \c powa 
+postgres=# \c powa
 You are now connected to database "powa" as user "postgres".
 powa=# create extension pg_stat_statements ;
 CREATE EXTENSION
@@ -77,7 +77,7 @@ powa=# create extension powa;
 CREATE EXTENSION
 powa=# \dt
                           List of relations
- Schema |              Name               | Type  |  Owner   
+ Schema |              Name               | Type  |  Owner
 --------+---------------------------------+-------+----------
  public | powa_functions                  | table | postgres
  public | powa_last_aggregation           | table | postgres
