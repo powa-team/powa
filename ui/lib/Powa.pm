@@ -65,9 +65,12 @@ sub startup {
     $r_auth->route('/statement/:dbname')->to('statement#showdb')->name('statement_showdb');
     $r_auth->route('/statement/:dbname/:md5query')->to('statement#showdbquery')->name('statement_showdbquery');
     # Graph data
-    $r_auth->post('/data/statement/dbdata')->to('statement#dbdata')->name('statement_dbdata');
+    $r_auth->post('/data/statement/listdbdata_agg')->to('statement#listdbdata_agg')->name('statement_listdbdata_agg');
     $r_auth->post('/data/statement/dbdata_agg')->to('statement#dbdata_agg')->name('statement_dbdata_agg');
     $r_auth->post('/data/statement/querydata')->to('statement#querydata')->name('statement_querydata');
+    # Charts
+    $r_auth->post('/data/statement/listdbdata')->to('statement#listdbdata')->name('statement_listdbdata');
+    $r_auth->post('/data/statement/dbdata')->to('statement#dbdata')->name('statement_dbdata');
 }
 
 1;
