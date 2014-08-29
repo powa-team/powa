@@ -314,7 +314,8 @@ BEGIN
         UNION ALL
         SELECT (record).*
         FROM powa_statements_history_current_db
-        WHERE tstzrange(ts_start, ts_end,'[]') @> (record).ts
+        WHERE dbname=p_datname
+        AND tstzrange(ts_start, ts_end,'[]') @> (record).ts
     ),
     statements_history_number AS (
         SELECT row_number() over (order by statements_history.ts) as number, *
