@@ -73,14 +73,37 @@ DECLARE
   purgets timestamp with time zone;
   purge_seq bigint;
   funcname text;
+  v_state   text;
+  v_msg     text;
+  v_detail  text;
+  v_hint    text;
+  v_context text;
+
 BEGIN
     -- For all snapshot functions in the powa_functions table, execute
     FOR funcname IN SELECT function_name
                  FROM powa_functions
                  WHERE operation='snapshot' LOOP
       -- Call all of them, with no parameter
-RAISE debug 'fonction: %',funcname;
-      EXECUTE 'SELECT ' || quote_ident(funcname)||'()';
+      RAISE debug 'fonction: %',funcname;
+      BEGIN
+        EXECUTE 'SELECT ' || quote_ident(funcname)||'()';
+      EXCEPTION
+        WHEN OTHERS THEN
+          GET STACKED DIAGNOSTICS
+              v_state   = RETURNED_SQLSTATE,
+              v_msg     = MESSAGE_TEXT,
+              v_detail  = PG_EXCEPTION_DETAIL,
+              v_hint    = PG_EXCEPTION_HINT,
+              v_context = PG_EXCEPTION_CONTEXT;
+          RAISE warning 'powa_take_snapshot(): function "%" failed:
+              state  : %
+              message: %
+              detail : %
+              hint   : %
+              context: %', funcname, v_state, v_msg, v_detail, v_hint, v_context;
+
+      END;
     END LOOP;
 
     -- Coalesce datas into statements_history
@@ -92,7 +115,24 @@ RAISE debug 'fonction: %',funcname;
                    FROM powa_functions
                    WHERE operation='aggregate' LOOP
         -- Call all of them, with no parameter
-        EXECUTE 'SELECT ' || quote_ident(funcname)||'()';
+        BEGIN
+          EXECUTE 'SELECT ' || quote_ident(funcname)||'()';
+        EXCEPTION
+          WHEN OTHERS THEN
+            GET STACKED DIAGNOSTICS
+                v_state   = RETURNED_SQLSTATE,
+                v_msg     = MESSAGE_TEXT,
+                v_detail  = PG_EXCEPTION_DETAIL,
+                v_hint    = PG_EXCEPTION_HINT,
+                v_context = PG_EXCEPTION_CONTEXT;
+            RAISE warning 'powa_take_snapshot(): function "%" failed:
+                state  : %
+                message: %
+                detail : %
+                hint   : %
+                context: %', funcname, v_state, v_msg, v_detail, v_hint, v_context;
+
+        END;
       END LOOP;
       UPDATE powa_last_aggregation SET aggts = now();
     END IF;
@@ -104,7 +144,24 @@ RAISE debug 'fonction: %',funcname;
                    FROM powa_functions
                    WHERE operation='purge' LOOP
         -- Call all of them, with no parameter
-        EXECUTE 'SELECT ' || quote_ident(funcname)||'()';
+        BEGIN
+          EXECUTE 'SELECT ' || quote_ident(funcname)||'()';
+        EXCEPTION
+          WHEN OTHERS THEN
+            GET STACKED DIAGNOSTICS
+                v_state   = RETURNED_SQLSTATE,
+                v_msg     = MESSAGE_TEXT,
+                v_detail  = PG_EXCEPTION_DETAIL,
+                v_hint    = PG_EXCEPTION_HINT,
+                v_context = PG_EXCEPTION_CONTEXT;
+            RAISE warning 'powa_take_snapshot(): function "%" failed:
+                state  : %
+                message: %
+                detail : %
+                hint   : %
+                context: %', funcname, v_state, v_msg, v_detail, v_hint, v_context;
+
+        END;
       END LOOP;
       UPDATE powa_last_purge SET purgets=now();
     END IF;
