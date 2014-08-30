@@ -39,9 +39,9 @@ gcc -Wall -Wmissing-prototypes -Wpointer-arith -Wdeclaration-after-statement -We
 gcc -Wall -Wmissing-prototypes -Wpointer-arith -Wdeclaration-after-statement -Wendif-labels -Wmissing-format-attribute -Wformat-security -fno-strict-aliasing -fwrapv -fexcess-precision=standard -g -fpic -L/home/thomas/postgresql/postgresql-9.3.4/lib -Wl,--as-needed -Wl,-rpath,'/home/thomas/postgresql/postgresql-9.3.4/lib',--enable-new-dtags  -shared -o powa.so powa.o
 ```
 
-Install the software :
+Install the software (need root privileges) :
 ```
-make install
+sudo make install
 ```
 
 It should output something like the following :
