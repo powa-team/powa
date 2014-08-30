@@ -257,13 +257,17 @@ sub dbdata_agg {
     my $tmp;
     my $groupby = "";
     my $blksize = "";
+
+    # Handle case total_mesure_interval is 0 second to avoid division by zero error
+    my $total_mesure_interval = "CASE WHEN total_mesure_interval = '0 second' THEN '1 second'::interval ELSE total_mesure_interval END";
+
     if ( $section eq "call") {
-        $tmp = "sum(total_runtime)/extract(epoch from total_mesure_interval) as runtime";
+        $tmp = "sum(total_runtime)/extract(epoch from $total_mesure_interval) as runtime";
         $groupby = "GROUP BY ts,total_mesure_interval";
     } else {
         $blksize = ", (SELECT current_setting('block_size')::numeric AS blksize) setting";
-        $tmp = "((shared_blks_read+local_blks_read+temp_blks_read)*blksize)/extract(epoch from total_mesure_interval) as total_blks_read,
-            ((shared_blks_hit+local_blks_hit)*blksize)/extract(epoch from total_mesure_interval) as total_blks_hit";
+        $tmp = "((shared_blks_read+local_blks_read+temp_blks_read)*blksize)/extract(epoch from $total_mesure_interval) as total_blks_read,
+            ((shared_blks_hit+local_blks_hit)*blksize)/extract(epoch from $total_mesure_interval) as total_blks_hit";
     }
 
     $sql = $dbh->prepare(
@@ -352,10 +356,15 @@ sub querydata {
     my $tmp = "";
     my $blksize = ", (SELECT current_setting('block_size')::numeric AS blksize) setting";
     $blksize = "" if ($section eq "GEN") or ($section eq "TIM");
+
+    # Handle case total_mesure_interval is 0 second to avoid division by zero error
+    my $total_mesure_interval = "CASE WHEN total_mesure_interval = '0 second' THEN '1 second'::interval ELSE total_mesure_interval END";
+
+
     $tmp = "round((total_runtime/CASE total_calls WHEN 0 THEN 1 ELSE total_calls END)::numeric,2), rows" if ($section eq "GEN");
-    $tmp = "(shared_blks_hit*blksize)/extract(epoch from total_mesure_interval), (shared_blks_read*blksize)/extract(epoch from total_mesure_interval), (shared_blks_dirtied*blksize)/extract(epoch from total_mesure_interval), (shared_blks_written*blksize)/extract(epoch from total_mesure_interval)" if ($section eq "SHA");
-    $tmp = "(local_blks_hit*blksize)/extract(epoch from total_mesure_interval), (local_blks_read*blksize)/extract(epoch from total_mesure_interval), (local_blks_dirtied*blksize)/extract(epoch from total_mesure_interval), (shared_blks_written*blksize)/extract(epoch from total_mesure_interval)" if ($section eq "LOC");
-    $tmp = "(temp_blks_read*blksize)/extract(epoch from total_mesure_interval), (temp_blks_written*blksize)/extract(epoch from total_mesure_interval)" if ($section eq "TMP");
+    $tmp = "(shared_blks_hit*blksize)/extract(epoch from $total_mesure_interval), (shared_blks_read*blksize)/extract(epoch from $total_mesure_interval), (shared_blks_dirtied*blksize)/extract(epoch from $total_mesure_interval), (shared_blks_written*blksize)/extract(epoch from $total_mesure_interval)" if ($section eq "SHA");
+    $tmp = "(local_blks_hit*blksize)/extract(epoch from $total_mesure_interval), (local_blks_read*blksize)/extract(epoch from $total_mesure_interval), (local_blks_dirtied*blksize)/extract(epoch from $total_mesure_interval), (shared_blks_written*blksize)/extract(epoch from $total_mesure_interval)" if ($section eq "LOC");
+    $tmp = "(temp_blks_read*blksize)/extract(epoch from $total_mesure_interval), (temp_blks_written*blksize)/extract(epoch from $total_mesure_interval)" if ($section eq "TMP");
     $tmp = "blk_read_time, blk_write_time" if ($section eq "TIM");
 
 
