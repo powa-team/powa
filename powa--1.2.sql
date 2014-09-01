@@ -433,7 +433,7 @@ $function$
 ;
 
 CREATE OR REPLACE FUNCTION public.powa_getstatdata_db(ts_start timestamp with time zone, ts_end timestamp with time zone, pdbname text)
- RETURNS TABLE(md5query text, query text, dbname text, total_calls bigint, total_runtime numeric, total_blks_read bigint, total_blks_hit bigint)
+ RETURNS TABLE(md5query text, query text, dbname text, total_calls bigint, total_runtime numeric, total_blks_read bigint, total_blks_hit bigint, total_blks_dirtied bigint, total_blks_written bigint, total_temp_blks_read bigint, total_temp_blks_written bigint)
  LANGUAGE plpgsql
 AS $function$
 BEGIN
@@ -459,7 +459,11 @@ BEGIN
     max(h.calls)-min(h.calls) AS total_calls,
     round((max(h.total_time)-min(h.total_time))::numeric,3) AS total_runtime,
     max(h.shared_blks_read)-min(h.shared_blks_read) AS total_blks_read,
-    max(h.shared_blks_hit)-min(h.shared_blks_hit) AS total_blks_hit
+    max(h.shared_blks_hit)-min(h.shared_blks_hit) AS total_blks_hit,
+    max(h.shared_blks_dirtied)-min(h.shared_blks_dirtied) AS total_blks_dirtied,
+    max(h.shared_blks_written)-min(h.shared_blks_written) AS total_blks_written,
+    max(h.temp_blks_read)-min(h.temp_blks_read) AS total_temp_blks_read,
+    max(h.temp_blks_written)-min(h.temp_blks_written) AS total_temp_blks_written
     FROM statements_history h
     JOIN powa_statements s USING (md5query)
     WHERE s.dbname=pdbname
