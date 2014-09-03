@@ -64,6 +64,21 @@ INSERT INTO powa_statements_history_current_db
  SELECT dbname, record
  FROM aggregated;
 
+ 
+ALTER TABLE powa_functions
+  ADD COLUMN added_manually boolean default false; -- To put it to false for now
+ALTER TABLE powa_functions
+  ALTER COLUMN added_manually set default true; -- New entries will be to true
+
+  
+-- Mark all of powa's tables as "to be dumped"
+SELECT pg_catalog.pg_extension_config_dump('powa_statements','');
+SELECT pg_catalog.pg_extension_config_dump('powa_statements_history','');
+SELECT pg_catalog.pg_extension_config_dump('powa_statements_history_db','');
+SELECT pg_catalog.pg_extension_config_dump('powa_statements_history_current','');
+SELECT pg_catalog.pg_extension_config_dump('powa_statements_history_current_db','');
+SELECT pg_catalog.pg_extension_config_dump('powa_functions','WHERE added_manually');
+
 
 -- Recreate all functions. Pasted from the 1.2 script
 -- Drop them before, sometimes the prototype changes...

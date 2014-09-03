@@ -87,10 +87,19 @@ CREATE SEQUENCE powa_coalesce_sequence INCREMENT BY 1
 CREATE TABLE powa_functions (
     operation TEXT,
     function_name TEXT,
+    added_manually boolean default true,
     CHECK (operation IN ('snapshot','aggregate','purge'))
 );
 
-INSERT INTO powa_functions VALUES ('snapshot','powa_take_statements_snapshot'),('aggregate','powa_statements_aggregate'),('purge','powa_statements_purge');
+INSERT INTO powa_functions VALUES ('snapshot','powa_take_statements_snapshot',false),('aggregate','powa_statements_aggregate',false),('purge','powa_statements_purge',false);
+
+-- Mark all of powa's tables as "to be dumped"
+SELECT pg_catalog.pg_extension_config_dump('powa_statements','');
+SELECT pg_catalog.pg_extension_config_dump('powa_statements_history','');
+SELECT pg_catalog.pg_extension_config_dump('powa_statements_history_db','');
+SELECT pg_catalog.pg_extension_config_dump('powa_statements_history_current','');
+SELECT pg_catalog.pg_extension_config_dump('powa_statements_history_current_db','');
+SELECT pg_catalog.pg_extension_config_dump('powa_functions','WHERE added_manually');
 
 CREATE OR REPLACE FUNCTION powa_take_snapshot() RETURNS void AS $PROC$
 DECLARE
@@ -487,3 +496,5 @@ BEGIN
 END
 $function$
 ;
+
+
