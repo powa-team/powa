@@ -79,7 +79,10 @@ sub listdbdata {
     $to = substr $to, 0, -3;
     $sql = $dbh->prepare(
         "SELECT datname, sum(total_calls), sum(total_runtime),
-            sum(total_blks_read), sum(total_blks_hit), count(query)
+            sum(total_blks_read), sum(total_blks_hit),
+            sum(total_blks_dirtied), sum(total_blks_written),
+            sum(total_temp_blks_read), sum(total_temp_blks_written),
+            count(query)
         FROM (
             SELECT datname, (powa_getstatdata_db(to_timestamp(?), to_timestamp(?), datname)).*
             FROM pg_database
@@ -114,7 +117,11 @@ sub dbdata {
     $to = substr $to, 0, -3;
     $sql = $dbh->prepare(
         "SELECT total_calls, total_runtime,
-            total_blks_read, total_blks_hit, query, md5query
+            total_blks_read, total_blks_hit,
+            total_blks_dirtied, total_blks_written,
+            total_temp_blks_read, total_temp_blks_written,
+            CASE WHEN length(query) > 35 THEN substr(query,1,35) || '...' ELSE QUERY END, md5query,
+            query
         FROM powa_getstatdata_db(to_timestamp(?), to_timestamp(?), ?)
         ORDER BY total_calls DESC
         "
@@ -123,6 +130,8 @@ sub dbdata {
 
     my $stats = [];
     while ( my @row = $sql->fetchrow_array() ) {
+        my $query = highlight_code( $row[10] );
+        $row[10] =  $query;
         push @{$stats}, {
             row => \@row
         };

@@ -52,6 +52,10 @@ function load(){
           tmp.append($('<td>').text(val[3]));
           tmp.append($('<td>').text(val[4]));
           tmp.append($('<td>').text(val[5]));
+          tmp.append($('<td>').text(val[6]));
+          tmp.append($('<td>').text(val[7]));
+          tmp.append($('<td>').text(val[8]));
+          tmp.append($('<td>').text(val[9]));
         });
         $('#dbdata tbody').append(tmp);
       });

@@ -4,25 +4,6 @@
 <script type="text/javascript" src="<%= url_for '/js/statementlistdb.js' %>"></script>
 %end
 
-% #<div class="row">
-% #  <div class="span6">
-% #    <div class="box" id="server_list">
-% #        <b><%= 'List of databases' %> :</b><br />
-% #        <% if (scalar(@databases)) { %>
-% #          <ul>
-% #            <% foreach my $d (@databases) { %>
-% #              <%   my %line = %{$d}; %>
-% #                <li><%= link_to statement_showdb => { dbname => $line{dbname} } => begin %><%= $line{dbname} %></li><% end %>
-% #            <% } %>
-% #          </ul>
-% #        <% } else { %>
-% #        <p>No database found.</p>
-% #        <% } %>
-% #    </div>
-% #  </div>
-% #</div>
-
-
 <div class="row">
   <div class="container-fluid scales"<%= ( defined $base_timestamp ? b(" data-base-timestamp=\"$base_timestamp\""): '' ) %>>
     <div class="btn-toolbar" role="toolbar">
@@ -109,11 +90,15 @@
                 <thead>
                     <tr>
                         <th>Database</th>
-                        <th>Total Calls</th>
-                        <th>Total runtime</th>
-                        <th>Total blocks read</th>
-                        <th>Total blocks hit</th>
-                        <th>Number of queries</th>
+                        <th># Calls</th>
+                        <th>Runtime</th>
+                        <th>Blocks read</th>
+                        <th>Blocks hit</th>
+                        <th>Blocks dirtied</th>
+                        <th>Blocks written</th>
+                        <th>Temp blocks read</th>
+                        <th>Temp blocks written</th>
+                        <th># of queries</th>
                     </tr>
                 </thead>
                 <tbody>

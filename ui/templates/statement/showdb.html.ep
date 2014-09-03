@@ -91,15 +91,21 @@
             <table id="dbdata" class="table table-condensed table-hover tablesorter">
                 <thead>
                     <tr>
-                        <th>Total Calls</th>
-                        <th>Total runtime</th>
-                        <th>Total blocks read</th>
-                        <th>Total blocks hit</th>
+                        <th># Calls</th>
+                        <th>Runtime</th>
+                        <th>Blocks read</th>
+                        <th>Blocks hit</th>
+                        <th>Blocks dirtied</th>
+                        <th>Blocks written</th>
+                        <th>Temp blocks read</th>
+                        <th>Temp blocks written</th>
                         <th>Query</th>
                     </tr>
                 </thead>
                 <tbody>
                 </tbody>
             </table>
+    </div>
+    <div id="query-list">
     </div>
 </div>
