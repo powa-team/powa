@@ -40,8 +40,8 @@ gcc -Wall -Wmissing-prototypes -Wpointer-arith -Wdeclaration-after-statement -We
 ```
 
 Install the software :
-```
--This step has to be made with the user that has installed PostgreSQL. If you have used a package, it will be certainly be root. If so:
+
+- This step has to be made with the user that has installed PostgreSQL. If you have used a package, it will be certainly be root. If so:
 ```
 sudo make install
 ```
