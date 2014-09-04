@@ -28,7 +28,7 @@
             bars: {
               barWidth: 1,
               filled: true,
-              gropued: false,
+              grouped: false,
               lineWidth: 2,
               stacked: false
             },
@@ -40,7 +40,8 @@
             lines: {
               filled: true,
               lineWidth: 2,
-              stacked: false
+              stacked: false,
+              fillOpacity: 0.4
             },
             mouse: {
                  track: true,
@@ -48,7 +49,7 @@
                  trackFormatter: function (o) {
                      var d = new Date(parseInt(o.x, 10));
                      return d.toString() +"<br />"+ o.series.label +' = '+ $().formatUnit(o.series.data[o.index][1], o.series.yaxis.options.unit);
-                 }
+                 },
             },
             pie: {
               filled: true,
@@ -82,6 +83,9 @@
                 showLabels: true,
                 titleAngle: 90,
                 tickFormatter: function (val) { return $().formatUnit (val, this.unit); }
+            },
+            grid: {
+              color: '#bbbbbb'
             }
         };
     };
@@ -230,10 +234,10 @@
                     label = legend_opt.labelFormatter(s.label);
                     color = ((s.bars && s.bars.show && s.bars.fillColor && s.bars.fill) ? s.bars.fillColor : s.color);
 
-                    $cell = $('<div>').addClass('flotr-legend-color-box')
+                    $cell = $('<span>').addClass('flotr-legend-color-box')
                             .css({
                                 'margin' : '0 10px 0 0',
-                                'float'  : 'left',
+                                'display': 'inline-block',
                                 'border' : '1px solid '+ legend_opt.labelBoxBorderColor,
                                 'width'  : '1.4em',
                                 'height' : '1.2em',
@@ -241,16 +245,14 @@
                             })
                             .add($('<label>').html(label));
 
-                    $label = $('<div>').addClass('label-' + i).prepend($cell)
+                    $label = $('<span>').addClass('label-list label-' + i).prepend($cell)
                             .data('i', i)
                             .click(toggleSerie)
                             .appendTo($legend);
                     if (s.hide) { this._deactivateSerie( $label ); }
                 }
 
-                $legend.css({
-                    height: this.flotr.canvasHeight
-                });
+                $legend.find('.label-list').wrap('<div class="col-sm-12 col-md-6 col-lg-4"></div>');
             }
         },
 

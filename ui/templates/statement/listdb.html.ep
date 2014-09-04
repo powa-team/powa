@@ -1,5 +1,4 @@
 % layout config 'layout';
-% # my @databases = @{stash 'databases'};
 % content_for header => begin
 <script type="text/javascript" src="<%= url_for '/js/statementlistdb.js' %>"></script>
 %end
@@ -52,8 +51,7 @@
   <% foreach my $section ('call','blks') { %>
     <div class="graph_container col-md-6" data-graphid="<%= $section %>"
       data-graphurl="<%= url_for('statement_listdbdata_agg') %>">
-      <div class="grapher-header row-fluid" style="margin-bottom: 5px">
-        <span></span>
+      <div class="grapher-header row-fluid">
         <div class="pull-right">
           <div class="btn-toolbar" role="toolbar">
             <div class="btn-group">
@@ -77,7 +75,7 @@
 
       <div class="container-fluid">
         <div data-graphrole="plot"></div>
-        <div class="graph-legend" data-graphrole="legend"></div>
+        <div class="row graph-legend" data-graphrole="legend"></div>
       </div>
     </div>
   % }

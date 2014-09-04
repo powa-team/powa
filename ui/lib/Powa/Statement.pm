@@ -216,10 +216,10 @@ sub listdbdata_agg {
 
     foreach my $d (@{$datnames}) {
         if ( $id eq "call") {
-            push @{$data}, { data => $series->{@{$d}[0] . '_runtime'}, label => "query runtime per second on @{$d}[0]" };
+            push @{$data}, { data => $series->{@{$d}[0] . '_runtime'}, label => "@{$d}[0]" };
         } else {
-            push @{$data}, { data => $series->{@{$d}[0]. '_total_blks_read'}, label => "Total read (in Bps) on @{$d}[0]" };
-            push @{$data}, { data => $series->{@{$d}[0]. '_total_blks_hit'}, label => "Total hit (in Bps) on @{$d}[0]" };
+            push @{$data}, { data => $series->{@{$d}[0]. '_total_blks_read'}, label => "Read on @{$d}[0]" };
+            push @{$data}, { data => $series->{@{$d}[0]. '_total_blks_hit'}, label => "Hit on @{$d}[0]" };
         }
     }
 
@@ -229,10 +229,10 @@ sub listdbdata_agg {
     $properties->{legend}{show} = $json->false;
     $properties->{legend}{position} = "ne";
     if ( $id eq "call" ){
-         $section_h = 'Calls';
+         $section_h = 'Query runtime per second';
         $properties->{yaxis}{unit} = 'ms';
     } else {
-        $section_h = 'Blocks' if ( $id eq "blks" );
+        $section_h = 'Blocks access in Bps' if ( $id eq "blks" );
         $properties->{yaxis}{unit} = 'Bps';
         $properties->{lines}{stacked} = $json->true;
         $properties->{lines}{fill} = $json->true;

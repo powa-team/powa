@@ -90,16 +90,25 @@ body {
 
 /* Graphs
 --------------------------------------------------- */
+.grapher-header {
+  height: 20px;
+}
+
 .graph_container {
-  background-color: #fff;
+  background-color: #232323;
+  color: #bbbbbb;
   margin-bottom: 30px;
   clear: right;
-  border: 1px solid #e5e5e5;
-  padding: 10px 10px;
+  padding: 0px;
+}
+
+.graph_container .container-fluid {
+  padding: 0px;
 }
 
 .plot {
     height: 300px;
+    background-color: #404040;
 }
 
 .input-daterange-to {
@@ -119,7 +128,8 @@ body {
 .graph-legend {
   padding-top: 5px;
   overflow: auto;
-  color: #222222;
+  color: #bbbbbb;
+  font-size: 1em;
 }
 
 label.deactivated {
