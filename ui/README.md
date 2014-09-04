@@ -48,6 +48,15 @@ sometimes packages, for example the package in Debian is
 If the needed version is not available anymore on you distribution, you can
 download Mojolicious 4.75 [here](http://backpan.perl.org/authors/id/S/SR/SRI/Mojolicious-4.75.tar.gz).
 
+As you are then not using a package, you may not want to install Mojolicious globally on your system. So here is how to install it locally (let's say you installed powa in /path/to/powa):
+
+    perl Makefile.PL PREFIX=/path/to/powa/mojo
+    make install
+
+Check that make tells you the files have been copied to /path/to/powa/mojo.
+
+Now, you'll just have to tell perl that there is an extension in /path/to/powa/mojo (we'll see that with the morbo command below).
+
 Copy `powa.conf-dist` to `powa.conf` and edit it.
 
 To quickly run the UI, do not activate `rewrite` in the config (this
@@ -55,6 +64,12 @@ is Apache rewrite rules when run as a CGI) and start the morbo
 webserver inside the source directory:
 
     morbo script/powa
+
+If you have installed Mojolicious locally, you'll have to do this command instead (the paths may vary depending on where you run this command from):
+
+    PERL5LIB=/path/to/powa/mojo/share/perl5/site_perl mojo/bin/site_perl/morbo ui/script/powa
+
+Of course, putting PERL5LIB and PATH in your bashrc wouldn't be a bad idea...
 
 It will output what is printed to STDOUT/STDOUT in the code in the
 term. The web pages are available on http://localhost:3000/
