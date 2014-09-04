@@ -211,10 +211,10 @@ BEGIN
          missing_statements AS(
              INSERT INTO powa_statements (md5query,rolname,dbname,query)
                SELECT DISTINCT md5(rolname||datname||query),rolname,datname,query
-               FROM capture
+               FROM capture c
                WHERE NOT EXISTS (SELECT 1
                                  FROM powa_statements
-                                 WHERE powa_statements.md5query = md5(rolname||datname||query))
+                                 WHERE powa_statements.md5query = md5(c.rolname||c.datname||c.query))
 
          ),
          by_query AS (
