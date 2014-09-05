@@ -17,7 +17,7 @@ LOCK TABLE powa_statements_history_current;
 -- Start with the purge. We count the deleted records (but not needed here).
 WITH 
  to_delete AS 
-    (SELECT md5query FROM powa_statements WHERE query ~* '^[[:space:]]*(DEALLOCATE|BEGIN)'),
+    (DELETE FROM powa_statements WHERE query ~* '^[[:space:]]*(DEALLOCATE|BEGIN)' RETURNING md5query),
  delete_from_powa_statements_history AS 
     (DELETE FROM powa_statements_history WHERE md5query IN (SELECT md5query FROM to_delete) RETURNING 1) ,
  delete_from_powa_statements_history_current AS (DELETE FROM powa_statements_history_current WHERE md5query IN (SELECT md5query FROM to_delete) RETURNING 1)
