@@ -449,20 +449,20 @@ sub querydata {
             push @{$data}, { data => $series->{'rows'}, label => 'rows' };
         }
         if ( $section eq "SHA" ){
-            push @{$data}, { data => $series->{'shared_blks_hit'}, label => 'Shared hit (in Bps)' };
-            push @{$data}, { data => $series->{'shared_blks_read'}, label => 'Shared read (in Bps)' };
-            push @{$data}, { data => $series->{'shared_blks_dirtied'}, label => 'Shared dirtied (in Bps)' };
-            push @{$data}, { data => $series->{'shared_blks_written'}, label => 'Shared written (in Bps)' };
+            push @{$data}, { data => $series->{'shared_blks_hit'}, label => 'Shared hit' };
+            push @{$data}, { data => $series->{'shared_blks_read'}, label => 'Shared read' };
+            push @{$data}, { data => $series->{'shared_blks_dirtied'}, label => 'Shared dirtied' };
+            push @{$data}, { data => $series->{'shared_blks_written'}, label => 'Shared written' };
         }
         if ( $section eq "LOC" ){
-            push @{$data}, { data => $series->{'local_blks_hit'}, label => 'Local hit (in Bps)' };
-            push @{$data}, { data => $series->{'local_blks_read'}, label => 'Local read (in Bps)' };
-            push @{$data}, { data => $series->{'local_blks_dirtied'}, label => 'Local dirtied (in Bps)' };
-            push @{$data}, { data => $series->{'local_blks_written'}, label => 'Local written (in Bps)' };
+            push @{$data}, { data => $series->{'local_blks_hit'}, label => 'Local hit' };
+            push @{$data}, { data => $series->{'local_blks_read'}, label => 'Local read' };
+            push @{$data}, { data => $series->{'local_blks_dirtied'}, label => 'Local dirtied' };
+            push @{$data}, { data => $series->{'local_blks_written'}, label => 'Local written' };
         }
         if ( $section eq "TMP" ){
-            push @{$data}, { data => $series->{'temp_blks_read'}, label => 'Temp read (in Bps)' };
-            push @{$data}, { data => $series->{'temp_blks_written'}, label => 'Temp written (in Bps)' };
+            push @{$data}, { data => $series->{'temp_blks_read'}, label => 'Temp read' };
+            push @{$data}, { data => $series->{'temp_blks_written'}, label => 'Temp written' };
         }
         if ( $section eq "TIM" ){
             push @{$data}, { data => $series->{'blk_read_time'}, label => 'Read time' };
@@ -472,9 +472,9 @@ sub querydata {
     $dbh->disconnect();
 
     $section_h = 'General' if ( $section eq 'GEN' );
-    $section_h = 'Shared blocks' if ( $section eq 'SHA' );
-    $section_h = 'Local blocks' if ( $section eq 'LOC' );
-    $section_h = 'Temporary blocks' if ( $section eq 'TMP' );
+    $section_h = 'Shared blocks in Bps' if ( $section eq 'SHA' );
+    $section_h = 'Local blocks in Bps' if ( $section eq 'LOC' );
+    $section_h = 'Temporary blocks in Bps' if ( $section eq 'TMP' );
     $section_h = 'Read / write time' if ( $section eq 'TIM' );
     my $properties = {};
     $properties->{legend}{show} = $json->false;
