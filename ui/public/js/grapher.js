@@ -35,7 +35,8 @@
             HtmlText: false,
             legend: {
               position: 'ne',
-              show: false
+              show: false,
+              backgroundColor: '#121212'
             },
             lines: {
               filled: true,
@@ -85,7 +86,8 @@
                 tickFormatter: function (val) { return $().formatUnit (val, this.unit); }
             },
             grid: {
-              color: '#bbbbbb'
+              color: '#bbbbbb',
+              backgroundColor: '#232323'
             }
         };
     };

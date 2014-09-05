@@ -99,7 +99,7 @@ body {
   color: #bbbbbb;
   margin-bottom: 30px;
   clear: right;
-  padding: 0px;
+  padding: 0px 3px;
 }
 
 .graph_container .container-fluid {
