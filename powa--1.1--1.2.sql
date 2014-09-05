@@ -9,9 +9,19 @@ SET client_min_messages = warning;
 SET escape_string_warning = off;
 SET search_path = public, pg_catalog;
 
--- We need to block these two tables to calculate aggregates and have no surprise when the upgrade finishes
+-- We need to block the tables to calculate aggregates, do the purges, and have no surprise when the upgrade finishes
+LOCK TABLE powa_statements;
 LOCK TABLE powa_statements_history;
 LOCK TABLE powa_statements_history_current;
+
+-- Start with the purge. We count the deleted records (but not needed here).
+WITH 
+ to_delete AS 
+    (SELECT md5query FROM powa_statements WHERE query ~* '^[[:space:]]*(DEALLOCATE|BEGIN)'),
+ delete_from_powa_statements_history AS 
+    (DELETE FROM powa_statements_history WHERE md5query IN (SELECT md5query FROM to_delete) RETURNING 1) ,
+ delete_from_powa_statements_history_current AS (DELETE FROM powa_statements_history_current WHERE md5query IN (SELECT md5query FROM to_delete) RETURNING 1)
+        SELECT count(*) FROM (SELECT 1 FROM to_delete UNION ALL SELECT 1 FROM delete_from_powa_statements_history UNION ALL SELECT 1 FROM delete_from_powa_statements_history_current) AS tmp;
 
 CREATE TABLE powa_statements_history_db (
     dbname text,
