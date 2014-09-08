@@ -6,105 +6,40 @@
 
 <%= link_to site_home => begin %> « <%= 'Back to all databases' %><% end %>
 
-<div class="row">
-  <div class="container-fluid scales"<%= ( defined $base_timestamp ? b(" data-base-timestamp=\"$base_timestamp\""): '' ) %>>
-    <div class="btn-toolbar" role="toolbar">
-
-      <div class="btn-group">
-        <input id="sel_month" class="btn btn-default" type="button" value="Month" />
-        <input id="sel_week" class="btn btn-default" type="button" value="Week" />
-        <input id="sel_day" class="btn btn-default" type="button" value="Day" />
-        <input id="sel_hour" class="btn btn-default" type="button" value="Hour" />
-      </div>
-
-      <div class="btn-group">
-        <button class="btn btn-default go-backward"><i class="glyphicon glyphicon-fast-backward"></i></button>
-        <button class="btn btn-default go-forward"><i class="glyphicon glyphicon-fast-forward"></i></button>
-      </div>
-
-      <div class="btn-group">
-        <div class="btn-group">
-          <div class="input-group date datepick" id="fromdatepick">
-            <span class="input-group-addon"><span class="glyphicon glyphicon-calendar"></span></span>
-            <input id="fromdate" type="text" class="form-control"/>
-          </div>
-        </div>
-
-        <span class="btn-group input-daterange-to">
-          to
-        </span>
-
-        <div class="btn-group">
-          <div class="input-group date datepick" id="todatepick">
-            <input id="todate" type="text" class="form-control"/>
-            <span class="input-group-addon"><span class="glyphicon glyphicon-calendar"></span></span>
-          </div>
-        </div>
-      </div>
-
-      <div class="btn-group">
-        <input type="button" id="sel_custom" class="btn default" value="Custom" />
-      </div>
-      <%= content_for 'graph_nav_right' %>
-    </div>
-  </div>
-</div>
+%= include('graphs/navigation');
 
 <div class="row container-fluid">
+  % my $graph = ();
+  % $graph->{url} = 'statement_dbdata_agg';
+  % $graph->{class} = 'col-md-6';
+
   <% foreach my $section ('call','blks') { %>
-    <div class="graph_container col-md-6" data-graphid="<%= $section %>_<%= stash 'dbname' %>"
-      data-graphurl="<%= url_for('statement_dbdata_agg') %>">
-      <div class="grapher-header row-fluid">
-        <div class="pull-right">
-          <div class="btn-toolbar" role="toolbar">
-            <div class="btn-group">
-              <a href="#" data-graphrole="offon-series"
-                class="btn btn-default btn-xs"
-                title="Show/Hide series"
-                ><i class="glyphicon glyphicon-eye-open"></i></a>
-              <a href="#" data-graphrole="invert-series"
-                class="btn btn-default btn-xs"
-                title="Invert Sel."
-                ><i class="glyphicon glyphicon-eye-close"></i></a>
-              <a href="#" data-graphrole="export-graph"
-                class="btn btn-default btn-xs save"
-                title="Save"
-                ><i class="glyphicon glyphicon-download-alt"></i></a>
-            </div>
-
-          </div>
-        </div>
-      </div>
-
-      <div class="container-fluid">
-        <div data-graphrole="plot"></div>
-        <div class="graph-legend" data-graphrole="legend"></div>
-      </div>
-    </div>
+    % $graph->{id} = $section . '_' . stash('dbname');
+    %= include('graphs/graph', graph => $graph);
   % }
 </div>
 
 <div class="row">
-    <div class="box" id="server_list">
-        <b>Details for database <u><span id="dbname"><%= stash 'dbname' %></span></u>:</b><br />
-            <table id="dbdata" class="table table-condensed table-hover tablesorter">
-                <thead>
-                    <tr>
-                        <th># Calls</th>
-                        <th>Runtime</th>
-                        <th>Blocks read</th>
-                        <th>Blocks hit</th>
-                        <th>Blocks dirtied</th>
-                        <th>Blocks written</th>
-                        <th>Temp blocks read</th>
-                        <th>Temp blocks written</th>
-                        <th>Query</th>
-                    </tr>
-                </thead>
-                <tbody>
-                </tbody>
-            </table>
-    </div>
-    <div id="query-list">
-    </div>
+  <div class="box" id="server_list">
+    <b>Details for database <u><span id="dbname"><%= stash 'dbname' %></span></u>:</b><br />
+    <table id="dbdata" class="table table-condensed table-hover tablesorter">
+      <thead>
+        <tr>
+          <th># Calls</th>
+          <th>Runtime</th>
+          <th>Blocks read</th>
+          <th>Blocks hit</th>
+          <th>Blocks dirtied</th>
+          <th>Blocks written</th>
+          <th>Temp blocks read</th>
+          <th>Temp blocks written</th>
+          <th>Query</th>
+        </tr>
+      </thead>
+      <tbody>
+      </tbody>
+    </table>
+  </div>
+  <div id="query-list">
+  </div>
 </div>
