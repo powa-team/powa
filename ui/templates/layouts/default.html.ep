@@ -103,7 +103,7 @@
           <img src="<%= url_for '/img/powa-logo-white.png' %>" class="logo-small" />
           <ul class="list-unstyled">
             <li>Version <%= $Powa::VERSION %></li>
-            <li>&copy 2014 Dalibo</li>
+            <li>&copy; 2014 Dalibo</li>
             <li><a href="http://dalibo.github.io/powa">http://dalibo.github.io/powa</a></li>
           </ul>
         </div>
