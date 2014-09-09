@@ -2,38 +2,13 @@
  * Javascript for page showdb.html.ep
  **/
 
-// implement select hook to apply zoom in on all data on page
-function grapherSelectHook(x1, x2) {
-  $('#fromdatepick').data('DateTimePicker').setDate(moment(x1));
-  $('#todatepick').data('DateTimePicker').setDate(moment(x2));
-  $('#sel_custom').click();
-}
-
-// implement sclick hook to apply zoom in on all data on page
-function grapherClickHook(x1, x2) {
-  $('#fromdatepick').data('DateTimePicker').setDate(moment(x1));
-  $('#todatepick').data('DateTimePicker').setDate(moment(x2));
-  $('#sel_custom').click();
-}
-
-// implement load to perform data retrieval on period change
-function load(){
+// implement load to perform chart data retrieval on period change
+function loadChart(){
   var frompick = $('#fromdatepick').data('DateTimePicker');
   var topick = $('#todatepick').data('DateTimePicker');
   var first = ($('#dbdata tbody').find('tr').length == 0);
   $('#dbdata tbody').find('tr').remove();
   $('#query-list').empty();
-
-
-  var frompick = $('#fromdatepick').data('DateTimePicker');
-  var topick = $('#todatepick').data('DateTimePicker');
-
-  $('[data-graphrole="plot"]').each(function (i, e) {
-      $(this).grapher().zoom(
-          frompick.getDate().valueOf(),
-          topick.getDate().valueOf()
-      );
-  });
 
   $.ajax({
     type: 'POST',

@@ -1,6 +1,21 @@
 /**
  * Javascript for powa pages
  **/
+
+// implement select hook to apply zoom in on all data on page
+function grapherSelectHook(x1, x2) {
+  $('#fromdatepick').data('DateTimePicker').setDate(moment(x1));
+  $('#todatepick').data('DateTimePicker').setDate(moment(x2));
+  $('#sel_custom').click();
+}
+
+// implement sclick hook to apply zoom in on all data on page
+function grapherClickHook(x1, x2) {
+  $('#fromdatepick').data('DateTimePicker').setDate(moment(x1));
+  $('#todatepick').data('DateTimePicker').setDate(moment(x2));
+  $('#sel_custom').click();
+}
+
 $(document).ready(function () {
   /* bind the datetimepicker to the date fields */
   $('.datepick').datetimepicker({
@@ -99,7 +114,14 @@ $(document).ready(function () {
       frompick.setDate(fromDate.toDate());
       topick.setDate(toDate.toDate());
 
-      load(); //overloaded in specific template
+      $('[data-graphrole="plot"]').each(function (i, e) {
+          $(this).grapher().zoom(
+              fromDate.valueOf(),
+              toDate.valueOf()
+          );
+      });
+
+      loadChart(); //overloaded in specific template
     }
   });
 
