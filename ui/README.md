@@ -32,6 +32,7 @@ The versions showed have been tested, it may work with older versions
 
 * Perl 5.10
 * Mojolicious 4.75
+* Perl DBI and DBD-Pg modules
 * PostgreSQL 9.3
 * A CGI/Perl webserver
 
