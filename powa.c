@@ -166,8 +166,8 @@ static void powa_main(Datum main_arg)
             }
           INSTR_TIME_SET_CURRENT(begin);
           ResetLatch(&MyProc->procLatch);
-          StartTransactionCommand();
           SetCurrentStatementStartTimestamp();
+	  StartTransactionCommand();
           SPI_connect();
           PushActiveSnapshot(GetTransactionSnapshot());
           SPI_execute(q1, false, 0);
@@ -184,8 +184,10 @@ static void powa_main(Datum main_arg)
              just do another operation right now 
            */
           time_to_wait = powa_frequency - INSTR_TIME_GET_MILLISEC(end);
+          elog(DEBUG1,"Waiting for %li milliseconds",time_to_wait);
           if (time_to_wait > 0)
             {
+
                 WaitLatch(&MyProc->procLatch,
                           WL_LATCH_SET | WL_TIMEOUT | WL_POSTMASTER_DEATH,
                           time_to_wait);
