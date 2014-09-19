@@ -105,6 +105,12 @@ Change the `shared_preload_libraries` appropriately :
 shared_preload_libraries = 'powa,pg_stat_statements'# (change requires restart)
 ```
 
+If possible (check with pg_test_timing), activate track_io_timing on your instance, in postgresql.conf :
+
+```
+track_io_timing = on
+```
+
 Other GUC variables are available. Read [README.md](https://github.com/dalibo/powa/blob/master/README.md) for further details.
 
 In `pg_hba.conf`:

@@ -3,7 +3,8 @@ PostgreSQL Workload Analyzer
 
 PoWA is an extension designed to historize informations given by the
 `pg_stat_statements extension`. It provides sql SRF (Set Returning Functions)
-to gather useful information on a specified time interval.
+to gather useful information on a specified time interval. If possible (verify
+with pg_test_timing), also activate track_io_timing in postgresql.conf.
 
 PoWA requires PostgreSQL 9.3 or more.
 

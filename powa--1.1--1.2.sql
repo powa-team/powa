@@ -289,7 +289,8 @@ $PROC$ LANGUAGE plpgsql;
 
 CREATE OR REPLACE FUNCTION powa_getstatdata (IN ts_start timestamptz, IN ts_end timestamptz)
     RETURNS TABLE (md5query text, query text, dbname text, total_calls numeric, total_runtime double precision,
-    total_mesure_interval interval, total_blks_read numeric, total_blks_hit numeric)
+    total_mesure_interval interval, total_blks_read numeric, total_blks_hit numeric,
+    total_blk_read_time double precision, total_blk_write_time double precision)
 AS
 $$
 BEGIN
@@ -313,7 +314,9 @@ BEGIN
         float8larger(lead(total_time) over (querygroup) - total_time,0) runtime,
         interval_larger(lead(ts) over (querygroup) - ts,interval '0 second') mesure_interval,
         int8larger(lead(shared_blks_read) over (querygroup) - shared_blks_read,0) blks_read,
-        int8larger(lead(shared_blks_hit) over (querygroup) - shared_blks_hit,0) blks_hit
+        int8larger(lead(shared_blks_hit) over (querygroup) - shared_blks_hit,0) blks_hit,
+        float8larger(lead(blk_read_time) over (querygroup) - blk_read_time,0::double precision) blk_read_time,
+        float8larger(lead(blk_write_time) over (querygroup) - blk_write_time,0::double precision) blk_write_time
         FROM statements_history sh
         NATURAL JOIN powa_statements ps
         WINDOW querygroup AS (PARTITION BY sh.md5query ORDER BY ts)
@@ -326,7 +329,9 @@ BEGIN
     sum(s.runtime) AS total_runtime,
     sum(s.mesure_interval) AS total_mesure_interval,
     sum(s.blks_read) AS total_blks_read,
-    sum(s.blks_hit) AS total_blks_hit
+    sum(s.blks_hit) AS total_blks_hit,
+    sum(s.blk_read_time) AS total_blk_read_time,
+    sum(s.blk_write_time) AS total_blk_write_time
     FROM statements_history_differential s
     GROUP BY s.md5query, s.query, s.dbname;
 END
@@ -443,7 +448,7 @@ $function$
 ;
 
 CREATE OR REPLACE FUNCTION public.powa_getstatdata_db(ts_start timestamp with time zone, ts_end timestamp with time zone, pdbname text)
- RETURNS TABLE(md5query text, query text, dbname text, total_calls bigint, total_runtime numeric, total_blks_read bigint, total_blks_hit bigint, total_blks_dirtied bigint, total_blks_written bigint, total_temp_blks_read bigint, total_temp_blks_written bigint)
+ RETURNS TABLE(md5query text, query text, dbname text, total_calls bigint, total_runtime numeric, total_blks_read bigint, total_blks_hit bigint, total_blks_dirtied bigint, total_blks_written bigint, total_temp_blks_read bigint, total_temp_blks_written bigint, total_blk_read_time double precision, total_blk_write_time double precision)
  LANGUAGE plpgsql
 AS $function$
 BEGIN
@@ -473,7 +478,9 @@ BEGIN
     max(h.shared_blks_dirtied)-min(h.shared_blks_dirtied) AS total_blks_dirtied,
     max(h.shared_blks_written)-min(h.shared_blks_written) AS total_blks_written,
     max(h.temp_blks_read)-min(h.temp_blks_read) AS total_temp_blks_read,
-    max(h.temp_blks_written)-min(h.temp_blks_written) AS total_temp_blks_written
+    max(h.temp_blks_written)-min(h.temp_blks_written) AS total_temp_blks_written,
+    max(h.blk_read_time)-min(h.blk_read_time) AS total_blk_read_time,
+    max(h.blk_write_time)-min(h.blk_write_time) AS total_blk_write_time
     FROM statements_history h
     JOIN powa_statements s USING (md5query)
     WHERE s.dbname=pdbname
@@ -497,3 +504,5 @@ BEGIN
 END
 $function$
 ;
+
+
