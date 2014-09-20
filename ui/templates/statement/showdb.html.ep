@@ -33,6 +33,8 @@
           <th>Blocks written</th>
           <th>Temp blocks read</th>
           <th>Temp blocks written</th>
+          <th>Block read time</th>
+          <th>Block write time</th>
           <th>Query</th>
         </tr>
       </thead>

@@ -23,9 +23,9 @@ function loadChart(){
 
         $.each(row, function(i2,val){ //ech detail for a query, only 1 by query
           chart = $('<tr>');
-          chart.attr('id','row-' + val[9]);
-          query = $('<div>').attr('id',val[9]).addClass('box hid sql sql-middlesize').html(val[10]);
-          chart.click(function(){ window.location = '/statement/' + $('#dbname').text() + '/' + val[9]; });
+          chart.attr('id','row-' + val[11]);
+          query = $('<div>').attr('id',val[11]).addClass('box hid sql sql-middlesize').html(val[12]);
+          chart.click(function(){ window.location = '/statement/' + $('#dbname').text() + '/' + val[11]; });
           chart.append($('<td>').text(val[0]));
           chart.append($('<td>').text(val[1]));
           chart.append($('<td>').text(val[2]));
@@ -34,13 +34,15 @@ function loadChart(){
           chart.append($('<td>').text(val[5]));
           chart.append($('<td>').text(val[6]));
           chart.append($('<td>').text(val[7]));
-          chart.append($('<td>').text(val[8]).mouseenter(function(e){
-            var p = $('#row-'+val[9]).position();
-            var h1 = $('#row-'+val[9]).height();
-            var h2 = $('#'+val[9]).height();
-            $('#' + val[9]).css({top: p.top-h1-h2, left: p.left}).fadeIn();
+          chart.append($('<td>').text(val[8]));
+          chart.append($('<td>').text(val[9]));
+          chart.append($('<td>').text(val[10]).mouseenter(function(e){
+            var p = $('#row-'+val[11]).position();
+            var h1 = $('#row-'+val[11]).height();
+            var h2 = $('#'+val[11]).height();
+            $('#' + val[11]).css({top: p.top-h1-h2, left: p.left}).fadeIn(100);
           }).mouseleave(function(e){
-            $('#' + val[9]).fadeOut();
+            $('#' + val[11]).fadeOut(100);
           }));
         });
         $('#dbdata tbody').append(chart);
