@@ -1,4 +1,4 @@
-# wh_nagios extension
+# powa extension
 comment = 'PostgreSQL Workload Analyser-core'
 default_version = '1.2'
 module_pathname = '$libdir/powa'
