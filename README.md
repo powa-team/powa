@@ -27,6 +27,12 @@ Optionally, you can create a dedicated user for PoWA. For instance, connected on
 - configure connections in pg_hba.conf to allow connection from the server that will run the GUI
 - restart instance
 
+Upgrade from previous version:
+
+- make install in the main directory
+- restart your PostgreSQL engine to use the new powa library
+- ALTER EXTENSION powa UPDATE; -- This will take some time, a lot of things are rewritten as the schema is upgraded
+- If you have deadlock messages, it means that the powa extension is trying to update data, while your update is doing conflicting operations. To solve this, put powa.frequency=-1 to deactivate powa temporarily, then do the extension update, and put powa.frequency back to what it was before. Don't forget to reload your configuration each time.
 
 Configuration:
 ------------------------
