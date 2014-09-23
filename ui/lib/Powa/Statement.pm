@@ -82,6 +82,7 @@ sub listdbdata {
             sum(total_blks_read), sum(total_blks_hit),
             sum(total_blks_dirtied), sum(total_blks_written),
             sum(total_temp_blks_read), sum(total_temp_blks_written),
+            round(sum(total_blk_read_time)::numeric,2), round(sum(total_blk_write_time)::numeric,2),
             count(query)
         FROM (
             SELECT datname, (powa_getstatdata_db(to_timestamp(?), to_timestamp(?), datname)).*
@@ -120,6 +121,7 @@ sub dbdata {
             total_blks_read, total_blks_hit,
             total_blks_dirtied, total_blks_written,
             total_temp_blks_read, total_temp_blks_written,
+            round(total_blk_read_time::numeric,2),round(total_blk_write_time::numeric,2),
             CASE WHEN length(query) > 35 THEN substr(query,1,35) || '...' ELSE QUERY END, md5query,
             query
         FROM powa_getstatdata_db(to_timestamp(?), to_timestamp(?), ?)
@@ -130,8 +132,8 @@ sub dbdata {
 
     my $stats = [];
     while ( my @row = $sql->fetchrow_array() ) {
-        my $query = highlight_code( $row[10] );
-        $row[10] =  $query;
+        my $query = highlight_code( $row[12] );
+        $row[12] =  $query;
         push @{$stats}, {
             row => \@row
         };
