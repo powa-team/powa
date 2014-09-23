@@ -92,15 +92,16 @@ SELECT pg_catalog.pg_extension_config_dump('powa_functions','WHERE added_manuall
 
 -- Recreate all functions. Pasted from the 1.2 script
 -- Drop them before, sometimes the prototype changes...
-DROP FUNCTION powa_take_snapshot();
-DROP FUNCTION powa_take_statements_snapshot();
-DROP FUNCTION powa_statements_purge();
-DROP FUNCTION powa_statements_aggregate();
-DROP FUNCTION powa_getstatdata (IN ts_start timestamptz, IN ts_end timestamptz);
-DROP FUNCTION public.powa_getstatdata_sample(ts_start timestamp with time zone, ts_end timestamp with time zone, pmd5query text, samples integer);
-DROP FUNCTION public.powa_getstatdata_sample_db(ts_start timestamp with time zone, ts_end timestamp with time zone, p_datname text, samples integer);
-DROP FUNCTION public.powa_getstatdata_db(ts_start timestamp with time zone, ts_end timestamp with time zone, pdbname text);
-DROP FUNCTION public.powa_stats_reset();
+DROP FUNCTION IF EXISTS powa_take_snapshot();
+DROP FUNCTION IF EXISTS powa_take_statements_snapshot();
+DROP FUNCTION IF EXISTS powa_statements_purge();
+DROP FUNCTION IF EXISTS powa_statements_aggregate();
+DROP FUNCTION IF EXISTS powa_getstatdata (IN ts_start timestamptz, IN ts_end timestamptz);
+DROP FUNCTION IF EXISTS public.powa_getstatdata_sample(ts_start timestamp with time zone, ts_end timestamp with time zone, pmd5query text, samples integer);
+DROP FUNCTION IF EXISTS public.powa_getstatdata_sample_db(ts_start timestamp with time zone, ts_end timestamp with time zone, p_datname text, samples integer);
+DROP FUNCTION IF EXISTS public.powa_getstatdata_db(ts_start timestamp with time zone, ts_end timestamp with time zone, pdbname text);
+DROP FUNCTION IF EXISTS public.powa_getstatdata_detailed_db(ts_start timestamp with time zone, ts_end timestamp with time zone, pdbname text);
+DROP FUNCTION IF EXISTS public.powa_stats_reset();
 
 CREATE OR REPLACE FUNCTION powa_take_snapshot() RETURNS void AS $PROC$
 DECLARE
@@ -448,6 +449,46 @@ $function$
 ;
 
 CREATE OR REPLACE FUNCTION public.powa_getstatdata_db(ts_start timestamp with time zone, ts_end timestamp with time zone, pdbname text)
+ RETURNS TABLE(dbname text, total_calls bigint, total_runtime numeric, total_blks_read bigint, total_blks_hit bigint, total_blks_dirtied bigint, total_blks_written bigint, total_temp_blks_read bigint, total_temp_blks_written bigint, total_blk_read_time double precision, total_blk_write_time double precision)
+ LANGUAGE plpgsql
+AS $function$
+BEGIN
+    RETURN QUERY
+    WITH db_history AS (
+        SELECT unnested.dbname,(unnested.records).*
+        FROM (
+            SELECT dbh.dbname, dbh.coalesce_range, unnest(records) AS records
+            FROM powa_statements_history_db dbh
+            WHERE ( coalesce_range && tstzrange(ts_start,ts_end,'[]') OR coalesce_range is null )
+            AND dbh.dbname=pdbname
+        ) AS unnested
+        WHERE tstzrange(ts_start,ts_end,'[]') @> (records).ts
+        UNION ALL
+        SELECT dbc.dbname,(dbc.record).*
+        FROM powa_statements_history_current_db dbc
+        WHERE tstzrange(ts_start,ts_end,'[]') @> (record).ts
+        AND dbc.dbname=pdbname
+    )
+    SELECT h.dbname,
+    max(calls)-min(calls) AS total_calls,
+    round((max(total_time)-min(total_time))::numeric,3) AS total_runtime,
+    max(shared_blks_read)-min(shared_blks_read) AS total_blks_read,
+    max(shared_blks_hit)-min(shared_blks_hit) AS total_blks_hit,
+    max(shared_blks_dirtied)-min(shared_blks_dirtied) AS total_blks_dirtied,
+    max(shared_blks_written)-min(shared_blks_written) AS total_blks_written,
+    max(temp_blks_read)-min(temp_blks_read) AS total_temp_blks_read,
+    max(temp_blks_written)-min(temp_blks_written) AS total_temp_blks_written,
+    max(blk_read_time)-min(blk_read_time) AS total_blk_read_time,
+    max(blk_write_time)-min(blk_write_time) AS total_blk_write_time
+    FROM db_history h
+    WHERE h.dbname=pdbname
+    GROUP BY h.dbname
+    HAVING (max(calls)-min(calls)) > 0;
+END
+$function$
+;
+
+CREATE OR REPLACE FUNCTION public.powa_getstatdata_detailed_db(ts_start timestamp with time zone, ts_end timestamp with time zone, pdbname text)
  RETURNS TABLE(md5query text, query text, dbname text, total_calls bigint, total_runtime numeric, total_blks_read bigint, total_blks_hit bigint, total_blks_dirtied bigint, total_blks_written bigint, total_temp_blks_read bigint, total_temp_blks_written bigint, total_blk_read_time double precision, total_blk_write_time double precision)
  LANGUAGE plpgsql
 AS $function$
@@ -488,9 +529,7 @@ BEGIN
     HAVING (max(h.calls)-min(h.calls)) > 0;
 END
 $function$
-;
-
-CREATE OR REPLACE FUNCTION public.powa_stats_reset()
+;CREATE OR REPLACE FUNCTION public.powa_stats_reset()
  RETURNS boolean
  LANGUAGE plpgsql
 AS $function$
@@ -504,5 +543,3 @@ BEGIN
 END
 $function$
 ;
-
-
