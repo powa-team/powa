@@ -29,7 +29,6 @@
           <th>Blocks hit</th>
           <th>Blocks dirtied</th>
           <th>Blocks written</th>
-          <th>Temp blocks read</th>
           <th>Temp blocks written</th>
           <th>I/O time</th>
         </tr>
