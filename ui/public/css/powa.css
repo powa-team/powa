@@ -92,6 +92,7 @@ body {
 --------------------------------------------------- */
 .grapher-header {
   height: 20px;
+  background-color: #404040;
 }
 
 .graph_container {
