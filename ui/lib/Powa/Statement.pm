@@ -82,8 +82,7 @@ sub listdbdata {
             sum(total_blks_read), sum(total_blks_hit),
             sum(total_blks_dirtied), sum(total_blks_written),
             sum(total_temp_blks_read), sum(total_temp_blks_written),
-            round(sum(total_blk_read_time)::numeric,2), round(sum(total_blk_write_time)::numeric,2),
-            count(query)
+            round(sum(total_blk_read_time)::numeric,2), round(sum(total_blk_write_time)::numeric,2)
         FROM (
             SELECT datname, (powa_getstatdata_db(to_timestamp(?), to_timestamp(?), datname)).*
             FROM pg_database
@@ -124,7 +123,7 @@ sub dbdata {
             round(total_blk_read_time::numeric,2),round(total_blk_write_time::numeric,2),
             CASE WHEN length(query) > 35 THEN substr(query,1,35) || '...' ELSE QUERY END, md5query,
             query
-        FROM powa_getstatdata_db(to_timestamp(?), to_timestamp(?), ?)
+        FROM powa_getstatdata_detailed_db(to_timestamp(?), to_timestamp(?), ?)
         ORDER BY total_calls DESC
         "
     );
