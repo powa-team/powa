@@ -31,7 +31,6 @@ function loadChart(){
           tmp.append($('<td>').text(val[7]));
           tmp.append($('<td>').text(val[8]));
           tmp.append($('<td>').text(val[9]));
-          tmp.append($('<td>').text(val[10]));
         });
         $('#dbdata tbody').append(tmp);
       });
