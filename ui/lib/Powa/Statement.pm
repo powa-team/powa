@@ -157,29 +157,25 @@ sub listdbdata_agg {
     $from = substr $from, 0, -3;
     $to = substr $to, 0, -3;
 
-    $sql = $dbh->prepare("SELECT DISTINCT dbname FROM powa_statements ORDER BY dbname");
-    $sql->execute();
-    my $datnames = $sql->fetchall_arrayref();
-    $sql->finish();
-
     my $tmp;
-    my $groupby = "";
+    my $groupby = "GROUP BY ";
     my $blksize = "";
 
     # Handle case total_mesure_interval is 0 second to avoid division by zero error
-    my $total_mesure_interval = "CASE WHEN total_mesure_interval = '0 second' THEN '1 second'::interval ELSE total_mesure_interval END";
+    my $total_mesure_interval = "CASE WHEN min(total_mesure_interval) = '0 second' THEN '1 second'::interval ELSE min(total_mesure_interval) END";
 
     if ( $id eq "call") {
         $tmp = "sum(total_runtime)/extract(epoch from $total_mesure_interval) as runtime";
-        $groupby = "GROUP BY ts,datname,total_mesure_interval";
+        $groupby .= "s.ts";
     } else {
         $blksize = ", (SELECT current_setting('block_size')::numeric AS blksize) setting";
-        $tmp = "((shared_blks_read+local_blks_read+temp_blks_read)*blksize)/extract(epoch from $total_mesure_interval) as total_blks_read,
-            ((shared_blks_hit+local_blks_hit)*blksize)/extract(epoch from $total_mesure_interval) as total_blks_hit";
+        $tmp = "(sum(shared_blks_read+local_blks_read+temp_blks_read)*blksize)/extract(epoch from $total_mesure_interval) as total_blks_read,
+            (sum(shared_blks_hit+local_blks_hit)*blksize)/extract(epoch from $total_mesure_interval) as total_blks_hit";
+        $groupby .= "s.ts, blksize";
     }
 
     $sql = $dbh->prepare(
-        "SELECT (extract(epoch FROM ts)*1000)::bigint, datname,
+        "SELECT (extract(epoch FROM ts)*1000)::bigint,
             $tmp
         FROM (
             SELECT datname,(powa_getstatdata_sample_db(to_timestamp(?), to_timestamp(?), datname, 300)).*
@@ -188,7 +184,7 @@ sub listdbdata_agg {
         ) s
         $blksize
         $groupby
-        ORDER BY 1,2
+        ORDER BY 1
         "
     );
     $sql->execute($from,$to);
@@ -196,32 +192,22 @@ sub listdbdata_agg {
     my $data = [];
     my $series = {};
     use Data::Dumper;
-    foreach my $d (@{$datnames}) {
-        if ( $id eq "call") {
-            $series->{@{$d}[0] . "_total_calls"} = [];
-            $series->{@{$d}[0] . "_runtime"} = [];
-        } else {
-            $series->{@{$d}[0] . "_total_blks_read"} = [];
-            $series->{@{$d}[0] . "_total_blks_hit"} = [];
-        }
-    }
+
     while ( my @tab = $sql->fetchrow_array() ) {
         if ( $id eq "call") {
-            push @{$series->{$tab[1] . '_runtime'}},[ 0 + $tab[0], 0.0 + $tab[2] ];
+            push @{$series->{'runtime'}},[ 0 + $tab[0], 0.0 + $tab[1] ];
         } else {
-            push @{$series->{$tab[1] . '_total_blks_read'}},  [ 0 + $tab[0], 0.0 + $tab[2] ];
-            push @{$series->{$tab[1] . '_total_blks_hit'}},   [ 0 + $tab[0], 0.0 + $tab[3] ];
+            push @{$series->{'total_blks_read'}},  [ 0 + $tab[0], 0.0 + $tab[1] ];
+            push @{$series->{'total_blks_hit'}},   [ 0 + $tab[0], 0.0 + $tab[2] ];
         }
         }
     $sql->finish();
 
-    foreach my $d (@{$datnames}) {
-        if ( $id eq "call") {
-            push @{$data}, { data => $series->{@{$d}[0] . '_runtime'}, label => "@{$d}[0]" };
-        } else {
-            push @{$data}, { data => $series->{@{$d}[0]. '_total_blks_read'}, label => "Read on @{$d}[0]" };
-            push @{$data}, { data => $series->{@{$d}[0]. '_total_blks_hit'}, label => "Hit on @{$d}[0]" };
-        }
+    if ( $id eq "call") {
+        push @{$data}, { data => $series->{'runtime'}, label => "Total runtime" };
+    } else {
+        push @{$data}, { data => $series->{'total_blks_read'}, label => "Total read" };
+        push @{$data}, { data => $series->{'total_blks_hit'}, label => "Total hit" };
     }
 
     $dbh->disconnect();
