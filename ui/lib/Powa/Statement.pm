@@ -79,6 +79,7 @@ sub listdbdata {
     $to = substr $to, 0, -3;
     $sql = $dbh->prepare(
         "SELECT datname, sum(total_calls), sum(total_runtime),
+            round(sum(total_runtime)/sum(total_calls),2),
             sum(total_blks_read), sum(total_blks_hit),
             sum(total_blks_dirtied), sum(total_blks_written),
             sum(total_temp_blks_written),
@@ -117,6 +118,7 @@ sub dbdata {
     $to = substr $to, 0, -3;
     $sql = $dbh->prepare(
         "SELECT total_calls, total_runtime,
+            round(total_runtime/total_calls,2),
             total_blks_read, total_blks_hit,
             total_blks_dirtied, total_blks_written,
             total_temp_blks_read, total_temp_blks_written,
@@ -131,8 +133,8 @@ sub dbdata {
 
     my $stats = [];
     while ( my @row = $sql->fetchrow_array() ) {
-        my $query = highlight_code( $row[12] );
-        $row[12] =  $query;
+        my $query = highlight_code( $row[13] );
+        $row[13] =  $query;
         push @{$stats}, {
             row => \@row
         };

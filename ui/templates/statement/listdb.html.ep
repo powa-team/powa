@@ -25,6 +25,7 @@
           <th>Database</th>
           <th># Calls</th>
           <th>Runtime</th>
+          <th>Avg. runtime</th>
           <th>Blocks read</th>
           <th>Blocks hit</th>
           <th>Blocks dirtied</th>
