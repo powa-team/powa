@@ -1,5 +1,5 @@
 % layout config 'layout';
-% content_for header => begin
+% content_for body_scripts => begin
   <script type="text/javascript" src="<%= url_for '/js/statementdbquery.js' %>"></script>
 %end
 % my $query = stash 'query';

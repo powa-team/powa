@@ -2,6 +2,38 @@
  * Javascript for powa pages
  **/
 
+// Format time values, call formatUnit in grapher.js. Used in tables.
+function timeFormatter(val,row,index) {
+  return $.fn.formatUnit(val,'ms');
+}
+
+// Format byte values, call formatUnit in grapher.js. Used in tables.
+function byteFormatter(val,row,index) {
+  return $.fn.formatUnit(val,'B');
+}
+
+// Format queries. Used in table in showdb page.
+function queryFormatter(val,row,index) {
+  return '<button class="btn btn-info btn-xs"><span class="glyphicon glyphicon-fullscreen"></span></button> ' + row.short_query;
+}
+
+// Sort values using numeric values. Used when sorting tables.
+function customSorter(a,b){
+  a = Number(a);
+  b = Number(b);
+  if (a > b) return 1;
+  if (a < b) return -1;
+  return 0;
+}
+
+// Display prettified query on click in showdb table.
+window.queryModal = {
+  'click .btn': function (e,value,row,index) {
+    $('#query-content').html(row.query);
+    $('#query').modal();
+  }
+}
+
 // implement select hook to apply zoom in on all data on page
 function grapherSelectHook(x1, x2) {
   $('#fromdatepick').data('DateTimePicker').setDate(moment(x1));

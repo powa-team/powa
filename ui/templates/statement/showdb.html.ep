@@ -1,5 +1,5 @@
 % layout config 'layout';
-% content_for header => begin
+% content_for body_scripts => begin
 <script type="text/javascript" src="<%= url_for '/js/statementdb.js' %>"></script>
 %end
 % my $base_timestamp = stash 'base_timestamp';
@@ -22,27 +22,24 @@
 <div class="row">
   <div class="box" id="server_list">
     <b>Details for database <u><span id="dbname"><%= stash 'dbname' %></span></u>:</b><br />
-    <table id="dbdata" class="table table-condensed table-hover tablesorter">
-      <thead>
-        <tr>
-          <th># Calls</th>
-          <th>Runtime</th>
-          <th>Avg. runtime</th>
-          <th>Blocks read</th>
-          <th>Blocks hit</th>
-          <th>Blocks dirtied</th>
-          <th>Blocks written</th>
-          <th>Temp blocks read</th>
-          <th>Temp blocks written</th>
-          <th>Block read time</th>
-          <th>Block write time</th>
-          <th>Query</th>
-        </tr>
-      </thead>
-      <tbody>
-      </tbody>
+    <table id="dbdata" class="table-condensed">
     </table>
   </div>
-  <div id="query-list">
+  <div id="query" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="query-label" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+          <h4 class="modal-title" id="query-label">Query detail</h4>
+        </div>
+        <div class="modal-body">
+          <div id="query-content" class="sql sql-large">
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-primary btn-sm" data-dismiss="modal">OK</button>
+        </div>
+      </div>
+    </div>
   </div>
 </div>

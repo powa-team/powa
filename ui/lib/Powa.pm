@@ -69,8 +69,8 @@ sub startup {
     $r_auth->post('/data/statement/dbdata_agg')->to('statement#dbdata_agg')->name('statement_dbdata_agg');
     $r_auth->post('/data/statement/querydata')->to('statement#querydata')->name('statement_querydata');
     # Charts
-    $r_auth->post('/data/statement/listdbdata')->to('statement#listdbdata')->name('statement_listdbdata');
-    $r_auth->post('/data/statement/dbdata')->to('statement#dbdata')->name('statement_dbdata');
+    $r_auth->route('/data/statement/listdbdata')->to('statement#listdbdata')->name('statement_listdbdata');
+    $r_auth->route('/data/statement/dbdata')->to('statement#dbdata')->name('statement_dbdata');
 }
 
 1;

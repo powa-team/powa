@@ -32,6 +32,7 @@
     <link rel="stylesheet" media="all" type="text/css" href="<%= url_for '/css/bootstrap.min.css' %>" />
     <link rel="stylesheet" media="all" type="text/css" href="<%= url_for '/css/bootstrap-theme.min.css' %>" />
     <link rel="stylesheet" media="all" type="text/css" href="<%= url_for '/css/bootstrap-datetimepicker.min.css' %>" />
+    <link rel="stylesheet" media="all" type="text/css" href="<%= url_for '/css/bootstrap-table.min.css' %>" />
     <link rel="stylesheet" media="all" type="text/css" href="<%= url_for '/css/powa.css' %>" />
 
     <!-- Use HTML5 shim, for IE6-8 support of HTML5 elements -->
@@ -116,10 +117,10 @@
     <script type="text/javascript" src="<%= url_for '/js/flotr2.min.js' %>"></script>
     <script type="text/javascript" src="<%= url_for '/js/moment.min.js' %>"></script>
     <script type="text/javascript" src="<%= url_for '/js/jquery.min.js' %>"></script>
-    <script type="text/javascript" src="<%= url_for '/js/jquery.tablesorter.min.js' %>"></script>
     <script type="text/javascript" src="<%= url_for '/js/bootstrap.min.js' %>"></script>
     <script type="text/javascript" src="<%= url_for '/js/bootstrap-typeahead.js' %>"></script>
     <script type="text/javascript" src="<%= url_for '/js/bootstrap-datetimepicker.min.js' %>"></script>
+    <script type="text/javascript" src="<%= url_for '/js/bootstrap-table.min.js' %>"></script>
     <script type="text/javascript" src="<%= url_for '/js/powa.js' %>"></script>
     <script type="text/javascript" src="<%= url_for '/js/grapher.js' %>"></script>
     %= content_for 'body_scripts'

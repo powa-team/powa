@@ -447,7 +447,7 @@
                     val = val%steps[i];
                 }
                 if ( res == ''){
-                  return '0' + unit;
+                  return parseFloat(val).toFixed(2) + unit;
                 }
                 return res;
 

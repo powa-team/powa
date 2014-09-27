@@ -6,39 +6,87 @@
 function loadChart(){
   var frompick = $('#fromdatepick').data('DateTimePicker');
   var topick = $('#todatepick').data('DateTimePicker');
-  var first = ($('#dbdata tbody').find('tr').length == 0);
-  $('#dbdata tbody').find('tr').remove();
+  $('#dbdata').bootstrapTable('destroy');
 
-  $.ajax({
-    type: 'POST',
-    dataType: 'json',
+  $('#dbdata').bootstrapTable({
+    method: 'get',
     url: '/data/statement/listdbdata',
-    async: false,
-    data: { from: frompick.getDate().valueOf(), to: topick.getDate().valueOf() },
-    success: function(d){
-      var tmp = '';
-      $.each(d.data, function(i,row){ //each query line
-        tmp = $('<tr>');
-        $.each(row, function(i2,val){ //ech detail for a query, only 1 by query
-          tmp.click(function(){ window.location = '/statement/' + val[0]; });
-          tmp.append($('<td>').text(val[0]));
-          tmp.append($('<td>').text(val[1]));
-          tmp.append($('<td>').text(val[2]));
-          tmp.append($('<td>').text(val[3]));
-          tmp.append($('<td>').text(val[4]));
-          tmp.append($('<td>').text(val[5]));
-          tmp.append($('<td>').text(val[6]));
-          tmp.append($('<td>').text(val[7]));
-          tmp.append($('<td>').text(val[8]));
-          tmp.append($('<td>').text(val[9]));
-        });
-        $('#dbdata tbody').append(tmp);
-      });
-      if (first){
-        $('#dbdata').tablesorter({ sortList: [[0,1]] });
-      } else{
-         $('#dbdata').trigger("update");
-      }
+    queryParams: function(params){
+      return {
+        'from': frompick.getDate().valueOf(),
+        'to': topick.getDate().valueOf()
+      };
+    },
+    cache: false,
+    queryParamsType: 'limit',
+    responseHandler: function(res){ return res.data; },
+    search: true,
+    pagination: true,
+    pageSize: 10,
+    pageList: [10, 25, 50, 100, 200],
+    showColumns: true,
+    sortName: 'total_calls',
+    sortOrder: 'desc',
+    columns: [{
+        field: 'datname',
+        title: 'Database',
+        sortable: true
+      }, {
+        field: 'total_calls',
+        title: '# Calls',
+        sortable: true,
+        sorter: customSorter
+      }, {
+        field: 'total_runtime',
+        title: 'Runtime',
+        sortable: true,
+        formatter: timeFormatter,
+        sorter: customSorter
+      }, {
+        field: 'avg_runtime',
+        title: 'Avg. runtime',
+        sortable: true,
+        formatter: timeFormatter,
+        sorter: customSorter
+      }, {
+        field: 'total_blks_read',
+        title: 'Blocks read',
+        sortable: true,
+        formatter: byteFormatter,
+        sorter: customSorter
+      }, {
+        field: 'total_blks_hit',
+        title: 'Blocks hit',
+        sortable: true,
+        formatter: byteFormatter,
+        sorter: customSorter
+      }, {
+        field: 'total_blks_dirtied',
+        title: 'Blocks dirtied',
+        sortable: true,
+        formatter: byteFormatter,
+        sorter: customSorter
+      }, {
+        field: 'total_blks_written',
+        title: 'Blocks written',
+        sortable: true,
+        formatter: byteFormatter,
+        sorter: customSorter
+      }, {
+        field: 'total_temp_blks_written',
+        title: 'Temp blocks written',
+        sortable: true,
+        formatter: byteFormatter,
+        sorter: customSorter
+      }, {
+        field: 'io_time',
+        title: 'I/O time',
+        sortable: true,
+        formatter: timeFormatter,
+        sorter: customSorter
+    }],
+    onClickRow: function(row){
+      window.location = '/statement/' + row.datname;
     }
-  })
+  });
 }

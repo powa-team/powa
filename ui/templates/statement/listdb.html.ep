@@ -1,5 +1,5 @@
 % layout config 'layout';
-% content_for header => begin
+% content_for body_scripts => begin
 <script type="text/javascript" src="<%= url_for '/js/statementlistdb.js' %>"></script>
 %end
 
@@ -19,23 +19,7 @@
 <div class="row">
   <div class="box" id="server_list">
     <b>Details for all databases:</b><br />
-    <table id="dbdata" class="table table-condensed table-hover tablesorter">
-      <thead>
-        <tr>
-          <th>Database</th>
-          <th># Calls</th>
-          <th>Runtime</th>
-          <th>Avg. runtime</th>
-          <th>Blocks read</th>
-          <th>Blocks hit</th>
-          <th>Blocks dirtied</th>
-          <th>Blocks written</th>
-          <th>Temp blocks written</th>
-          <th>I/O time</th>
-        </tr>
-      </thead>
-      <tbody>
-      </tbody>
+    <table id="dbdata" class="table-condensed">
     </table>
   </div>
 </div>

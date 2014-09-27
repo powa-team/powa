@@ -30,38 +30,6 @@ body {
     line-height: 30px;
 }
 
-.nav-sidebar > .active > a {
-    color: #fff;
-    background-color: #428bca;
-}
-
-.box-content {
-    clear: both;
-    padding-top: 0px;
-}
-
-/* Tables for key value descriptions
--------------------------------------------------- */
-.table-desc th,
-.table-desc td {
-    border-top: 0;
-}
-
-.table-desc tbody tr:nth-child(odd) td,
-.table-desc tbody tr:nth-child(odd) th {
-  background-color: #f9f9fd;
-}
-
-/* Upload
--------------------------------------------------- */
-.after {
-  clear: both;
-}
-
-.progress {
-  width: 45%;
-}
-
 .global-footer {
     margin-top: 45px;
     padding: 35px 0 36px;
@@ -80,12 +48,6 @@ body {
 
 .controls p {
   padding-top: 5px;
-}
-
-/* Query textareas
---------------------------------------------------- */
-.code-font {
-  font-family: Menlo, Monaco, Consolas, "Courier New", monospace;
 }
 
 /* Graphs
@@ -143,30 +105,8 @@ label.deactivated {
     margin: 5px;
 }
 
-.messages_success {
-    border: 1px solid #cfc;
-    background-color: #efe;
-    color: #090;
-}
-
-.messages_failure {
-    border: 1px solid #fcc;
-    background-color: #fee;
-    color: #800;
-}
-
-.messages_debug {
-    border: 1px solid #ccc;
-    background-color: #eee;
-    color: #888;
-}
-
 /* Other
 --------------------------------------------------- */
-.help-block {
-    font-size: 12px;
-    font-style: italic;
-}
 
 .strong {
     font-weight: bold;
@@ -205,29 +145,14 @@ a.critical{
 #dbdata td:hover {
   cursor: pointer;
 }
-table.tablesorter thead tr .header {
-  background-image: url(/img/bg.gif);
-  background-repeat: no-repeat;
-  background-position: center right;
-  cursor: pointer;
-}
 
-table.tablesorter thead tr .headerSortUp {
-  background-image: url(/img/asc.gif);
-}
-
-table.tablesorter thead tr .headerSortDown {
-  background-image: url(/img/desc.gif);
-}
-
-.hid {
-  display: none;
-  position: absolute;
-  border: solid 1px #404040;
+#query{
+  color: #000000;
 }
 
 /* SQL beautifier
 --------------------------------------------------- */
+
 .sql {
   font-family:monospace;
   background-color: #ffffff;

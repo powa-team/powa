@@ -78,27 +78,29 @@ sub listdbdata {
     $from = substr $from, 0, -3;
     $to = substr $to, 0, -3;
     $sql = $dbh->prepare(
-        "SELECT datname, sum(total_calls), sum(total_runtime),
-            round(sum(total_runtime)/sum(total_calls),2),
-            sum(total_blks_read), sum(total_blks_hit),
-            sum(total_blks_dirtied), sum(total_blks_written),
-            sum(total_temp_blks_written),
-            round(sum(total_blk_read_time+total_blk_write_time)::numeric,2)
+        "SELECT datname, sum(total_calls) AS total_calls,
+            sum(total_runtime) AS total_runtime,
+            round(sum(total_runtime)/sum(total_calls),2) AS avg_runtime,
+            sum(total_blks_read) * b.blocksize AS total_blks_read,
+            sum(total_blks_hit) * b.blocksize AS total_blks_hit,
+            sum(total_blks_dirtied) * b.blocksize AS total_blks_dirtied,
+            sum(total_blks_written) * b.blocksize AS total_blks_written,
+            sum(total_temp_blks_written) * b.blocksize AS total_temp_blks_written,
+            round(sum(total_blk_read_time+total_blk_write_time)::numeric,2) AS io_time
         FROM (
             SELECT datname, (powa_getstatdata_db(to_timestamp(?), to_timestamp(?), datname)).*
             FROM pg_database
         ) s
-        GROUP BY datname
+        JOIN (SELECT current_setting('block_size')::int AS blocksize) b ON true
+        GROUP BY datname, b.blocksize
         ORDER BY sum(total_calls) DESC
         "
     );
     $sql->execute($from,$to);
 
     my $stats = [];
-    while ( my @row = $sql->fetchrow_array() ) {
-        push @{$stats}, {
-            row => \@row
-        };
+    while ( my $row = $sql->fetchrow_hashref() ) {
+        push @{$stats}, $row;
     }
     $sql->finish();
 
@@ -118,26 +120,30 @@ sub dbdata {
     $to = substr $to, 0, -3;
     $sql = $dbh->prepare(
         "SELECT total_calls, total_runtime,
-            round(total_runtime/total_calls,2),
-            total_blks_read, total_blks_hit,
-            total_blks_dirtied, total_blks_written,
-            total_temp_blks_read, total_temp_blks_written,
-            round(total_blk_read_time::numeric,2),round(total_blk_write_time::numeric,2),
-            CASE WHEN length(query) > 35 THEN substr(query,1,35) || '...' ELSE QUERY END, md5query,
+            total_runtime/total_calls AS avg_runtime,
+            total_blks_read * b.blocksize AS total_blks_read,
+            total_blks_hit * b.blocksize AS total_blks_hit,
+            total_blks_dirtied * b.blocksize AS total_blks_dirtied,
+            total_blks_written * b.blocksize AS total_blks_written,
+            total_temp_blks_read * b.blocksize AS total_temp_blks_read,
+            total_temp_blks_written * b.blocksize AS total_temp_blks_written,
+            total_blk_read_time * b.blocksize AS total_blk_read_time,
+            total_blk_write_time * b.blocksize AS total_blk_write_time,
+            CASE WHEN length(query) > 35 THEN substr(query,1,35) || '...' ELSE query END AS short_query,
+            md5query,
             query
-        FROM powa_getstatdata_detailed_db(to_timestamp(?), to_timestamp(?), ?)
+        FROM powa_getstatdata_detailed_db(to_timestamp(?), to_timestamp(?), ?) s
+        JOIN (SELECT current_setting('block_size')::int AS blocksize) b ON true
         ORDER BY total_calls DESC
         "
     );
     $sql->execute($from,$to,$dbname);
 
     my $stats = [];
-    while ( my @row = $sql->fetchrow_array() ) {
-        my $query = highlight_code( $row[13] );
-        $row[13] =  $query;
-        push @{$stats}, {
-            row => \@row
-        };
+    while ( my $row = $sql->fetchrow_hashref() ) {
+        my $query = highlight_code( $row->{query} );
+        $row->{query} =  $query;
+        push @{$stats}, $row;
     }
     $sql->finish();
 
