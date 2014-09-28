@@ -99,7 +99,7 @@
         html_error: function (message) {
             if (message === undefined) { message = ''; }
 
-            return '<div class="alert alert-error">'+
+            return '<div class="alert alert-danger">'+
                 '<button type="button" class="close" data-dismiss="alert">&times;</button>'+
                 '<strong>Error:</strong> '+ message +
                 '</div>';

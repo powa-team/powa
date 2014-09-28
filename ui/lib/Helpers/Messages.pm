@@ -31,7 +31,7 @@ sub register {
             }
 
             if ( @{ $self->msg_lists->{error} } ) {
-                $html .= qq{<div class="alert fade in  alert-error">};
+                $html .= qq{<div class="alert fade in  alert-danger">};
                 $html .=
                     qq{<button type="button" class="close" data-dismiss="alert">&times;</button>\n};
                 $html .= qq{<ul class="unstyled">\n};
