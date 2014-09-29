@@ -453,7 +453,7 @@ AS $function$
 BEGIN
     RETURN QUERY
     WITH query_history AS (
-        SELECT unnested.md5query,(unnested.records).*
+        SELECT (unnested.records).*
         FROM (
             SELECT sth.md5query, sth.coalesce_range, unnest(records) AS records
             FROM powa_statements_history sth
@@ -462,7 +462,7 @@ BEGIN
         ) AS unnested
         WHERE tstzrange(ts_start,ts_end,'[]') @> (records).ts
         UNION ALL
-        SELECT psc.md5query,(psc.record).*
+        SELECT (psc.record).*
         FROM powa_statements_history_current psc
         WHERE tstzrange(ts_start,ts_end,'[]') @> (record).ts
         AND psc.md5query=pmd5query
@@ -479,33 +479,33 @@ BEGIN
     max(blk_read_time)-min(blk_read_time) AS total_blk_read_time,
     max(blk_write_time)-min(blk_write_time) AS total_blk_write_time
     FROM query_history h
-    HAVING (max(calls)-min(calls)) > 0;
+    HAVING (max(calls)-min(calls)) >= 0;
 END
 $function$
 ;
 
 CREATE OR REPLACE FUNCTION public.powa_getstatdata_db(ts_start timestamp with time zone, ts_end timestamp with time zone, pdbname text)
- RETURNS TABLE(dbname text, total_calls bigint, total_runtime numeric, total_blks_read bigint, total_blks_hit bigint, total_blks_dirtied bigint, total_blks_written bigint, total_temp_blks_read bigint, total_temp_blks_written bigint, total_blk_read_time double precision, total_blk_write_time double precision)
+ RETURNS TABLE(total_calls bigint, total_runtime numeric, total_blks_read bigint, total_blks_hit bigint, total_blks_dirtied bigint, total_blks_written bigint, total_temp_blks_read bigint, total_temp_blks_written bigint, total_blk_read_time double precision, total_blk_write_time double precision)
  LANGUAGE plpgsql
 AS $function$
 BEGIN
     RETURN QUERY
     WITH db_history AS (
-        SELECT unnested.dbname,(unnested.records).*
+        SELECT (unnested.records).*
         FROM (
-            SELECT dbh.dbname, dbh.coalesce_range, unnest(records) AS records
+            SELECT dbh.coalesce_range, unnest(records) AS records
             FROM powa_statements_history_db dbh
             WHERE ( coalesce_range && tstzrange(ts_start,ts_end,'[]') OR coalesce_range is null )
             AND dbh.dbname=pdbname
         ) AS unnested
         WHERE tstzrange(ts_start,ts_end,'[]') @> (records).ts
         UNION ALL
-        SELECT dbc.dbname,(dbc.record).*
+        SELECT (dbc.record).*
         FROM powa_statements_history_current_db dbc
         WHERE tstzrange(ts_start,ts_end,'[]') @> (record).ts
         AND dbc.dbname=pdbname
     )
-    SELECT h.dbname,
+    SELECT
     max(calls)-min(calls) AS total_calls,
     round((max(total_time)-min(total_time))::numeric,3) AS total_runtime,
     max(shared_blks_read)-min(shared_blks_read) AS total_blks_read,
@@ -517,9 +517,7 @@ BEGIN
     max(blk_read_time)-min(blk_read_time) AS total_blk_read_time,
     max(blk_write_time)-min(blk_write_time) AS total_blk_write_time
     FROM db_history h
-    WHERE h.dbname=pdbname
-    GROUP BY h.dbname
-    HAVING (max(calls)-min(calls)) > 0;
+    HAVING (max(calls)-min(calls)) >= 0;
 END
 $function$
 ;
@@ -562,7 +560,7 @@ BEGIN
     JOIN powa_statements s USING (md5query)
     WHERE s.dbname=pdbname
     GROUP BY s.md5query, s.query, s.dbname
-    HAVING (max(h.calls)-min(h.calls)) > 0;
+    HAVING (max(h.calls)-min(h.calls)) >= 0;
 END
 $function$
 ;CREATE OR REPLACE FUNCTION public.powa_stats_reset()
