@@ -446,6 +446,44 @@ END
 $function$
 ;
 
+CREATE OR REPLACE FUNCTION public.powa_getstatdata_query(ts_start timestamp with time zone, ts_end timestamp with time zone, pmd5query text)
+ RETURNS TABLE(total_calls bigint, total_runtime numeric, total_blks_read bigint, total_blks_hit bigint, total_blks_dirtied bigint, total_blks_written bigint, total_temp_blks_read bigint, total_temp_blks_written bigint, total_blk_read_time double precision, total_blk_write_time double precision)
+ LANGUAGE plpgsql
+AS $function$
+BEGIN
+    RETURN QUERY
+    WITH query_history AS (
+        SELECT unnested.md5query,(unnested.records).*
+        FROM (
+            SELECT sth.md5query, sth.coalesce_range, unnest(records) AS records
+            FROM powa_statements_history sth
+            WHERE ( coalesce_range && tstzrange(ts_start,ts_end,'[]') OR coalesce_range is null )
+            AND sth.md5query=pmd5query
+        ) AS unnested
+        WHERE tstzrange(ts_start,ts_end,'[]') @> (records).ts
+        UNION ALL
+        SELECT psc.md5query,(psc.record).*
+        FROM powa_statements_history_current psc
+        WHERE tstzrange(ts_start,ts_end,'[]') @> (record).ts
+        AND psc.md5query=pmd5query
+    )
+    SELECT 
+    max(calls)-min(calls) AS total_calls,
+    round((max(total_time)-min(total_time))::numeric,3) AS total_runtime,
+    max(shared_blks_read)-min(shared_blks_read) AS total_blks_read,
+    max(shared_blks_hit)-min(shared_blks_hit) AS total_blks_hit,
+    max(shared_blks_dirtied)-min(shared_blks_dirtied) AS total_blks_dirtied,
+    max(shared_blks_written)-min(shared_blks_written) AS total_blks_written,
+    max(temp_blks_read)-min(temp_blks_read) AS total_temp_blks_read,
+    max(temp_blks_written)-min(temp_blks_written) AS total_temp_blks_written,
+    max(blk_read_time)-min(blk_read_time) AS total_blk_read_time,
+    max(blk_write_time)-min(blk_write_time) AS total_blk_write_time
+    FROM query_history h
+    HAVING (max(calls)-min(calls)) > 0;
+END
+$function$
+;
+
 CREATE OR REPLACE FUNCTION public.powa_getstatdata_db(ts_start timestamp with time zone, ts_end timestamp with time zone, pdbname text)
  RETURNS TABLE(dbname text, total_calls bigint, total_runtime numeric, total_blks_read bigint, total_blks_hit bigint, total_blks_dirtied bigint, total_blks_written bigint, total_temp_blks_read bigint, total_temp_blks_written bigint, total_blk_read_time double precision, total_blk_write_time double precision)
  LANGUAGE plpgsql
