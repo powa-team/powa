@@ -127,8 +127,8 @@ sub dbdata {
             total_blks_written * b.blocksize AS total_blks_written,
             total_temp_blks_read * b.blocksize AS total_temp_blks_read,
             total_temp_blks_written * b.blocksize AS total_temp_blks_written,
-            total_blk_read_time * b.blocksize AS total_blk_read_time,
-            total_blk_write_time * b.blocksize AS total_blk_write_time,
+            total_blk_read_time AS total_blk_read_time,
+            total_blk_write_time AS total_blk_write_time,
             CASE WHEN length(query) > 35 THEN substr(query,1,35) || '...' ELSE query END AS short_query,
             md5query,
             query
