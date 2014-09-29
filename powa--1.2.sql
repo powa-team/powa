@@ -299,7 +299,7 @@ BEGIN
         FROM (
             SELECT psh.md5query, psh.coalesce_range, unnest(records) AS records
             FROM powa_statements_history psh
-            WHERE coalesce_range && tstzrange(ts_start,ts_end,'[]') OR coalesce_range is null
+            WHERE coalesce_range && tstzrange(ts_start,ts_end,'[]')
         ) AS unnested
         WHERE tstzrange(ts_start,ts_end,'[]') @> (records).ts
         UNION ALL
@@ -350,7 +350,7 @@ BEGIN
             SELECT psh.coalesce_range, unnest(records) AS records
             FROM powa_statements_history psh
             WHERE md5query=pmd5query
-            AND (coalesce_range && tstzrange(ts_start, ts_end,'[]') OR coalesce_range is null)
+            AND coalesce_range && tstzrange(ts_start, ts_end,'[]')
         ) AS unnested
         WHERE tstzrange(ts_start, ts_end,'[]') @> (records).ts
         UNION ALL
@@ -404,7 +404,7 @@ BEGIN
             SELECT psh.coalesce_range, unnest(records) AS records
             FROM powa_statements_history_db psh
             WHERE dbname=p_datname
-            AND (coalesce_range && tstzrange(ts_start, ts_end,'[]') OR coalesce_range is null)
+            AND coalesce_range && tstzrange(ts_start, ts_end,'[]')
         ) AS unnested
         WHERE tstzrange(ts_start, ts_end,'[]') @> (records).ts
         UNION ALL
@@ -457,7 +457,7 @@ BEGIN
         FROM (
             SELECT sth.md5query, sth.coalesce_range, unnest(records) AS records
             FROM powa_statements_history sth
-            WHERE ( coalesce_range && tstzrange(ts_start,ts_end,'[]') OR coalesce_range is null )
+            WHERE coalesce_range && tstzrange(ts_start,ts_end,'[]')
             AND sth.md5query=pmd5query
         ) AS unnested
         WHERE tstzrange(ts_start,ts_end,'[]') @> (records).ts
@@ -495,7 +495,7 @@ BEGIN
         FROM (
             SELECT dbh.coalesce_range, unnest(records) AS records
             FROM powa_statements_history_db dbh
-            WHERE ( coalesce_range && tstzrange(ts_start,ts_end,'[]') OR coalesce_range is null )
+            WHERE coalesce_range && tstzrange(ts_start,ts_end,'[]')
             AND dbh.dbname=pdbname
         ) AS unnested
         WHERE tstzrange(ts_start,ts_end,'[]') @> (records).ts
@@ -533,7 +533,7 @@ BEGIN
         FROM (
             SELECT psh.md5query, psh.coalesce_range, unnest(records) AS records
             FROM powa_statements_history psh
-            WHERE ( coalesce_range && tstzrange(ts_start,ts_end,'[]') OR coalesce_range is null )
+            WHERE coalesce_range && tstzrange(ts_start,ts_end,'[]')
             AND psh.md5query IN (SELECT powa_statements.md5query FROM powa_statements WHERE powa_statements.dbname=pdbname)
         ) AS unnested
         WHERE tstzrange(ts_start,ts_end,'[]') @> (records).ts
