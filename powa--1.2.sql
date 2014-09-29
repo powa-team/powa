@@ -479,7 +479,7 @@ BEGIN
     max(blk_read_time)-min(blk_read_time) AS total_blk_read_time,
     max(blk_write_time)-min(blk_write_time) AS total_blk_write_time
     FROM query_history h
-    HAVING (max(calls)-min(calls)) >= 0;
+    HAVING (max(calls)-min(calls)) > 0;
 END
 $function$
 ;
@@ -517,7 +517,7 @@ BEGIN
     max(blk_read_time)-min(blk_read_time) AS total_blk_read_time,
     max(blk_write_time)-min(blk_write_time) AS total_blk_write_time
     FROM db_history h
-    HAVING (max(calls)-min(calls)) >= 0;
+    HAVING (max(calls)-min(calls)) > 0;
 END
 $function$
 ;
@@ -560,7 +560,7 @@ BEGIN
     JOIN powa_statements s USING (md5query)
     WHERE s.dbname=pdbname
     GROUP BY s.md5query, s.query, s.dbname
-    HAVING (max(h.calls)-min(h.calls)) >= 0;
+    HAVING (max(h.calls)-min(h.calls)) > 0;
 END
 $function$
 ;CREATE OR REPLACE FUNCTION public.powa_stats_reset()
