@@ -1,3 +1,15 @@
+## 1.2 (Not released yet)
+
+Backward compatibility
+
+  - The format of the database section of the powa.conf has changed. The new format is :
+
+     "dbname"   : "powa",
+     "host"     : "127.0.0.1",
+     "port"     : "5432",
+
+ (instead of one line containing the dbi:Pg connection info)
+
 ## 1.1 (2014-08-18)
 
 **POWA is now production ready**

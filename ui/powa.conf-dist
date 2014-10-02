@@ -7,7 +7,9 @@
     "secrets" : ["|Erp--Wjgb)+eiB/|H=|V7!#+M|L{a8=J2|gd+P1=M|&pJWq|M&,f3q^XS"],
 
     "database" : {
-        "dsn"     : "dbi:Pg:database=powa;host=127.0.0.1;port=5432",
+        "dbname"   : "powa",
+        "host"     : "127.0.0.1",
+        "port"     : "5432",
         "options"  : {
             "AutoCommit" : 0,
             "pg_enable_utf8" : 1

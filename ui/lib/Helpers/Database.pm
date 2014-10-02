@@ -8,29 +8,17 @@ use Mojo::Base 'Mojolicious::Plugin';
 use Carp;
 use DBI;
 
-has conninfo => sub { [] };
-
 sub register {
     my ( $self, $app, $config ) = @_;
 
-    # data source name
-    my $dsn = $config->{database}->{dsn};
-
-    # Check if we have a split dsn with fallback on defaults
-    unless ($dsn) {
-        my $database = $config->{database} || lc $ENV{MOJO_APP};
-        my $dsn = "dbi:Pg:database=" . $database;
-        $dsn .= ';host=' . $config->{host} if $config->{host};
-        $dsn .= ';port=' . $config->{port} if $config->{port};
-    }
-
-    # Save connection parameters
-    $self->conninfo($dsn);
-
     # Register a helper that give the database handle
+    # username, password and dbname are optionnal.
+    # both username and password must be provided to be used.
+    # if a dbname is provided, it'll overload the value configured
+    # in powa.conf
     $app->helper(
         database => sub {
-            my ( $ctrl, $username, $password ) = @_;
+            my ( $ctrl, $username, $password, $dbname ) = @_;
             my $dbh;
             my $sql;
             my $ok;
@@ -40,9 +28,12 @@ sub register {
             }
 
             # Return a new database connection handle
-            $dbh =
-                DBI->connect( $self->conninfo, $username, $password,
-                $config->{database}->{options} || {} );
+            $dbh = DBI->connect(
+                $self->conninfo($config->{database},$dbname),
+                $username,
+                $password,
+                $config->{database}->{options} || {}
+            );
 
             return 0 if (!$dbh);
 
@@ -64,6 +55,21 @@ sub register {
         } );
 
     return;
+}
+
+# Return a PG connection string. dbname can be overloaded.
+sub conninfo {
+    my ( $self, $dbconf, $dbname ) = @_;
+
+    my $db = $dbconf->{dbname} || lc $ENV{MOJO_APP};
+    $db = $dbname if defined $dbname;
+
+    my $dsn = "dbi:Pg:";
+    $dsn .= "database=" . $db;
+    $dsn .= ";host="    . $dbconf->{host} if $dbconf->{host};
+    $dsn .= ";port="    . $dbconf->{port} if $dbconf->{port};
+
+    return $dsn;
 }
 
 1;
