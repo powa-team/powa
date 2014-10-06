@@ -488,25 +488,44 @@ END
 $function$
 ;
 
+
 CREATE OR REPLACE FUNCTION public.powa_getstatdata_db(ts_start timestamp with time zone, ts_end timestamp with time zone, pdbname text)
  RETURNS TABLE(total_calls bigint, total_runtime numeric, total_blks_read bigint, total_blks_hit bigint, total_blks_dirtied bigint, total_blks_written bigint, total_temp_blks_read bigint, total_temp_blks_written bigint, total_blk_read_time double precision, total_blk_write_time double precision)
  LANGUAGE plpgsql
 AS $function$
+DECLARE min_ts timestamp with time zone;
+DECLARE max_ts timestamp with time zone;
 BEGIN
+    -- To answer this really fast, we need to not unnest everything, but to get the first and last record for this database
+    -- It will fail if stats were reset to 0, but preventing against that would be too costly
+    SELECT INTO min_ts,max_ts min(lower(coalesce_range)),max(upper(coalesce_range))
+    FROM powa_statements_history_db dbh
+    WHERE dbh.dbname=pdbname
+      AND coalesce_range && tstzrange(ts_start,ts_end,'[]');
+    -- Use these two timestamps to only retrieve records which have them
     RETURN QUERY
     WITH db_history AS (
-        SELECT (unnested.records).*
+        SELECT (unnested1.records).*
         FROM (
             SELECT dbh.coalesce_range, unnest(records) AS records
             FROM powa_statements_history_db dbh
-            WHERE coalesce_range && tstzrange(ts_start,ts_end,'[]')
+            WHERE coalesce_range @> min_ts
             AND dbh.dbname=pdbname
-        ) AS unnested
-        WHERE tstzrange(ts_start,ts_end,'[]') @> (records).ts
+        ) AS unnested1
+        WHERE tstzrange(ts_start,ts_end,'[]') @> (unnested1.records).ts
+        UNION ALL
+        SELECT (unnested2.records).*
+        FROM (
+            SELECT dbh.coalesce_range, unnest(records) AS records
+            FROM powa_statements_history_db dbh
+            WHERE coalesce_range @> max_ts
+            AND dbh.dbname=pdbname
+        ) AS unnested2
+        WHERE tstzrange(ts_start,ts_end,'[]') @> (unnested2.records).ts
         UNION ALL
         SELECT (dbc.record).*
         FROM powa_statements_history_current_db dbc
-        WHERE tstzrange(ts_start,ts_end,'[]') @> (record).ts
+        WHERE tstzrange(ts_start,ts_end,'[]') @> (dbc.record).ts
         AND dbc.dbname=pdbname
     )
     SELECT
