@@ -14,7 +14,9 @@ function byteFormatter(val,row,index) {
 
 // Format queries. Used in table in showdb page.
 function queryFormatter(val,row,index) {
-  return '<button class="btn btn-info btn-xs"><span class="glyphicon glyphicon-fullscreen"></span></button> ' + row.short_query;
+  return '<button class="btn btn-info btn-xs btn-query" title="View query text"><span class="glyphicon glyphicon-fullscreen"></span></button> '
+    + '<a href="/statement/' + $('#dbname').text() + '/' + row.md5query + '"><button class="btn btn-default btn-xs" title="View query charts"><span class="glyphicon glyphicon-search" title="View query charts"></span></button></a> '
+    + row.short_query;
 }
 
 // Sort values using numeric values. Used when sorting tables.
@@ -28,7 +30,7 @@ function customSorter(a,b){
 
 // Display prettified query on click in showdb table.
 window.queryModal = {
-  'click .btn': function (e,value,row,index) {
+  'click .btn-query': function (e,value,row,index) {
     $('#query-content').html(row.query);
     $('#query').modal();
   }
