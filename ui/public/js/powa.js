@@ -19,6 +19,12 @@ function queryFormatter(val,row,index) {
     + row.short_query;
 }
 
+// Format database (only add a button). Used in table in listdb page.
+function dbFormatter(val,row,index) {
+  return '<a href="/statement/' + row.datname + '"><button class="btn btn-default btn-xs" title="View database charts"><span class="glyphicon glyphicon-search" title="View query charts"></span></button></a> '
+    + row.datname;
+}
+
 // Sort values using numeric values. Used when sorting tables.
 function customSorter(a,b){
   a = Number(a);

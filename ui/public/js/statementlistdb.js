@@ -30,7 +30,8 @@ function loadChart(){
     columns: [{
         field: 'datname',
         title: 'Database',
-        sortable: true
+        sortable: true,
+        formatter: dbFormatter,
       }, {
         field: 'total_calls',
         title: '# Calls',
@@ -85,7 +86,7 @@ function loadChart(){
         formatter: timeFormatter,
         sorter: customSorter
     }],
-    onClickRow: function(row){
+    onDblClickRow: function(row){
       window.location = '/statement/' + row.datname;
     }
   });
