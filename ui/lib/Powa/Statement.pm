@@ -151,6 +151,43 @@ sub dbdata {
     $self->render( json => { data => $stats });
 }
 
+sub querydata {
+    my $self = shift;
+    my $dbh  = $self->database();
+    my $md5query    = $self->param("md5query");
+    my $from        = $self->param("from");
+    my $to          = $self->param("to");
+    my $sql;
+
+    $from = substr $from, 0, -3;
+    $to = substr $to, 0, -3;
+    $sql = $dbh->prepare(
+        "SELECT total_calls, total_runtime,
+            total_runtime/total_calls AS avg_runtime,
+            total_blks_read * b.blocksize AS total_blks_read,
+            total_blks_hit * b.blocksize AS total_blks_hit,
+            total_blks_dirtied * b.blocksize AS total_blks_dirtied,
+            total_blks_written * b.blocksize AS total_blks_written,
+            total_temp_blks_read * b.blocksize AS total_temp_blks_read,
+            total_temp_blks_written * b.blocksize AS total_temp_blks_written,
+            total_blk_read_time AS total_blk_read_time,
+            total_blk_write_time AS total_blk_write_time
+        FROM powa_getstatdata_query(to_timestamp(?), to_timestamp(?), ?) s
+        JOIN (SELECT current_setting('block_size')::int AS blocksize) b ON true
+        "
+    );
+    $sql->execute($from,$to,$md5query);
+
+    my $stats = [];
+    while ( my $row = $sql->fetchrow_hashref() ) {
+        push @{$stats}, $row;
+    }
+    $sql->finish();
+
+    $dbh->disconnect();
+    $self->render( json => { data => $stats });
+}
+
 
 sub listdbdata_agg {
     my $self = shift;
@@ -338,7 +375,7 @@ sub dbdata_agg {
     } );
 }
 
-sub querydata {
+sub querydata_agg {
     my $self = shift;
     my $dbh  = $self->database();
     my $id   = $self->param("id");

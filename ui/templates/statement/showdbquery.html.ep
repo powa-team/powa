@@ -1,6 +1,9 @@
 % layout config 'layout';
 % content_for body_scripts => begin
-  <script type="text/javascript" src="<%= url_for '/js/statementdbquery.js' %>"></script>
+  %= javascript begin
+    var md5query = '<%= param 'md5query' %>';
+  % end
+  %= javascript url_for '/js/statementdbquery.js'
 %end
 % my $query = stash 'query';
 % my $base_timestamp = stash 'base_timestamp';
@@ -16,8 +19,13 @@
 
 %= include('graphs/navigation');
 
+<div class="box">
+  <table id="dbdata" class="table-condensed">
+  </table>
+</div>
+
 % my $graph = ();
-% $graph->{url} = 'statement_querydata';
+% $graph->{url} = 'statement_querydata_agg';
 
 <% foreach my $section ('GEN','SHA','LOC','TMP','TIM') { %>
   % $graph->{id} = $section . stash('md5query');
