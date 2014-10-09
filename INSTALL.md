@@ -26,8 +26,16 @@ unzip powa-REL_1_1.zip
 Compile and install the software
 --------------------------------
 
-Before proceeding, be sure to have a compiler installed and the appropriate PostgreSQL development packages.
+Before proceeding, be sure to have a compiler installed and the appropriate PostgreSQL development packages. Something like
+```
+apt-get install postgresql-server-dev-9.3
+```
+or
+```
+yum install postgresql93-devel
+```
 
+Then:
 ```
 cd /usr/src/powa-REL_1_1
 make
