@@ -34,6 +34,7 @@ sub login {
             $self->msg->error("Empty password.");
             $e = 1;
         }
+        $self->stash( 'subtitle' => 'login' );
         return $self->render() if ($e);
 
         my $dbh =
@@ -57,6 +58,7 @@ sub login {
     }
     $self->flash('saved_route'=> $self->flash('saved_route'));
     $self->flash('stack'=> $self->flash('stack'));
+    $self->stash( 'subtitle' => 'login' );
     $self->render();
 }
 

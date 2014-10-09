@@ -28,8 +28,10 @@ sub listdb {
     $sql->finish();
 
     $self->stash( 'base_timestamp' => $base_timestamp );
+    $self->stash( subtitle => 'all databases' );
 
     $dbh->disconnect();
+
     $self->render();
 }
 
@@ -39,6 +41,7 @@ sub showdb {
 
     $base_timestamp = $self->config->{base_timestamp} if ( defined $self->config->{base_timestamp} );
 
+    $self->stash( subtitle => 'database ' . $self->param('dbname') );
     $self->render( 'base_timestamp' => $base_timestamp );
 }
 
@@ -61,6 +64,7 @@ sub showdbquery {
     $base_timestamp = $self->config->{base_timestamp} if ( defined $self->config->{base_timestamp} );
 
     $self->stash( query => b($query), base_timestamp => $base_timestamp );
+    $self->stash( subtitle => 'query details on database ' . $dbname );
 
     $sql->finish();
 
