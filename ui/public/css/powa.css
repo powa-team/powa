@@ -50,6 +50,11 @@ body {
   padding-top: 5px;
 }
 
+.title {
+  text-align: center;
+  color: #bbbbbb;
+}
+
 /* Graphs
 --------------------------------------------------- */
 .grapher-header {
