@@ -87,7 +87,7 @@ function loadChart(){
         sorter: customSorter
     }],
     onDblClickRow: function(row){
-      window.location = '/statement/' + row.datname;
+      window.location = getDbUrl(row.datname);
     }
   });
 }

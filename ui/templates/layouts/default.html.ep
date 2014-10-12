@@ -45,7 +45,7 @@
 
   </head>
 
-  <body>
+  <body data-from="<%= param 'from' %>" data-to="<%= param 'to' %>">
     <div class="container-fluid">
       <div class="row">
         <div class="col-md-6">
@@ -124,6 +124,9 @@
     <script type="text/javascript" src="<%= url_for '/js/bootstrap-table.min.js' %>"></script>
     <script type="text/javascript" src="<%= url_for '/js/powa.js' %>"></script>
     <script type="text/javascript" src="<%= url_for '/js/grapher.js' %>"></script>
+    <script>
+      var current_route = '<%= url_for 'current' %>';
+    </script>
     %= content_for 'body_scripts'
 
   </body>

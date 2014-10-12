@@ -7,8 +7,10 @@
 %end
 % my $query = stash 'query';
 % my $base_timestamp = stash 'base_timestamp';
+% my $from = param 'from';
+% my $to = param 'to';
 
-<%= link_to statement_showdb => { dbname => param 'dbname' } => begin %> « <%= 'Back to database' %> <%= param 'dbname' %><% end %>
+<%= link_to url_for('statement_showdb', dbname => param 'dbname')->query ( from => $from, to => $to ) => (class => "change-page") => begin %> « <%= 'Back to database' %> <%= param 'dbname' %><% end %>
 
 <div class="box">
   <b>Query :</b><br />

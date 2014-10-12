@@ -2,6 +2,26 @@
  * Javascript for powa pages
  **/
 
+// Return GET from and to params
+function getInterval() {
+  var from = $('body').data('from');
+  var to = $('body').data('to');
+  if ( from != "" && to != "" ) {
+    return "?from=" + from + "&to=" + to;
+  }
+  return "";
+}
+
+// href for a db page
+function getDbUrl(datname) {
+  return '/statement/' + datname + getInterval();
+}
+
+// href for a query page
+function getQueryUrl(datname, md5query) {
+  return '/statement/' + datname + '/' + md5query + getInterval();
+}
+
 // Format time values, call formatUnit in grapher.js. Used in tables.
 function timeFormatter(val,row,index) {
   return $.fn.formatUnit(val,'ms');
@@ -15,13 +35,13 @@ function byteFormatter(val,row,index) {
 // Format queries. Used in table in showdb page.
 function queryFormatter(val,row,index) {
   return '<button class="btn btn-info btn-xs btn-query" title="View query text"><span class="glyphicon glyphicon-fullscreen"></span></button> '
-    + '<a href="/statement/' + $('#dbname').text() + '/' + row.md5query + '"><button class="btn btn-default btn-xs" title="View query charts"><span class="glyphicon glyphicon-search" title="View query charts"></span></button></a> '
+    + '<a href="' + getQueryUrl($('#dbname').text(), row.md5query) + '"><button class="btn btn-default btn-xs" title="View query charts"><span class="glyphicon glyphicon-search" title="View query charts"></span></button></a> '
     + row.short_query;
 }
 
 // Format database (only add a button). Used in table in listdb page.
 function dbFormatter(val,row,index) {
-  return '<a href="/statement/' + row.datname + '"><button class="btn btn-default btn-xs" title="View database charts"><span class="glyphicon glyphicon-search" title="View query charts"></span></button></a> '
+  return '<a href="' + getDbUrl(row.datname) + '"><button class="btn btn-default btn-xs" title="View database charts"><span class="glyphicon glyphicon-search" title="View query charts"></span></button></a> '
     + row.datname;
 }
 
@@ -44,16 +64,32 @@ window.queryModal = {
 
 // implement select hook to apply zoom in on all data on page
 function grapherSelectHook(x1, x2) {
-  $('#fromdatepick').data('DateTimePicker').setDate(moment(x1));
-  $('#todatepick').data('DateTimePicker').setDate(moment(x2));
-  $('#sel_custom').click();
+  applyZoom(x1,x2);
 }
 
 // implement sclick hook to apply zoom in on all data on page
 function grapherClickHook(x1, x2) {
+  applyZoom(x1,x2);
+}
+
+function applyZoom(x1, x2) {
+  var from = moment(x1).format('YYYY-MM-DD HH:mm:ss');
+  var to = moment(x2).format('YYYY-MM-DD HH:mm:ss');
+  $('body').data('from', from);
+  $('body').data('to', to);
   $('#fromdatepick').data('DateTimePicker').setDate(moment(x1));
   $('#todatepick').data('DateTimePicker').setDate(moment(x2));
   $('#sel_custom').click();
+  window.history.replaceState( {}, '', current_route
+    + '?from=' + from
+    + '&to=' + to
+  );
+  $('.change-page').each(function() {
+    var href = $(this).attr('href');
+    href = href.replace(/\?from=.*/,'');
+    href = href + getInterval();
+    $(this).attr('href',href);
+  });
 }
 
 $(document).ready(function () {
@@ -207,8 +243,16 @@ $(document).ready(function () {
     }
   });
 
-  /* by default, display data from the last hour */
-  if ($('#todatepick').length != 0){
-    $('#sel_hour').click();
+  /* By default, display data from the last hour,
+     unless from and to GET params are valued
+  */
+  var from = $('body').data('from');
+  var to = $('body').data('to');
+  if ( from != '' && to != '' ) {
+    applyZoom(moment(from).valueOf(), moment(to).valueOf())
+  } else {
+    if ($('#todatepick').length != 0){
+      $('#sel_hour').click();
+    }
   }
 });

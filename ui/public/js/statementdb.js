@@ -102,7 +102,7 @@ function loadChart(){
         events: queryModal,
     }],
     onDblClickRow: function(row){
-      window.location = '/statement/' + $('#dbname').text() + '/' + row.md5query;
+      window.location = getQueryUrl($('#dbname').text(), row.md5query);
     }
   });
 }
