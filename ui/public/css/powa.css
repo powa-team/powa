@@ -151,6 +151,10 @@ a.critical{
   cursor: pointer;
 }
 
+.fixed-table-loading {
+  background-color: #232323;
+}
+
 #query{
   color: #000000;
 }
