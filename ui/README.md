@@ -60,6 +60,9 @@ Now, you'll just have to tell perl that there is an extension in /path/to/powa/m
 
 Copy `powa.conf-dist` to `powa.conf` and edit it.
 
+**CAREFUL:** If upgrading from PoWA 1.1, you need to change the format of the
+database section. See INSTALL.md in PoWA main directory for more details.
+
 To quickly run the UI, do not activate `rewrite` in the config (this
 is Apache rewrite rules when run as a CGI) and start the morbo
 webserver inside the source directory:

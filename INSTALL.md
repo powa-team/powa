@@ -167,6 +167,33 @@ updated background worker. As root, run the following command :
 service postgresql-9.3 restart
 ```
 
+Finally, adapt the ui/powa.conf file to suit the new format. For instance,
+
+
+```
+    "database" : {
+        "dsn"     : "dbi:Pg:database=powa;host=127.0.0.1;port=5432",
+        "options"  : {
+            "AutoCommit" : 0,
+            "pg_enable_utf8" : 1
+        }
+    },
+
+```
+
+must be changed in
+
+```
+    "database" : {
+        "dbname"   : "powa",
+        "host"     : "127.0.0.1",
+        "port"     : "5432",
+        "options"  : {
+            "AutoCommit" : 0,
+            "pg_enable_utf8" : 1
+        }
+    },
+```
 
 Set-up the UI
 -------------
