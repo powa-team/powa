@@ -181,7 +181,7 @@ Finally, adapt the ui/powa.conf file to suit the new format. For instance,
 
 ```
 
-must be changed in
+must be changed to
 
 ```
     "database" : {
