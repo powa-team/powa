@@ -154,13 +154,9 @@ If you already have an older PoWA installation, you can simply upgrade PoWA with
 
 First, connect to PostgreSQL as administrator and update the extension :
 ```
-bash-4.1$ psql
+bash-4.1$ psql powa
 psql (9.3.5)
 Type "help" for help.
-postgres=# create database powa;
-CREATE DATABASE
-postgres=# \c powa
-You are now connected to database "powa" as user "postgres".
 powa=# alter extension powa update to version '1.2';
 ALTER EXTENSION
 ```
