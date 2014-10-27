@@ -12,7 +12,7 @@ Download PoWA from the website
 ------------------------------
 
 ```
-wget https://github.com/dalibo/powa/archive/REL_1_1.zip
+wget https://github.com/dalibo/powa/archive/REL_1_2.zip
 ```
 
 Unpack the downloaded file
@@ -37,7 +37,7 @@ yum install postgresql93-devel
 
 Then:
 ```
-cd /usr/src/powa-REL_1_1
+cd /usr/src/powa-REL_1_2
 make
 ```
 
@@ -73,6 +73,10 @@ It should output something like the following :
 
 Create a PoWA database and create required extensions
 -----------------------------------------------------
+
+Note: if you are upgrading from a previous PoWA release, please consult the
+upgrading section at the end of this file.
+
 
 First, connect to PostgreSQL as administrator :
 ```
@@ -141,6 +145,30 @@ PostgreSQL should output the following messages in the log files :
 2014-07-25 03:48:20 IST LOG:  registering background worker "powa"
 2014-07-25 03:48:20 IST LOG:  loaded library "powa"
 2014-07-25 03:48:20 IST LOG:  loaded library "pg_stat_statements"
+```
+
+Upgrading from a previous version of PoWA
+-----------------------------------------
+
+If you already have an older PoWA installation, you can simply upgrade PoWA with the following steps :
+
+First, connect to PostgreSQL as administrator and update the extension :
+```
+bash-4.1$ psql
+psql (9.3.5)
+Type "help" for help.
+postgres=# create database powa;
+CREATE DATABASE
+postgres=# \c powa
+You are now connected to database "powa" as user "postgres".
+powa=# alter extension powa update to version '1.2';
+ALTER EXTENSION
+```
+
+Next, you will need to restart PostgreSQL in order to take account of the
+updated background worker. As root, run the following command :
+```
+service postgresql-9.3 restart
 ```
 
 
