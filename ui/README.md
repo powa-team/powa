@@ -4,7 +4,7 @@ PostgreSQL Workload Analyzer User Interface
 Overview
 --------
 
-You can run the POWA User Interface in various ways : as Perl webservice (Morbo), as a CGI with Apache or with Nginx (Hypnotoad).
+You can run the POWA User Interface in various ways : as Perl webservice (Morbo), as a CGI with Apache or with Nginx (as a reverse proxy in front of Hypnotoad).
 
 But first let's talk about safety:
 
