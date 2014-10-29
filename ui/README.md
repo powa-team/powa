@@ -4,6 +4,10 @@ PostgreSQL Workload Analyzer User Interface
 Overview
 --------
 
+You can run the POWA User Interface in various ways : as Perl webservice (Morbo), as a CGI with Apache or with Nginx (Hypnotoad).
+
+But first let's talk about safety:
+
 /!\ WARNING /!\
 -------------------------
 
@@ -39,14 +43,14 @@ The versions showed have been tested, it may work with older versions
 Install
 -------
 
-Install powa extension and configure it as seen it main README.powa file.
+Install powa extension and configure it as seen it main README.md file.
 
 
 Install other prerequisites: Mojolicious is available on CPAN and
 sometimes packages, for example the package in Debian is
 `libmojolicious-perl`
 
-If the needed version is not available anymore on you distribution, you can
+If the needed version is not available anymore on your distribution, you can
 download Mojolicious 4.75 [here](http://backpan.perl.org/authors/id/S/SR/SRI/Mojolicious-4.75.tar.gz).
 
 As you are then not using a package, you may not want to install Mojolicious globally on your system. So here is how to install it locally (let's say you installed powa in /path/to/powa):
@@ -63,6 +67,9 @@ Copy `powa.conf-dist` to `powa.conf` and edit it.
 **CAREFUL:** If upgrading from PoWA 1.1, you need to change the format of the
 database section. See INSTALL.md in PoWA main directory for more details.
 
+Run With Morbo
+-------------------
+
 To quickly run the UI, do not activate `rewrite` in the config (this
 is Apache rewrite rules when run as a CGI) and start the morbo
 webserver inside the source directory:
@@ -73,10 +80,13 @@ If you have installed Mojolicious locally, you'll have to do this command instea
 
     PERL5LIB=/path/to/powa/mojo/share/perl5/site_perl mojo/bin/site_perl/morbo ui/script/powa
 
-Of course, putting PERL5LIB and PATH in your bashrc wouldn't be a bad idea...
+Of course, putting PERL5LIB and PATH in your .bashrc file wouldn't be a bad idea...
 
 It will output what is printed to STDOUT/STDOUT in the code in the
 term. The web pages are available on http://localhost:3000/
+
+Run With Apache
+-------------------------------
 
 To run the UI with Apache, here is an example using CGI:
 
@@ -117,3 +127,10 @@ To run the UI with Apache, here is an example using CGI:
 
         CustomLog ${APACHE_LOG_DIR}/powa.log combined
     </VirtualHost>
+
+Run with Nginx
+-------------------
+
+If you want ot use Nginx, the best solution is probably to run Hypnotoad behind a reverse proxy:
+
+More details here : http://mojolicio.us/perldoc/Mojolicious/Guides/Cookbook#Nginx
