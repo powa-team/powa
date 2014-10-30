@@ -157,7 +157,7 @@ First, connect to PostgreSQL as administrator and update the extension :
 bash-4.1$ psql powa
 psql (9.3.5)
 Type "help" for help.
-powa=# ALTER EXTENSION powa UPDATE TO '1.2';
+powa=# ALTER EXTENSION powa UPDATE ;
 ALTER EXTENSION
 ```
 
