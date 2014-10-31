@@ -95,7 +95,7 @@ function applyZoom(x1, x2) {
 $(document).ready(function () {
   /* bind the datetimepicker to the date fields */
   $('.datepick').datetimepicker({
-    format: 'DD/MM/YYYY HH:mm:ss'
+    format: 'YYYY-MM-DD HH:mm:ss'
   });
 
   $('[data-graphid]').each(function () {
