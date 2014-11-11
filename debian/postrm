@@ -1,0 +1,25 @@
+#!/bin/sh
+# postrm script for powa
+
+set -e
+
+case "$1" in
+	remove|upgrade|failed-upgrade|abort-install|abort-upgrade|disappear)
+	;;
+
+	purge)
+		rm -f /usr/share/powa-ui/powa.conf
+		rm -f /etc/powa/powa.conf
+		rm -f /etc/logrotate.d/powa
+		rm -f /usr/share/doc/postgresql-doc-9.3/extension/README.md
+	;;
+	
+	*)
+		echo "postrm called with unknown argument \`$1'" >&2
+		exit 1
+	;;
+esac
+
+#DEBHELPER#
+
+exit 0

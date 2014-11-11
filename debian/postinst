@@ -1,0 +1,49 @@
+#!/bin/sh
+# postinst script for powa
+
+set -e
+# Create conf and log directories if they don't exist.
+mkdir -p /etc/powa /var/log/powa
+# Remove existing symlink if it exists.
+rm -f /usr/share/powa-ui/powa.conf
+
+case "$1" in
+	configure)
+		if [ -f /usr/share/powa-ui/powa.conf-dist ]; then
+			cp /usr/share/powa-ui/powa.conf-dist /etc/powa/powa.conf
+			ln -s /etc/powa/powa.conf /usr/share/powa-ui/powa.conf
+			echo "[INFO] Adapt '/etc/powa/powa.conf' file to connect to PostgreSQL."
+		else
+			echo "[ERROR] '/usr/share/powa-ui/powa.conf-dist' not found !"
+			exit 1
+		fi
+		# Configure logrotate if installed (optional)
+		if [ -d /etc/logrotate.d/ ]; then
+cat > /etc/logrotate.d/powa <<EOF
+/var/log/powa/powa.log {
+	weekly
+	copytruncate
+	missingok
+	rotate 52
+	compress
+	delaycompress
+	notifempty
+}
+EOF
+		fi
+		# Restart the service
+		invoke-rc.d powa restart || true
+	;;
+
+	abort-upgrade|abort-remove|abort-deconfigure)
+	;;
+
+	*)
+		echo "postinst called with unknown argument \`$1'" >&2
+		exit 1
+	;;
+esac
+
+#DEBHELPER#
+
+exit 0
