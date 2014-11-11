@@ -68,6 +68,81 @@ Set up the UI:
 
 Read [ui/README.md](https://github.com/dalibo/powa/blob/master/ui/README.md).
 
+Easy install from a Debian package:
+--------------------------------------
+
+The package is built and tested on a Debian 7.5 (Wheezy) and should work on later Debian releases.
+
+1- Technical requirements:
+
+	- postgresql-server-dev-9.3 (for the build of PoWA extension)
+	- postgresql (>= 9.3)
+	- postgresql-contrib (>= 9.3)
+	- libdbd-pg-perl (>= 2.19.2-2)
+	- libmojolicious-perl (>= 4.63)
+
+The libmojolicious-perl (>= 4.63) is not available in the Wheezy repo. To install it follow these steps :
+
+```
+$ wget http://backpan.perl.org/authors/id/S/SR/SRI/Mojolicious-4.63.tar.gz
+$ cd Mojolicious-4.63
+$ perl Makefile.PL
+$ checkinstall -D (install checkinstall if it isn't installed)
+```
+
+Note :
+In order to create and install correctly libmojolicious-perl, you have to set some package's metadata prompted by checkinstall :
+- Set 'Summary' option (1) to "simple, yet powerful, Web Application Framework"
+- Set 'Name' option (2) to "libmojolicious-perl"
+- Hit ENTER and it is done ;)
+
+Look [here](https://wiki.postgresql.org/wiki/Apt) for more details about installing PostgreSQL 9.3.
+
+2- Download the [PoWA last release](https://github.com/abessifi/powa) and create an upstream tarball:
+
+```
+$ git clone https://github.com/abessifi/powa powa_1.2.orig
+$ tar czf powa_1.2.orig.tar.gz powa_1.2.orig
+```
+
+3- Build the package :
+
+```
+$ cd powa_1.2.orig
+$ debuild -us -uc
+$ cd ..
+```
+
+4- Install the package and check the service :
+
+Once created, the powa_1.2-1_*.deb package could be used to install PoWA in other machines (with same system architecture).
+
+```
+$ dpkg -i powa_1.2-1_*.deb
+```
+
+PoWA is now installed and handled by an initscript. To check if the service is running :
+
+```
+$ service status powa
+```
+
+If it is running, access the web UI on http://localhost:3000
+Otherwise, try to adapt the PoWA's config file /etc/powa/powa.conf and the default service parameters in /etc/default/powa, then restart the service :
+
+```
+$ service restart powa
+```
+
+5- Setup the stats collector :
+
+This step is well explained in the "Create a PoWA database" and "Modify the configuration files" sections [here](https://github.com/dalibo/powa/blob/master/INSTALL.md).
+
+6- Troubleshooting :
+
+- First check the logs on /var/log/powa/powa.log
+- Make sure you've installed the required packages with required versions.
+- If powa service couldn't be started, make sure to correctly set the variables DAEMON and PERL5LIB in /etc/default/powa. The command "which morbo" gives you the correct absolute path to the 'morbo' binary.
 
 Impact on performances
 ---------------------------
