@@ -44,11 +44,11 @@ do_start()
 	# 0 if daemon has been started
 	# 1 if daemon was already running
 	# 2 if daemon could not be started
-	[ -f $PIDFILE ] && kill -s 0 `cat $PIDFILE` && return 1
+	[ -f $PIDFILE ] && kill -s 0 `cat $PIDFILE` 2> /dev/null && return 1
 
 	export PERL5LIB
 	mkdir -p $LOG_DIR
-	start-stop-daemon --start --quiet --make-pidfile --pidfile $PIDFILE --background --startas /bin/bash -- -c "exec $DAEMON $DAEMON_OPTS $SCRIPT $SCRIPT_OPTS >> $LOG_FILE 2>&1" || return 2
+	start-stop-daemon --start --quiet --pidfile $PIDFILE --background --startas /bin/bash -- -c "exec $DAEMON $DAEMON_OPTS $SCRIPT $SCRIPT_OPTS >> $LOG_FILE 2>&1" || return 2
 
 }
 
@@ -92,8 +92,11 @@ case "$1" in
 	esac
 	;;
   status)
-       status_of_proc "$DAEMON" && exit 0 || exit $?
-       ;;
+	[ -f $PIDFILE ] && kill -s 0 `cat $PIDFILE` 2> /dev/null
+	case "$?" in
+		0) log_daemon_msg "is running" $NAME && log_end_msg 0 ;;
+		1) log_daemon_msg "is not running" $NAME && log_end_msg 1 ;;
+    ;;
   restart|force-reload)
 	log_daemon_msg "Restarting $DESC" "$NAME"
 	do_stop
