@@ -4,6 +4,7 @@ ui/powa.conf
 ui/log
 *.swp
 debian/files
+debian/patches
 debian/powa
 debian/powa.debhelper.log
 debian/powa.postinst.debhelper
