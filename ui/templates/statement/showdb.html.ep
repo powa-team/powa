@@ -3,8 +3,8 @@
 <script type="text/javascript" src="<%= url_for '/js/statementdb.js' %>"></script>
 %end
 % my $base_timestamp = stash 'base_timestamp';
-% my $from = param 'from';
-% my $to = param 'to';
+% my $from = param('from') || '';
+% my $to = param('to') || '';
 
 <%= link_to url_for('site_home')->query( from => $from, to => $to ) => ( class => "change-page" ) => begin %> « <%= 'Back to all databases' %><% end %>
 

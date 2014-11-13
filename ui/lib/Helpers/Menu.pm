@@ -36,9 +36,13 @@ sub register {
                     dbs        => \@dbs
                 );
 
-                $html = $self->render(
-                    template => 'helpers/user_menu',
-                    partial  => 1 );
+                if ( $Mojolicious::VERSION >= 5.00 ) {
+                    $html = $self->render_to_string( template => 'helpers/user_menu' );
+                } else {
+                    $html = $self->render(
+                        template => 'helpers/user_menu',
+                        partial  => 1 );
+                }
             }
 
             return b($html);

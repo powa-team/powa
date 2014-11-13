@@ -8,6 +8,7 @@ use Mojo::Base 'Mojolicious::Controller';
 use Data::Dumper;
 use Digest::SHA qw(sha256_hex);
 use Mojo::ByteStream 'b';
+use Mojo::JSON;
 use Powa::Beautify;
 
 sub listdb {
@@ -199,7 +200,6 @@ sub listdbdata_agg {
     my $id   = $self->param("id");
     my $from = $self->param("from");
     my $to   = $self->param("to");
-    my $json = Mojo::JSON->new;
     my $section_h;
     my $sql;
 
@@ -262,7 +262,7 @@ sub listdbdata_agg {
     $dbh->disconnect();
 
     my $properties = {};
-    $properties->{legend}{show} = $json->false;
+    $properties->{legend}{show} = Mojo::JSON->false;
     $properties->{legend}{position} = "ne";
     if ( $id eq "call" ){
          $section_h = 'Query runtime per second';
@@ -270,11 +270,11 @@ sub listdbdata_agg {
     } else {
         $section_h = 'Blocks access in Bps' if ( $id eq "blks" );
         $properties->{yaxis}{unit} = 'Bps';
-        $properties->{lines}{stacked} = $json->true;
-        $properties->{lines}{fill} = $json->true;
+        $properties->{lines}{stacked} = Mojo::JSON->true;
+        $properties->{lines}{fill} = Mojo::JSON->true;
     }
     $properties->{title} = "POWA : $section_h (all databases)";
-    $properties->{yaxis}{autoscale} = $json->true;
+    $properties->{yaxis}{autoscale} = Mojo::JSON->true;
     $properties->{yaxis}{autoscaleMargin} = 0.2;
 
     $self->render( json => {
@@ -289,7 +289,6 @@ sub dbdata_agg {
     my $id   = $self->param("id");
     my $from = $self->param("from");
     my $to   = $self->param("to");
-    my $json = Mojo::JSON->new;
     my $section_h;
     my $sql;
 
@@ -358,7 +357,7 @@ sub dbdata_agg {
     $section_h = 'Blocks' if ( $section eq "blks" );
 
     my $properties = {};
-    $properties->{legend}{show} = $json->false;
+    $properties->{legend}{show} = Mojo::JSON->false;
     $properties->{legend}{position} = "ne";
     $properties->{title} = "POWA : $section_h (on database $dbname)";
     if ( $section eq "call" ){
@@ -366,11 +365,11 @@ sub dbdata_agg {
     } else {
         $properties->{yaxis}{unit} = 'Bps';
     }
-    $properties->{yaxis}{autoscale} = $json->true;
+    $properties->{yaxis}{autoscale} = Mojo::JSON->true;
     $properties->{yaxis}{autoscaleMargin} = 0.2;
     if ( $section eq "blks" ) {
-        $properties->{lines}{stacked} = $json->true;
-        $properties->{lines}{fill} = $json->true;
+        $properties->{lines}{stacked} = Mojo::JSON->true;
+        $properties->{lines}{fill} = Mojo::JSON->true;
     }
 
     $self->render( json => {
@@ -385,7 +384,6 @@ sub querydata_agg {
     my $id   = $self->param("id");
     my $from = $self->param("from");
     my $to   = $self->param("to");
-    my $json = Mojo::JSON->new;
     my $dbname;
     my $section_h;
     my $sql;
@@ -513,7 +511,7 @@ sub querydata_agg {
     $section_h = 'Temporary blocks in Bps' if ( $section eq 'TMP' );
     $section_h = 'Read / write time' if ( $section eq 'TIM' );
     my $properties = {};
-    $properties->{legend}{show} = $json->false;
+    $properties->{legend}{show} = Mojo::JSON->false;
     $properties->{legend}{position} = "ne";
     $properties->{title} = "POWA : $section_h (on database $dbname)";
     if ($section eq "GEN"){
@@ -523,7 +521,7 @@ sub querydata_agg {
     } else {
         $properties->{yaxis}{unit} = 'Bps';
     }
-    $properties->{yaxis}{autoscale} = $json->true;
+    $properties->{yaxis}{autoscale} = Mojo::JSON->true;
     $properties->{yaxis}{autoscaleMargin} = 0.2;
     $self->render( json => {
         series      => $data,
