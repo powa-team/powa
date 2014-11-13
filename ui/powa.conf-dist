@@ -2,9 +2,15 @@
     "title" : "Powa",
 
     "rewrite": 0,
-    "base_url" : "http://www.example.com/powa/",
+
+	"base_url" : "http://localhost/powa/",
 
     "secrets" : ["|Erp--Wjgb)+eiB/|H=|V7!#+M|L{a8=J2|gd+P1=M|&pJWq|M&,f3q^XS"],
+
+	"hypnotoad" : {
+		"listen"  : ["http://localhost:3000"],
+		"pid_file": "/var/run/powa.pid"
+	},
 
     "database" : {
         "dbname"   : "powa",
