@@ -141,6 +141,7 @@ This step is well explained in the "Create a PoWA database" and "Modify the conf
 6- Troubleshooting :
 
 - First check the logs on /var/log/powa/powa.log
+- For more details, enable the debug level (MOJO_LOG_LEVEL="debug") in /etc/default/powa and restart the service.
 - Make sure you've installed the required packages with required versions.
 - If powa service couldn't be started, make sure to correctly set the variables DAEMON and PERL5LIB in /etc/default/powa. The command "which morbo" gives you the correct absolute path to the 'morbo' binary.
 
