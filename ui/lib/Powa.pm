@@ -19,7 +19,12 @@ sub startup {
     $self->plugin( charset => { charset => 'utf8' } );
 
     # load configuration
-    my $config_file = $self->home . '/powa.conf';
+    my $config_file;
+    if ( defined $ENV{POWA_CONFIG_FILE} ) {
+        $config_file = $ENV{POWA_CONFIG_FILE};
+    } else {
+        $config_file = $self->home . '/powa.conf';
+    }
     my $config = $self->plugin( 'JSONConfig' => { file => $config_file } );
 
     # setup secret passphrase
