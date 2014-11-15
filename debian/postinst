@@ -28,8 +28,6 @@ cat > /etc/logrotate.d/powa <<EOF
 }
 EOF
 		fi
-		# Restart the service
-		invoke-rc.d powa restart || true
 	;;
 
 	abort-upgrade|abort-remove|abort-deconfigure)

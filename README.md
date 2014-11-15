@@ -75,16 +75,20 @@ The package is built and tested on a Debian 7.5 (Wheezy) and should work on late
 
 1- Technical requirements:
 
-	- postgresql-server-dev-9.3 (for the build of PoWA extension)
 	- postgresql (>= 9.3)
 	- postgresql-contrib (>= 9.3)
+	- postgresql-server-dev-9.3 (for the build of PoWA extension)
 	- libdbd-pg-perl (>= 2.19.2-2)
 	- libmojolicious-perl (>= 4.63)
+
+Look [here](https://wiki.postgresql.org/wiki/Apt) for more details about installing PostgreSQL 9.3.
 
 The libmojolicious-perl (>= 4.63) is not available in the Wheezy repo. To install it follow these steps :
 
 ```
+$ cd /tmp
 $ wget http://backpan.perl.org/authors/id/S/SR/SRI/Mojolicious-4.63.tar.gz
+$ tar xzf Mojolicious-4.63.tar.gz
 $ cd Mojolicious-4.63
 $ perl Makefile.PL
 $ checkinstall -D (install checkinstall if it isn't installed)
@@ -92,11 +96,10 @@ $ checkinstall -D (install checkinstall if it isn't installed)
 
 Note :
 In order to create and install correctly libmojolicious-perl, you have to set some package's metadata prompted by checkinstall :
+- Answer 'N' to the question "Should I create a default set of package docs?"
 - Set 'Summary' option (1) to "simple, yet powerful, Web Application Framework"
 - Set 'Name' option (2) to "libmojolicious-perl"
 - Hit ENTER and it is done ;)
-
-Look [here](https://wiki.postgresql.org/wiki/Apt) for more details about installing PostgreSQL 9.3.
 
 2- Download the [PoWA last release](https://github.com/abessifi/powa) and create an upstream tarball:
 
@@ -124,7 +127,7 @@ $ dpkg -i powa_1.2-1_*.deb
 PoWA is now installed and handled by an initscript. To check if the service is running :
 
 ```
-$ service status powa
+$ service powa status
 ```
 
 If it is running, access the web UI on http://localhost:3000
