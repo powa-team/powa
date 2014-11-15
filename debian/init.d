@@ -30,8 +30,6 @@ SCRIPTNAME=/etc/init.d/$NAME
 # Read configuration variable file if it is present
 [ -r /etc/default/$NAME ] && . /etc/default/$NAME
 
-export MOJO_LOG_LEVEL
-
 # Depend on lsb-base (>= 3.0-6) to ensure that this file is present.
 . /lib/lsb/init-functions
 
@@ -46,8 +44,11 @@ do_start()
 	# 2 if daemon could not be started
 	[ -f $PIDFILE ] && kill -s 0 `cat $PIDFILE` 2> /dev/null && return 1
 
+	export POWA_CONFIG_FILE
+	export MOJO_LOG_LEVEL
 	export PERL5LIB
 	mkdir -p $LOG_DIR
+
 	start-stop-daemon --start --quiet --pidfile $PIDFILE --background --startas /bin/bash -- -c "exec $DAEMON $DAEMON_OPTS $SCRIPT $SCRIPT_OPTS >> $LOG_FILE 2>&1" || return 2
 
 }

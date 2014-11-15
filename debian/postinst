@@ -4,14 +4,11 @@
 set -e
 # Create conf and log directories if they don't exist.
 mkdir -p /etc/powa /var/log/powa
-# Remove existing symlink if it exists.
-rm -f /usr/share/powa-ui/powa.conf
 
 case "$1" in
 	configure)
 		if [ -f /usr/share/powa-ui/powa.conf-dist ]; then
 			cp /usr/share/powa-ui/powa.conf-dist /etc/powa/powa.conf
-			ln -s /etc/powa/powa.conf /usr/share/powa-ui/powa.conf
 			echo "[INFO] Adapt '/etc/powa/powa.conf' file to connect to PostgreSQL."
 		else
 			echo "[ERROR] '/usr/share/powa-ui/powa.conf-dist' not found !"

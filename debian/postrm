@@ -8,7 +8,6 @@ case "$1" in
 	;;
 
 	purge)
-		rm -f /usr/share/powa-ui/powa.conf
 		rm -f /etc/powa/powa.conf
 		rm -f /etc/logrotate.d/powa
 		rm -f /usr/share/doc/postgresql-doc-9.3/extension/README.md
