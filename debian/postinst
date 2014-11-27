@@ -1,15 +1,123 @@
-#!/bin/sh
+#!/bin/bash
 # postinst script for powa
 
 set -e
-# Create conf and log directories if they don't exist.
-mkdir -p /etc/powa /var/log/powa
+
+# Source debconf library.
+. /usr/share/debconf/confmodule
+
+# Check if a giving PostgreSQL extension exists or not.
+check_db_extension(){
+	output=$(su - postgres -c "psql -d $1 -tAc \"SELECT 1 FROM pg_extension WHERE extname='$2';\"")
+	if [ "$output" == 1 ]
+	then
+		echo "[INFO] '$2' extension found."
+		return 0
+	fi
+	echo "[INFO] '$2' extension not found."
+	return 1
+}
+
+# Create a PostgreSQL extension from a giving name
+create_db_extension(){
+	su - postgres -c "psql -d $1 -c \"CREATE extension $2;\""
+	if [ $? == 0 ]; then
+		echo "[INFO] Extension '$2' created."
+		return 0
+	else
+		echo "[ERROR] Could not create extension '$2'."
+		return 1
+	fi
+}
+
+# Upgrade powa extension if it exists
+upgrade_extension(){
+	if [ $1 == true ]; then
+		su - postgres -c "psql -d powa -c \"ALTER EXTENSION powa UPDATE;\"" || return 1
+		echo "[INFO] 'powa' extension updated."
+	fi
+}
+
+# Backup PoWA DB before purge.
+backup_db(){
+	echo "[INFO] Backing up powa DB..."
+	timestamp=$(date +'%d-%m-%Y')
+	backup_dest=/tmp/powa-backup-${timestamp}.sql
+	su - postgres -c "pg_dump -c powa -f $backup_dest" || return 1
+	echo "[INFO] Old DB backed up in '$backup_dest'."
+}
+
+# Create PostreSQL user to access the PoWA GUI.
+create_user(){
+	# Returns :
+	# 0 => OK (default).
+	# 1 => user creation/update failed.
+	db_get powa/user_exist
+	exist=$RET
+	db_get powa/get_password
+	password=$RET
+	if [ "$exist" == true ]; then
+		# User exists. Alter password.
+		su - postgres -c "psql -c \"ALTER USER powa WITH PASSWORD '$password';\"" || return 1
+		echo "[INFO] User 'powa' exist. Password updated."
+	else
+		# Create user.
+		su - postgres -c "psql -c \"CREATE USER powa WITH SUPERUSER PASSWORD '$password';\"" || return 1
+		echo "[INFO] 'powa' user created."
+	fi
+}
+
+# Create and initialize PoWA DB
+config_powa_db(){
+	# returns :
+	# 0 => Keep existing powa DB and don't check extensions.
+	# 1 => Could not create powa DB.
+	# 2 => Could not purge existing DB.
+	db_get powa/db_exist
+	exist=$RET
+	db_get powa/db_reset
+	do_reset=$RET
+	db_get powa/db_backup
+	do_backup=$RET
+	db_get powa/ext_upgrade
+	do_upgrade=$RET
+	# Keep the old database.
+	if [[ "$exist" == true && "$do_reset" == false ]]; then
+		echo "[WARN] Leave 'powa' database unchecked !"
+	# Backup and purge the old database.
+	elif [[ "$exist" == true && "$do_reset" == true ]]; then
+		[ $do_backup == true ] && backup_db
+		echo "[INFO] Dropping database..."
+		# Check if the DB has active connections
+		pid=$(su - postgres -c "psql -tAc \"select pg_stat_activity.pid from pg_stat_activity where datname='powa';\"")
+		if [ ! -z "$pid" ]; then
+			echo "[WARN] Database 'powa' is being accessed by other users."
+			echo "[ERROR] Database removal failed."
+			return 2
+		fi
+		su - postgres -c "dropdb powa"
+		exist=false
+	fi
+	# Create new PoWA database.
+	if [ "$exist" == false ]; then
+		echo "[INFO] Creating new PoWA database..."
+		su - postgres -c "createdb powa" || return 1
+	fi
+	check_db_extension 'powa' 'pg_stat_statements' || create_db_extension 'powa' 'pg_stat_statements'
+	check_db_extension 'powa' 'btree_gist' || create_db_extension 'powa' 'btree_gist'
+	check_db_extension 'powa' 'powa' && upgrade_extension $do_upgrade || create_db_extension 'powa' 'powa'
+	# Create PostgreSQL user to access the PoWA GUI
+	create_user
+	# Clean debconf DB for security reasons.
+	db_purge || true
+}
 
 case "$1" in
 	configure)
+		# Create conf and log directories if they don't exist.
+		mkdir -p /etc/powa /var/log/powa
 		if [ -f /usr/share/powa-ui/powa.conf-dist ]; then
 			cp /usr/share/powa-ui/powa.conf-dist /etc/powa/powa.conf
-			echo "[INFO] Adapt '/etc/powa/powa.conf' file to connect to PostgreSQL."
 		else
 			echo "[ERROR] '/usr/share/powa-ui/powa.conf-dist' not found !"
 			exit 1
@@ -28,6 +136,9 @@ cat > /etc/logrotate.d/powa <<EOF
 }
 EOF
 		fi
+	config_powa_db
+	echo "[INFO] Adapt '/etc/powa/powa.conf' file to connect to PostgreSQL."
+	echo "[INFO] Make sure 'shared_preload_libraries' and 'track_io_timing' parameters are correctly set up in postgresql.conf file !"
 	;;
 
 	abort-upgrade|abort-remove|abort-deconfigure)

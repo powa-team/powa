@@ -1,0 +1,45 @@
+Template: powa/db_exist
+Type: boolean
+Default: false
+Description: A database exists already ?
+
+Template: powa/db_reset
+Type: boolean
+Default: false
+Description: Reinitialize the PoWA database ?
+ A PoWA database exists already. In order to set setup the
+ service correctly you can reset the powa DB. Otherwise, skip
+ this step and make sure that the actual DB is supported.
+
+Template: powa/db_backup
+Type: boolean
+Default: true
+Description: Backup the database before purge ?
+
+Template: powa/ext_upgrade
+Type: boolean
+Default: false
+Description: Do you want to upgrade the powa extension ?
+ If you are installing a new PoWA version, you have to upgrade
+ the 'powa' extension !
+
+Template: powa/user_exist
+Type: boolean
+Default: false
+Description: A powa user exists already ?
+
+Template: powa/get_username
+Type: note
+Description:
+ While not mandatory, it is highly recommended that you set 
+ a PostgreSQL user to access to the PoWA GUI. Default username is 'powa' !
+
+Template: powa/get_password
+Type:password
+Description: New password :
+ Password must be at least 8 characters long. Just numbers and an uppercase/lowercase
+ letters are allowed. If the username 'powa' exists already, the password will be updated !
+
+Template: powa/user_pass_warn
+Type: note
+Description: The password is not correct !
