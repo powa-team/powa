@@ -42,55 +42,55 @@ function loadChart(){
         sorter: customSorter
       }, {
         field: 'avg_runtime',
-        title: 'Avg. runtime',
+        title: 'Avg.<br />runtime',
         sortable: true,
         formatter: timeFormatter,
         sorter: customSorter
       }, {
         field: 'total_blks_read',
-        title: 'Blocks read',
+        title: 'Blocks<br />read',
         sortable: true,
         formatter: byteFormatter,
         sorter: customSorter
       }, {
         field: 'total_blks_hit',
-        title: 'Blocks hit',
+        title: 'Blocks<br />hit',
         sortable: true,
         formatter: byteFormatter,
         sorter: customSorter
       }, {
         field: 'total_blks_dirtied',
-        title: 'Blocks dirtied',
+        title: 'Blocks<br />dirtied',
         sortable: true,
         formatter: byteFormatter,
         sorter: customSorter
       }, {
         field: 'total_blks_written',
-        title: 'Blocks written',
+        title: 'Blocks<br />written',
         sortable: true,
         formatter: byteFormatter,
         sorter: customSorter
       }, {
         field: 'total_temp_blks_read',
-        title: 'Temp blocks read',
+        title: 'Temp<br />blocks read',
         sortable: true,
         formatter: byteFormatter,
         sorter: customSorter
       }, {
         field: 'total_temp_blks_written',
-        title: 'Temp blocks written',
+        title: 'Temp<br />blocks written',
         sortable: true,
         formatter: byteFormatter,
         sorter: customSorter
       }, {
         field: 'total_blk_read_time',
-        title: 'Block read time',
+        title: 'Block<br />read time',
         sortable: true,
         formatter: timeFormatter,
         sorter: customSorter
       }, {
         field: 'total_blk_write_time',
-        title: 'Block write time',
+        title: 'Block<br />write time',
         sortable: true,
         formatter: timeFormatter,
         sorter: customSorter
