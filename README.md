@@ -10,33 +10,121 @@ PoWA requires PostgreSQL 9.3 or more.
 
 Connecting on the GUI requires a PostgreSQL user with SUPERUSER and LOGIN privileges.
 
-Installation
---------------
+Manual installation
+-------------------
 
-For a detailed installation procedure, please read [INSTALL.md](https://github.com/dalibo/powa/blob/master/INSTALL.md).
+For a detailed and manual installation procedure, please read [INSTALL.md](https://github.com/dalibo/powa/blob/master/INSTALL.md).
 
-Optionally, you can create a dedicated user for PoWA. For instance, connected on PostgreSQL :
-`CREATE USER powa SUPERUSER ENCRYPTED PASSWORD 'mypassword'` (don't forget to change the password).
+To Set up the UI, read [ui/README.md](https://github.com/dalibo/powa/blob/master/ui/README.md).
 
-- make install in the main directory
-- Make sure you have installed and configured `pg_stat_statements`
-- create a dedicated database (powa for instance)
-- create extension powa in this databse
-- add "powa" in the `shared_preload_libraries` in postgresql.conf (you should already have configured "`pg_stat_statements`")
-- configure GUC in postgresql.conf (see the §Configuration below)
-- configure connections in pg_hba.conf to allow connection from the server that will run the GUI
-- restart instance
+Easy install from a Debian package
+----------------------------------
 
-Upgrade from previous version:
+The package is built and tested on a `Debian 7.5 (Wheezy)` and should work on later Debian releases.
 
-- make install in the main directory
-- restart your PostgreSQL engine to use the new powa library
-- ALTER EXTENSION powa UPDATE; -- This will take some time, a lot of things are rewritten as the schema is upgraded
-- If you have deadlock messages, it means that the powa extension is trying to update data, while your update is doing conflicting operations. To solve this, put powa.frequency=-1 to deactivate powa temporarily, then do the extension update, and put powa.frequency back to what it was before. Don't forget to reload your configuration each time.
+1- Technical requirements:
 
-Configuration:
-------------------------
+```
+postgresql (>= 9.3)
+postgresql-contrib (>= 9.3)
+postgresql-server-dev-9.3 (for the build of PoWA extension)
+libdbd-pg-perl (>= 2.19.2-2)
+libmojolicious-perl (>= 4.63)
+```
 
+Look [here](https://wiki.postgresql.org/wiki/Apt) for more details about installing `PostgreSQL 9.3`.
+
+The `libmojolicious-perl` (>= 4.63) is not available in the Wheezy repo. To install it follow these steps :
+
+```
+$ cd /tmp
+$ wget http://backpan.perl.org/authors/id/S/SR/SRI/Mojolicious-4.63.tar.gz
+$ tar xzf Mojolicious-4.63.tar.gz
+$ cd Mojolicious-4.63
+$ perl Makefile.PL
+$ checkinstall -D (install checkinstall if it isn't installed)
+```
+
+Note :
+In order to create and install correctly `libmojolicious-perl`, you have to set some package's metadata prompted by checkinstall :
+- Answer 'N' to the question "Should I create a default set of package docs?"
+- Set 'Summary' option (1) to "simple, yet powerful, Web Application Framework"
+- Set 'Name' option (2) to "libmojolicious-perl"
+- Hit ENTER and it is done ;)
+
+2- Download the [PoWA last release](https://github.com/abessifi/powa) and create an upstream tarball:
+
+```
+$ git clone https://github.com/abessifi/powa powa_1.2.orig
+$ tar czf powa_1.2.orig.tar.gz powa_1.2.orig
+```
+
+To get a specific version :
+
+```
+$ git tag --list
+$ git checkout <tag_name> (E.g : powa_1.2-1.deb)
+```
+
+3- Build the package :
+
+```
+$ cd powa_1.2.orig
+$ debuild -us -uc
+$ cd ..
+```
+
+4- Install and configure the service :
+
+Once created, the `powa_1.2-1_*.deb` package could be used to install PoWA in other machines (with same system architecture).
+
+```
+$ dpkg -i powa_1.2-1_*.deb
+```
+
+Note :
+- Upgrade from a previous version will take some time, a lot of things are rewritten as the schema is upgraded.
+- The `powa` database and the required extensions will be created automatically.
+- If a `powa` database exists already, `debconf` will ask you to keep/purge it. Purging will fail if the DB is used by other users/procs (eventually powa collector, which is a PostgreSQL backend worker).
+- To purge the database, edit `postgresql.conf` and remove `powa,pg_stat_statements` from `shared_preload_libraries` (you can comment the entire line too) then restart PostgreSQL. Now you can purge the `powa` database.
+- Connecting to the GUI requires a PostgreSQL user with SUPERUSER and LOGIN privileges. Default username is `'powa'`. You'll be asked by `debconf` to setup a new password.
+
+PoWA is now installed and handled by an initscript. To check if the service is running :
+
+```
+$ service powa status
+```
+
+If it is running, access the web UI on `http://localhost:3000`.
+Otherwise, try to adapt the PoWA's config file `/etc/powa/powa.conf` and the default service parameters in `/etc/default/powa`, then restart the service :
+
+```
+$ service restart powa
+```
+
+Last step, edit `postgresql.conf`. Change the `shared_preload_libraries` appropriately :
+
+```
+shared_preload_libraries = 'powa,pg_stat_statements'# (change requires restart)
+```
+
+If possible (check with pg_test_timing), activate track_io_timing on your instance, in postgresql.conf :
+
+```
+track_io_timing = on
+```
+
+5- Troubleshooting :
+
+- First, check the logs on `/var/log/powa/powa.log`.
+- For more details, enable the debug level (MOJO_LOG_LEVEL="debug") in `/etc/default/powa` and restart the service.
+- Make sure you've installed the required packages with required versions.
+- If powa service couldn't be started, make sure to correctly set the variables `DAEMON` and `PERL5LIB` in `/etc/default/powa`. The command "which hypnotoad" gives you the correct absolute path to the `hypnotoad` binary.
+- If DB removal fails, make sure that it not busy.
+- If you uninstalled powa, change the `shared_preload_libraries` properly in `postgresql.conf` and restart PostgreSQL.
+
+Advanced configuration and tuning
+----------------------------------
 
 Here are the configuration parameters (GUC) available:
 
@@ -58,19 +146,13 @@ We use this:
 
 It's only used for the duration of the queries anyway, this is not statically allocated memory.
 
-Reset the stats:
-------------------------
+Reset the stats
+----------------
 
 `SELECT powa_stats_reset();` (in the powa database of course)
 
-Set up the UI:
-------------------------
-
-Read [ui/README.md](https://github.com/dalibo/powa/blob/master/ui/README.md).
-
-
 Impact on performances
----------------------------
+----------------------
 
 Using POWA will have a small negative impact on your PostgreSQL server performances. It is hard to evaluate precisely this impact but we can analyze it in 3 parts :
 

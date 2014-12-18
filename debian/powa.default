@@ -1,0 +1,16 @@
+# Defaults for PoWA initscript
+# sourced by /etc/init.d/powa
+
+VERBOSE=yes
+# Path to the WebSocket server (Hypnotoad)
+DAEMON=/usr/local/bin/hypnotoad
+# Additional options that are passed to the Daemon.
+# Use -f to start the server in the foreground in order to server log output.
+DAEMON_OPTS="-f"
+# PoWA config file location
+POWA_CONFIG_FILE=/etc/powa/powa.conf
+# Application logging level (debug, info, warn, error or fatal)
+MOJO_LOG_LEVEL="info"
+# Path to specific perl libs (e.g: Mojolicious)
+PERL5LIB=""
+

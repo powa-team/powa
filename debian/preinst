@@ -1,0 +1,30 @@
+#!/bin/sh
+# preinst script for powa
+
+set -e
+
+
+# Assert that PostgreSQL service is running
+check_postgresql_service(){   
+	# Start PostgreSQL service if it is down 
+	echo "[INFO] Checking if PostgreSQL server is running..."
+	invoke-rc.d postgresql status 2>1 > /dev/null || invoke-rc.d postgresql start
+}
+
+case "$1" in
+    install|upgrade)
+		check_postgresql_service
+	;;
+
+    abort-upgrade)
+    ;;
+
+    *)
+        echo "preinst called with unknown argument \`$1'" >&2
+        exit 1
+    ;;
+esac
+
+#DEBHELPER#
+
+exit 0

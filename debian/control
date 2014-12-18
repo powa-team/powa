@@ -1,0 +1,15 @@
+Source: powa
+Maintainer: Ahmed Bessifi <ahmed.bessifi@gmail.com>
+Section: misc
+Priority: extra
+Standards-Version: 3.9.4
+Build-Depends: debhelper (>= 9), postgresql-server-dev-9.3
+Vcs-Git: git://github.com/dalibo/powa.git
+
+Package: powa
+Architecture: any
+Depends: ${shlibs:Depends}, ${misc:Depends}, ${perl:Depends}, postgresql (>= 9.3), postgresql-contrib (>= 9.3), libdbd-pg-perl (>= 2.19.2-2), libmojolicious-perl (>= 4.63)
+Description: PostgreSQL Workload Analyzer
+ PoWA is a tool that gathers PostgreSQL performance stats and provides
+ real-time charts and graphs to help monitor and tune your PostgreSQL
+ servers.

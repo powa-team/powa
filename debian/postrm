@@ -1,0 +1,40 @@
+#!/bin/sh
+# postrm script for powa
+
+set -e
+
+# Source debconf library.
+. /usr/share/debconf/confmodule
+
+case "$1" in
+	remove|upgrade|failed-upgrade|abort-install|abort-upgrade|disappear)
+	;;
+
+	purge)
+		rm -f /etc/powa/powa.conf
+		rm -f /etc/logrotate.d/powa
+		rm -f /usr/share/doc/postgresql-doc-9.3/extension/README.md
+		# Check if the DB has active connections before purging it.
+		pid=$(su - postgres -c "psql -tAc \"select pg_stat_activity.pid from pg_stat_activity where datname='powa';\"")
+		if [ ! -z "$pid" ]; then
+			echo "[WARN] Database 'powa' is being accessed by other users."
+			echo "[ERROR] Database removal failed."
+		else
+			echo "[INFO] Dropping database..."
+			su - postgres -c "dropdb powa" || true
+		fi
+		# Drop user 'powa'
+		su - postgres -c "dropuser powa" || true
+		# Remove my changes to the db.
+		db_purge || true
+	;;
+	
+	*)
+		echo "postrm called with unknown argument \`$1'" >&2
+		exit 1
+	;;
+esac
+
+#DEBHELPER#
+
+exit 0

@@ -2,3 +2,12 @@ powa.o
 powa.so
 ui/powa.conf
 ui/log
+*.swp
+debian/files
+debian/patches
+debian/powa
+debian/powa.debhelper.log
+debian/powa.postinst.debhelper
+debian/powa.postrm.debhelper
+debian/powa.prerm.debhelper
+debian/powa.substvars

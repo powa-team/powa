@@ -1,0 +1,39 @@
+powa (1.2-1) UNRELEASED; urgency=low
+
+  * Display more metrics : temporary data, I/O time, average runtime
+  * Fix timestamp for snapshots
+  * DEALLOCATE and BEGIN statements are now ignored
+  * PoWA history tables are now marked as "to be dumped" by pg_dump
+  * Improve performance for "per database aggregated stats"
+  * Follow the selected time interval between each page
+  * Add a title to each page
+  * Display metrics for each query page
+  * Move database selector as a menu entry
+  * Display human readable metrics
+  * Fix empty graph bug
+  * When upgrading, upgrade the core with ALTER EXTENSION powa UPDATE
+  * The format of the database section of the powa.conf has changed.
+
+ -- Ahmed Bessifi <ahmed.bessifi@gmail.com>  Sun, 09 Nov 2014 13:33:59 +0100
+
+powa (1.1) UNRELEASED; urgency=low
+
+  * Various UI improvments
+  * More documentation
+  * New demo mode
+  * Plugin support
+  * The code is now under the PostgreSQL license
+  * New website
+  * New logo
+  * Use a temporary table for unpacked records to avoid unnecessary bloat
+
+ -- Ahmed Bessifi <ahmed.bessifi@gmail.com>  Sun, 18 Aug 2014 13:33:59 +0100
+
+powa (1.0) UNRELEASED; urgency=low
+
+  * Web UI based on Mojolicious
+  * Graph and dynamic charts
+  * Packed the code as an extension
+  * PL functions
+
+ -- Ahmed Bessifi <ahmed.bessifi@gmail.com>  Sun, 13 Jun 2014 13:33:59 +0100
