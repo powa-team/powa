@@ -47,6 +47,17 @@ sub register {
 
             return b($html);
         } );
+
+    $app->helper(
+        get_servers => sub {
+            my $self = shift;
+            my $servers;
+            foreach my $name (sort keys %{$self->config->{'servers'}} ) {
+                push @{$servers}, $name;
+            }
+
+            return $servers;
+        } );
 }
 
 1;

@@ -6,10 +6,12 @@
 
     "secrets" : ["|Erp--Wjgb)+eiB/|H=|V7!#+M|L{a8=J2|gd+P1=M|&pJWq|M&,f3q^XS"],
 
-    "database" : {
-        "dbname"   : "powa",
-        "host"     : "127.0.0.1",
-        "port"     : "5432"
+    "servers" : {
+        "main" : {
+            "dbname"   : "powa",
+            "host"     : "127.0.0.1",
+            "port"     : "5432"
+        }
     },
 
     "layout" : "default",

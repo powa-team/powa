@@ -169,6 +169,8 @@ service postgresql-9.3 restart
 
 Finally, adapt the ui/powa.conf file to suit the new format. For instance,
 
+* if coming from powa 1.1
+
 
 ```
     "database" : {
@@ -184,6 +186,18 @@ Finally, adapt the ui/powa.conf file to suit the new format. For instance,
 must be changed to
 
 ```
+    "servers" : {
+        "main" : {
+            "dbname"   : "powa",
+            "host"     : "127.0.0.1",
+            "port"     : "5432"
+        }
+    },
+```
+
+* if coming from powa 1.2
+
+```
     "database" : {
         "dbname"   : "powa",
         "host"     : "127.0.0.1",
@@ -191,6 +205,18 @@ must be changed to
         "options"  : {
             "AutoCommit" : 0,
             "pg_enable_utf8" : 1
+        }
+    },
+```
+
+must be changed to
+
+```
+    "servers" : {
+        "main" : {
+            "dbname"   : "powa",
+            "host"     : "127.0.0.1",
+            "port"     : "5432"
         }
     },
 ```

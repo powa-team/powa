@@ -38,11 +38,12 @@ sub login {
         return $self->render() if ($e);
 
         my $dbh =
-            $self->database( $form_data->{username}, $form_data->{password} );
+            $self->database( $form_data->{username}, $form_data->{password}, $form_data->{server} );
         if ($dbh) {
             $self->perm->update_info(
                 username => $form_data->{username},
                 password => $form_data->{password},
+                server => $form_data->{server},
                 stay_connected => $form_data->{stay_connected});
             $dbh->disconnect();
             if ( (defined $self->flash('saved_route')) && (defined $self->flash('stack')) ){

@@ -3,6 +3,7 @@
 % my $to = param('to') || '';
 
 <div class="pull-right">
+  <span class="title"><i class="glyphicon glyphicon-hdd"></i> Server: <%= $self->session('user_server') %></span>
   <%= link_to url_for( 'site_home')->query( from => $from, to => $to) => ( class => "change-page" ) => begin %>
     <i class="glyphicon glyphicon-home"></i> All databases
   <% end %>
@@ -23,4 +24,4 @@
 
   <%= link_to user_logout => begin %><i class="glyphicon glyphicon-off"></i> Sign Out<% end %>
   <br />
-/div>
+</div>

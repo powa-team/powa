@@ -64,7 +64,27 @@ Now, you'll just have to tell perl that there is an extension in /path/to/powa/m
 
 Copy `powa.conf-dist` to `powa.conf` and edit it.
 
-**CAREFUL:** If upgrading from PoWA 1.1, you need to change the format of the
+If you have multiple PostgreSQL servers with PoWA installed, you can configure them in the `powa.conf` file, in the **servers** section. Each entry is of the form **"name": { info... }**, and must be coma separated.
+
+For instance, if you have a production server listening on 10.0.0.1, port 5432 and a development server listening on 10.0.0.2, port 5433, the **servers** section should look like :
+```
+    ...
+    "servers" : {
+        "production" : {
+            "dbname"   : "powa",
+            "host"     : "10.0.0.1",
+            "port"     : "5432"
+        },
+        "development" : {
+            "dbname"   : "powa",
+            "host"     : "10.0.0.2",
+            "port"     : "5433"
+        }
+    },
+    ...
+```
+
+**CAREFUL:** If upgrading from PoWA 1.1 or PoWA 1.2, you need to change the format of the
 database section. See INSTALL.md in PoWA main directory for more details.
 
 Run With Morbo

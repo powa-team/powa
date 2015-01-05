@@ -18,20 +18,21 @@ sub register {
     # in powa.conf
     $app->helper(
         database => sub {
-            my ( $ctrl, $username, $password, $dbname ) = @_;
+            my ( $ctrl, $username, $password, $server, $dbname ) = @_;
             my $dbh;
             my $sql;
             my $ok;
-            if ( ( !defined($username) ) or ( !defined($password) ) ) {
+            if ( ( !defined($username) ) or ( !defined($password) ) or ( !defined($server) ) ) {
                 $username = $ctrl->session('user_username');
                 $password = $ctrl->session('user_password');
+                $server = $ctrl->session('user_server');
             }
 
             # Return a new database connection handle
             $config->{database}->{options}->{AutoCommit} = 1;
             $config->{database}->{options}->{pg_enable_utf8} = 1;
             $dbh = DBI->connect(
-                $self->conninfo($config->{database},$dbname),
+                $self->conninfo($config->{servers}->{$server},$dbname),
                 $username,
                 $password,
                 $config->{database}->{options} || {}

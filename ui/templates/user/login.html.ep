@@ -21,6 +21,13 @@
 
         <div class="control-group">
           <div class="controls">
+          <label class="control-label" for="server">Servers:</label>
+          <%= select_field 'server' => get_servers(), class => 'form-control', id => 'server' %>
+          </div>
+        </div>
+
+        <div class="control-group">
+          <div class="controls">
             <label class="checkbox" for="stay_connected">
               <%= check_box 'stay_connected' => 1, id => 'stay_connected' %>
               Stay connected ?
