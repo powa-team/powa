@@ -28,6 +28,8 @@ sub register {
             }
 
             # Return a new database connection handle
+            $config->{database}->{options}->{AutoCommit} = 1;
+            $config->{database}->{options}->{pg_enable_utf8} = 1;
             $dbh = DBI->connect(
                 $self->conninfo($config->{database},$dbname),
                 $username,

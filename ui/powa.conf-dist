@@ -9,11 +9,7 @@
     "database" : {
         "dbname"   : "powa",
         "host"     : "127.0.0.1",
-        "port"     : "5432",
-        "options"  : {
-            "AutoCommit" : 0,
-            "pg_enable_utf8" : 1
-        }
+        "port"     : "5432"
     },
 
     "layout" : "default",
