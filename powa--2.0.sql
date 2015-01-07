@@ -90,16 +90,17 @@ CREATE SEQUENCE powa_coalesce_sequence INCREMENT BY 1
 
 
 CREATE TABLE powa_functions (
+    module text NOT NULL,
     operation text NOT NULL,
     function_name text NOT NULL,
-    added_manually boolean default true,
+    added_manually boolean NOT NULL default true,
     CHECK (operation IN ('snapshot','aggregate','purge'))
 );
 
-INSERT INTO powa_functions (operation, function_name, added_manually) VALUES
-    ('snapshot','powa_take_statements_snapshot',false),
-    ('aggregate','powa_statements_aggregate',false),
-    ('purge','powa_statements_purge',false);
+INSERT INTO powa_functions (module, operation, function_name, added_manually) VALUES
+    ('pgss', 'snapshot', 'powa_take_statements_snapshot', false),
+    ('pgss', 'aggregate','powa_statements_aggregate', false),
+    ('pgss', 'purge', 'powa_statements_purge', false);
 
 -- Mark all of powa's tables as "to be dumped"
 SELECT pg_catalog.pg_extension_config_dump('powa_statements','');
