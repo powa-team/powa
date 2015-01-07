@@ -84,6 +84,32 @@ For instance, if you have a production server listening on 10.0.0.1, port 5432 a
     ...
 ```
 
+You can also optionally configure a user and a password for each server. If
+credentials are found in the config file for the selected server, they will
+override what a user could provide on the login page, and of course the fields
+will become optionnal on the login page.
+
+For instance, if you have a "test" server with must use the username "dba" and
+the password "testing", the **powa.conf** file will look like :
+
+```
+    ...
+    "servers" : {
+        "test" : {
+        "development" : {
+            "dbname"   : "powa",
+            "host"     : "10.0.0.3",
+            "port"     : "5433",
+            "username" : "dba",
+            "password" : "testing"
+        }
+    }
+    ...
+```
+
+**CAREFUL:** If you use this feature, it's strongly advised to rely on an external security
+method, such as what is built-in on most of the http servers.
+
 **CAREFUL:** If upgrading from PoWA 1.1 or PoWA 1.2, you need to change the format of the
 database section. See INSTALL.md in PoWA main directory for more details.
 

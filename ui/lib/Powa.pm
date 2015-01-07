@@ -41,6 +41,7 @@ sub startup {
     # Load others plugins
     $self->plugin('menu');
     $self->plugin('permissions');
+    $self->plugin('utils');
 
     # CGI pretty URLs
     if ( $config->{rewrite} ) {
