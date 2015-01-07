@@ -51,7 +51,7 @@ sub remove_info {
 sub is_authd {
     my $self = shift;
 
-    if ( $self->target->session('user_username') ) {
+    if ( $self->target->session('user_username') and $self->target->session('user_password') and $self->target->session('user_server')) {
         return 1;
     }
 

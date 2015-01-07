@@ -18,7 +18,7 @@ sub register {
             my $sql;
             my @dbs;
 
-            if ( $self->session('user_username') ) {
+            if ( $self->perm->is_authd() ) {
                 $self->stash(
                     menu_username => $self->session('user_username') );
 
