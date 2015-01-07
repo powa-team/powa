@@ -102,6 +102,48 @@ INSERT INTO powa_functions (module, operation, function_name, added_manually) VA
     ('pgss', 'aggregate','powa_statements_aggregate', false),
     ('pgss', 'purge', 'powa_statements_purge', false);
 
+/* pg_stat_kcache integration - part 1 */
+
+CREATE TYPE public.kcache_type AS (
+    ts timestamptz,
+    reads bigint,
+    writes bigint,
+    user_time double precision,
+    system_time double precision
+);
+
+CREATE TABLE public.powa_kcache_metrics (
+    coalesce_range tstzrange NOT NULL,
+    queryid bigint NOT NULL,
+    dbid oid NOT NULL,
+    userid oid NOT NULL,
+    metrics public.kcache_type[] NOT NULL,
+    PRIMARY KEY (coalesce_range, queryid, dbid, userid)
+);
+
+CREATE INDEX ON public.powa_kcache_metrics (queryid);
+
+CREATE TABLE public.powa_kcache_metrics_db (
+    coalesce_range tstzrange NOT NULL,
+    dbid oid NOT NULL,
+    metrics public.kcache_type[] NOT NULL,
+    PRIMARY KEY (coalesce_range, dbid)
+);
+
+CREATE TABLE public.powa_kcache_metrics_current (
+    queryid bigint NOT NULL,
+    dbid oid NOT NULL,
+    userid oid NOT NULL,
+    metrics kcache_type NULL NULL
+);
+
+CREATE TABLE public.powa_kcache_metrics_current_db (
+    dbid oid NOT NULL,
+    metrics kcache_type NULL NULL
+);
+
+/* end of pg_stat_kcache integration - part 1 */
+
 -- Mark all of powa's tables as "to be dumped"
 SELECT pg_catalog.pg_extension_config_dump('powa_statements','');
 SELECT pg_catalog.pg_extension_config_dump('powa_statements_history','');
@@ -109,6 +151,10 @@ SELECT pg_catalog.pg_extension_config_dump('powa_statements_history_db','');
 SELECT pg_catalog.pg_extension_config_dump('powa_statements_history_current','');
 SELECT pg_catalog.pg_extension_config_dump('powa_statements_history_current_db','');
 SELECT pg_catalog.pg_extension_config_dump('powa_functions','WHERE added_manually');
+SELECT pg_catalog.pg_extension_config_dump('powa_kcache_metrics','');
+SELECT pg_catalog.pg_extension_config_dump('powa_kcache_metrics_db','');
+SELECT pg_catalog.pg_extension_config_dump('powa_kcache_metrics_current','');
+SELECT pg_catalog.pg_extension_config_dump('powa_kcache_metrics_current_db','');
 
 CREATE OR REPLACE FUNCTION powa_take_snapshot() RETURNS void AS $PROC$
 DECLARE
@@ -320,3 +366,124 @@ BEGIN
     RETURN true;
 END:
 $function$;
+
+/* pg_stat_kcache integration - part 2 */
+
+/*
+ * register pg_stat_kcache extension
+ */
+CREATE OR REPLACE function public.powa_kcache_register() RETURNS bool AS
+$_$
+DECLARE
+    v_func_present bool;
+    v_ext_present bool;
+BEGIN
+    SELECT COUNT(*) = 1 INTO v_ext_present FROM pg_extension WHERE extname = 'pg_stat_kcache';
+
+    IF ( v_ext_present ) THEN
+        SELECT COUNT(*) > 0 INTO v_func_present FROM public.powa_functions WHERE module = 'pg_stat_kcache';
+        IF ( NOT v_func_present) THEN
+            INSERT INTO powa_functions (module, operation, function_name, added_manually)
+            VALUES ('pg_stat_kcache', 'snapshot', 'powa_kcache_snapshot', true),
+                   ('pg_stat_kcache', 'aggregate', 'powa_kcache_aggregate', true),
+                   ('pg_stat_kcache', 'purge', 'powa_kcache_purge', true);
+        END IF;
+    END IF;
+
+    RETURN true;
+END;
+$_$
+language plpgsql;
+
+/*
+ * unregister pg_stat_kcache extension
+ */
+CREATE OR REPLACE function public.powa_kcache_unregister() RETURNS bool AS
+$_$
+BEGIN
+    DELETE FROM public.powa_functions WHERE module = 'pg_stat_kcache';
+    RETURN true;
+END;
+$_$
+language plpgsql;
+
+/*
+ * powa_kcache snapshot collection.
+ */
+CREATE OR REPLACE FUNCTION powa_kcache_snapshot() RETURNS void as $PROC$
+DECLARE
+  result bool;
+BEGIN
+    RAISE DEBUG 'running powa_kcache_snapshot';
+
+    WITH capture AS (
+        SELECT *
+        FROM pg_stat_kcache()
+    ),
+
+    by_query AS (
+        INSERT INTO powa_kcache_metrics_current (queryid, dbid, userid, metrics)
+            SELECT queryid, dbid, userid, (now(), reads, writes, user_time, system_time)::kcache_type
+            FROM capture
+    ),
+
+    by_database AS (
+        INSERT INTO powa_kcache_metrics_current_db (dbid, metrics)
+            SELECT dbid, (now(), sum(reads), sum(writes), sum(user_time), sum(system_time))::kcache_type
+            FROM capture
+            GROUP BY dbid
+    )
+
+    SELECT true into result;
+END
+$PROC$ language plpgsql;
+
+/*
+ * powa_kcache aggregation
+ */
+CREATE OR REPLACE FUNCTION powa_kcache_aggregate() RETURNS void AS $PROC$
+DECLARE
+  result bool;
+BEGIN
+    RAISE DEBUG 'running powa_kcache_aggregate';
+
+    -- aggregate metrics table
+    LOCK TABLE powa_kcache_metrics_current IN SHARE MODE; -- prevent any other update
+
+    INSERT INTO powa_kcache_metrics (coalesce_range, queryid, dbid, userid, metrics)
+        SELECT tstzrange(min((metrics).ts), max((metrics).ts)),
+        queryid, dbid, userid, array_agg(metrics)
+        FROM powa_kcache_metrics_current
+        GROUP BY queryid, dbid, userid;
+
+    TRUNCATE powa_kcache_metrics_current;
+
+    -- aggregate metrics_db table
+    LOCK TABLE powa_kcache_metrics_current_db IN SHARE MODE; -- prevent any other update
+
+    INSERT INTO powa_kcache_metrics_db (coalesce_range, dbid, metrics)
+        SELECT tstzrange(min((metrics).ts), max((metrics).ts)),
+        dbid, array_agg(metrics)
+        FROM powa_kcache_metrics_current_db
+        GROUP BY dbid;
+
+    TRUNCATE powa_kcache_metrics_current_db;
+END
+$PROC$ language plpgsql;
+
+/*
+ * powa_kcache purge
+ */
+CREATE OR REPLACE FUNCTION powa_kcache_purge() RETURNS void as $PROC$
+BEGIN
+    RAISE DEBUG 'running powa_kcache_purge';
+
+    DELETE FROM powa_kcache_metrics WHERE upper(coalesce_range) < (now() - current_setting('powa.retention')::interval);
+    DELETE FROM powa_kcache_metrics_db WHERE upper(coalesce_range) < (now() - current_setting('powa.retention')::interval);
+END;
+$PROC$ language plpgsql;
+
+-- By default, try to register pg_stat_kcache, in case it's alreay here
+SELECT * FROM public.powa_kcache_register();
+
+/* end of pg_stat_kcache integration - part 2 */
