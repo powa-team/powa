@@ -1,6 +1,6 @@
 MODULES = powa
 EXTENSION = powa
-DATA = powa--1.1.sql powa--1.2.sql powa--1.1--1.2.sql
+DATA = powa--2.0.sql
 DOCS = README.md
 
 PG_CONFIG = pg_config
