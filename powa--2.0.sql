@@ -98,7 +98,7 @@ CREATE TABLE powa_functions (
 );
 
 INSERT INTO powa_functions (module, operation, function_name, added_manually) VALUES
-    ('pgss', 'snapshot', 'powa_take_statements_snapshot', false),
+    ('pgss', 'snapshot', 'powa_statements_snapshot', false),
     ('pgss', 'aggregate','powa_statements_aggregate', false),
     ('pgss', 'purge', 'powa_statements_purge', false);
 
@@ -257,7 +257,7 @@ BEGIN
 END;
 $PROC$ LANGUAGE plpgsql;
 
-CREATE OR REPLACE FUNCTION powa_take_statements_snapshot() RETURNS void AS $PROC$
+CREATE OR REPLACE FUNCTION powa_statements_snapshot() RETURNS void AS $PROC$
 DECLARE
     result boolean;
     ignore_regexp text:='^[[:space:]]*(BEGIN)'; -- Ignore begin at beginning of statement
@@ -265,7 +265,7 @@ BEGIN
     -- In this function, we capture statements, and also aggregate counters by database
     -- so that the first screens of powa stay reactive even though there may be thousands
     -- of different statements
-    RAISE DEBUG 'running powa_take_statements_snapshot';
+    RAISE DEBUG 'running powa_statements_snapshot';
     WITH capture AS(
         SELECT pg_stat_statements.*
         FROM pg_stat_statements
