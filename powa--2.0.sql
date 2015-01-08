@@ -152,19 +152,16 @@ CREATE TYPE public.qual_type AS (
     eval_type "char"
 );
 
-CREATE TYPE public.qual_stat AS (
-    nodehash bigint,
+CREATE TYPE public.qual_values AS (
     constants text[],
-    ts tstzrange,
-    filter_ratio float,
-    count bigint
+    count bigint,
+    filter_ratio float
 );
 
 CREATE TYPE powa_qualstats_history_item AS (
   ts timestamptz,
-  quals public.qual_type[],
-  filter_ratio float,
-  count bigint
+  count bigint,
+  filter_ratio float
 );
 
 CREATE TABLE public.powa_qualstats_nodehash (
@@ -184,9 +181,8 @@ CREATE TABLE public.powa_qualstats_nodehash_current (
     dbid oid,
     userid oid,
     ts timestamptz,
-    quals public.qual_type[],
     count   bigint,
-    avg_filter_ratio float,
+    filter_ratio float,
     FOREIGN KEY (nodehash, queryid, dbid, userid) REFERENCES powa_qualstats_nodehash(nodehash, queryid, dbid, userid)
       MATCH FULL ON UPDATE CASCADE ON DELETE CASCADE
 );
@@ -207,9 +203,9 @@ CREATE TABLE public.powa_qualstats_nodehash_constvalues(
     dbid oid,
     userid oid,
     coalesce_range tstzrange,
-    most_filtering qual_stat[],
-    least_filtering qual_stat[],
-    most_executed qual_stat[],
+    most_filtering qual_values[],
+    least_filtering qual_values[],
+    most_executed qual_values[],
     FOREIGN KEY (nodehash, queryid, dbid, userid) REFERENCES public.powa_qualstats_nodehash (nodehash, queryid, dbid, userid) MATCH FULL ON UPDATE CASCADE ON DELETE CASCADE
 );
 
@@ -219,10 +215,9 @@ CREATE TABLE public.powa_qualstats_nodehash_constvalues_current(
     dbid oid,
     userid oid,
     ts timestamptz,
-    quals qual_type[],
     constvalues text[],
-    filter_ratio float,
     count bigint,
+    filter_ratio float,
     FOREIGN KEY (nodehash, queryid, dbid, userid) REFERENCES public.powa_qualstats_nodehash (nodehash, queryid, dbid, userid) MATCH FULL ON UPDATE CASCADE ON DELETE CASCADE
 );
 
@@ -613,37 +608,55 @@ language plpgsql;
 /*
  * powa_qualstats utility view for aggregating constvalues
  */
-CREATE VIEW powa_qualstats_aggregate_constvalues_current AS
-  WITH ntiles AS (
-      SELECT *,
-        max(fr_ntile) OVER (PARTITION BY nodehash, queryid) as max_frntile,
-        min(fr_ntile) OVER (PARTITION BY nodehash, queryid) as min_frntile,
-        max(count_ntile) OVER (PARTITION BY nodehash, queryid) as max_countntile
-      FROM (
-        SELECT nodehash, queryid, dbid, userid, mints, (nodehash, constvalues, tstzrange(mints, maxts), filter_ratio, count)::qual_stat as qual_stat,
-        ntile(100) OVER (PARTITION BY nodehash, queryid ORDER BY filter_ratio) as fr_ntile,
-        ntile(100) OVER (PARTITION BY nodehash, queryid ORDER BY count) as count_ntile
-        FROM (
-          SELECT nodehash, queryid, dbid, userid, constvalues, min(ts) as mints, max(ts) as maxts, avg(filter_ratio) as filter_ratio, max(count) as count
-          FROM powa_qualstats_nodehash_constvalues_current
-          GROUP BY nodehash, queryid, dbid, userid, constvalues
-        ) agg
-      ) n
-  ),
-  groups AS (
-    SELECT nodehash, queryid, dbid, userid, tstzrange(min(lower((qual_stat).ts)), max(upper((qual_stat).ts))) as coalesce_range
-    FROM ntiles n
-    GROUP BY nodehash, queryid, dbid, userid
-  )
-  SELECT nodehash, queryid, dbid, userid, coalesce_range,
-  array_agg(distinct most_filtering) as most_filtering,
-  array_agg(distinct least_filtering) as least_filtering,
-  array_agg(distinct most_executed) as most_executed
-  FROM groups,
-    LATERAL (SELECT qual_stat as most_filtering FROM ntiles WHERE fr_ntile = max_frntile AND ntiles.nodehash = groups.nodehash AND ntiles.queryid = groups.queryid AND ntiles.dbid = groups.dbid AND ntiles.userid = groups.userid ORDER BY (qual_stat).filter_ratio DESC LIMIT 20) as mf,
-    LATERAL (SELECT qual_stat as least_filtering FROM ntiles WHERE fr_ntile = min_frntile AND ntiles.nodehash = groups.nodehash AND ntiles.queryid = groups.queryid AND ntiles.dbid = groups.dbid AND ntiles.userid = groups.userid ORDER BY (qual_stat).filter_ratio LIMIT 20) as lf,
-    LATERAL (SELECT qual_stat as most_executed FROM ntiles WHERE count_ntile = max_countntile AND ntiles.nodehash = groups.nodehash AND ntiles.queryid = groups.queryid AND ntiles.dbid = groups.dbid AND ntiles.userid = groups.userid ORDER BY (qual_stat).count DESC LIMIT 20) as me
-  GROUP BY coalesce_range, nodehash, queryid, dbid, userid;
+CREATE OR REPLACE VIEW powa_qualstats_aggregate_constvalues_current AS
+WITH consts AS (
+  SELECT nodehash, queryid, dbid, userid, min(ts) as mints, max(ts) as maxts, avg(filter_ratio) as filter_ratio,
+  max(count) - min(count) as count, constvalues
+  FROM powa_qualstats_nodehash_constvalues_current
+  GROUP BY nodehash, queryid, dbid, userid, constvalues
+  HAVING max(count) - min(count) > 0
+),
+groups AS (
+  SELECT nodehash, queryid, dbid, userid, tstzrange(min(mints), max(maxts))
+  FROM consts
+  GROUP BY nodehash, queryid, dbid, userid
+)
+SELECT *
+FROM groups,
+LATERAL (
+  SELECT array_agg(constvalues) as mf
+  FROM (
+    SELECT (constvalues, filter_ratio, count)::qual_values as constvalues
+    FROM consts
+    WHERE consts.nodehash = groups.nodehash AND consts.queryid = groups.queryid
+    AND consts.dbid = groups.dbid AND consts.userid = groups.userid
+    ORDER BY filter_ratio DESC
+    LIMIT 20
+  ) s
+) as mf,
+LATERAL (
+  SELECT array_agg(constvalues) as lf
+  FROM (
+    SELECT (constvalues, filter_ratio, count)::qual_values as constvalues
+    FROM consts
+    WHERE consts.nodehash = groups.nodehash AND consts.queryid = groups.queryid
+    AND consts.dbid = groups.dbid AND consts.userid = groups.userid
+    ORDER BY filter_ratio
+    LIMIT 20
+  ) s
+) as lf,
+LATERAL (
+  SELECT array_agg(constvalues) as me
+  FROM (
+    SELECT (constvalues, filter_ratio, count)::qual_values as constvalues
+    FROM consts
+    WHERE consts.nodehash = groups.nodehash AND consts.queryid = groups.queryid
+    AND consts.dbid = groups.dbid AND consts.userid = groups.userid
+    ORDER BY count desc
+    LIMIT 20
+  ) s
+) as me;
+
 
 CREATE OR REPLACE FUNCTION powa_qualstats_snapshot() RETURNS void as $PROC$
 DECLARE
@@ -651,41 +664,35 @@ DECLARE
 BEGIN
   RAISE DEBUG 'running powa_qualstats_snaphot';
   WITH capture AS (
-    SELECT pgqs.*, s.query FROM pg_qualstats_by_query pgqs
+    SELECT pgqs.*, s.query
+    FROM pg_qualstats_by_query pgqs
     JOIN powa_statements s USING(queryid, dbid, userid)
-  ),
-  by_qual AS (
-      INSERT INTO powa_qualstats_nodehash_current (nodehash, queryid, dbid, userid, ts, quals, count, avg_filter_ratio)
-      SELECT qs.nodehash, qs.queryid, qs.dbid, qs.userid, now(), array_agg((relid, attnum, opno, eval_type)::qual_type) as qual_type, sum(count), CASE sum(count) WHEN 0 THEN 0 ELSE sum(count * avg_filter_ratio) / sum(count) END as avg_filter_ratio
-        FROM (
-          SELECT nodehash, qs.queryid, qs.dbid, qs.userid, CASE sum(count) WHEN 0 THEN 0 ELSE sum(count * filter_ratio) / sum(count) END as avg_filter_ratio,
-          sum(count) as count, quals
-          FROM capture as qs
-          GROUP BY nodehash, qs.queryid, qs.dbid, qs.userid, quals
-          ) as qs
-        , LATERAL unnest(qs.quals) as d(relid, attnum, opno, eval_type)
-        GROUP BY nodehash, qs.queryid, qs.dbid, qs.userid
-      RETURNING *
-
   ),
   missing_quals AS (
       INSERT INTO powa_qualstats_nodehash (nodehash, queryid, dbid, userid, quals)
-        SELECT qs.nodehash, qs.queryid, qs.dbid, qs.userid, quals
-        FROM by_qual qs
+        SELECT DISTINCT qs.nodehash, qs.queryid, qs.dbid, qs.userid, array_agg(DISTINCT q::qual_type)
+        FROM capture qs,
+        LATERAL (SELECT (unnest(quals)).*) as q
         WHERE NOT EXISTS (
           SELECT 1
           FROM powa_qualstats_nodehash nh
           WHERE nh.nodehash = qs.nodehash AND nh.queryid = qs.queryid
             AND nh.dbid = qs.dbid AND nh.userid = qs.userid
         )
+        GROUP BY nodehash, queryid, dbid, userid
+      RETURNING *
+  ),
+  by_qual AS (
+      INSERT INTO powa_qualstats_nodehash_current (nodehash, queryid, dbid, userid, ts, count, filter_ratio)
+      SELECT qs.nodehash, qs.queryid, qs.dbid, qs.userid, now(), sum(count), CASE sum(count) WHEN 0 THEN 0 ELSE sum(count * filter_ratio) / sum(count) END as filter_ratio
+        FROM capture as qs
+        GROUP BY nodehash, qs.queryid, qs.dbid, qs.userid
+      RETURNING *
   ),
   by_qual_with_const AS (
-      INSERT INTO powa_qualstats_nodehash_constvalues_current(nodehash, queryid, dbid, userid, ts, quals, filter_ratio, count, constvalues)
-      SELECT nodehash, qs.queryid, qs.dbid, qs.userid, now(), array_agg((relid, attnum, opno, eval_type)::qual_type), filter_ratio, count,
-        constvalues
-      FROM capture as qs,
-      LATERAL unnest(qs.quals) as d(relid, attnum, opno, eval_type)
-      GROUP BY nodehash, qs.queryid, qs.dbid, qs.userid, now(), filter_ratio, count, constvalues
+      INSERT INTO powa_qualstats_nodehash_constvalues_current(nodehash, queryid, dbid, userid, ts, count, filter_ratio, constvalues)
+      SELECT nodehash, qs.queryid, qs.dbid, qs.userid, now(), count, filter_ratio, constvalues
+      FROM capture as qs
   )
   SELECT true into result;
 END
@@ -705,12 +712,8 @@ BEGIN
     nodehash, queryid, dbid, userid, coalesce_range, most_filtering, least_filtering, most_executed)
     SELECT * FROM powa_qualstats_aggregate_constvalues_current;
   INSERT INTO powa_qualstats_nodehash_history (nodehash, queryid, dbid, userid, coalesce_range, records)
-    SELECT nodehash, queryid, dbid, userid, tstzrange(min(ts), max(ts)), array_agg((ts, quals, avg_filter_ratio, count)::powa_qualstats_history_item)
-    FROM (
-      SELECT nodehash, queryid, dbid, userid, quals, ts, max(count) as count, max(avg_filter_ratio) as avg_filter_ratio
-      FROM powa_qualstats_nodehash_current
-      GROUP BY nodehash, queryid, dbid, userid, quals, ts
-    ) as by_query_nodehash
+    SELECT nodehash, queryid, dbid, userid, tstzrange(min(ts), max(ts)), array_agg((ts, count, filter_ratio)::powa_qualstats_history_item)
+    FROM powa_qualstats_nodehash_current
     GROUP BY nodehash, queryid, dbid, userid;
   TRUNCATE powa_qualstats_nodehash_constvalues_current;
   TRUNCATE powa_qualstats_nodehash_current;
