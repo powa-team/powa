@@ -98,9 +98,9 @@ CREATE TABLE powa_functions (
 );
 
 INSERT INTO powa_functions (module, operation, function_name, added_manually) VALUES
-    ('pgss', 'snapshot', 'powa_statements_snapshot', false),
-    ('pgss', 'aggregate','powa_statements_aggregate', false),
-    ('pgss', 'purge', 'powa_statements_purge', false);
+    ('pg_stat_statements', 'snapshot', 'powa_statements_snapshot', false),
+    ('pg_stat_statements', 'aggregate','powa_statements_aggregate', false),
+    ('pg_stat_statements', 'purge', 'powa_statements_purge', false);
 
 /* pg_stat_kcache integration - part 1 */
 
@@ -599,9 +599,9 @@ BEGIN
         SELECT COUNT(*) > 0 INTO v_func_present FROM public.powa_functions WHERE function_name IN ('powa_qualstats_snapshot', 'powa_qualstats_aggregate', 'powa_qualstats_purge');
         IF ( NOT v_func_present) THEN
             INSERT INTO powa_functions (module, operation, function_name, added_manually)
-            VALUES ('pgqs', 'snapshot', 'powa_qualstats_snapshot', false),
-                   ('pgqs', 'aggregate', 'powa_qualstats_aggregate', false),
-                   ('pgqs', 'purge', 'powa_qualstats_purge', false);
+            VALUES ('pg_qualstats', 'snapshot', 'powa_qualstats_snapshot', false),
+                   ('pg_qualstats', 'aggregate', 'powa_qualstats_aggregate', false),
+                   ('pg_qualstats', 'purge', 'powa_qualstats_purge', false);
         END IF;
     END IF;
 
