@@ -87,7 +87,7 @@ void _PG_init(void)
                                &powa_database,
                                "powa", PGC_POSTMASTER, 0, NULL, NULL, NULL);
     /*
-       Register the worker processes 
+       Register the worker processes
      */
     worker.bgw_flags =
         BGWORKER_SHMEM_ACCESS | BGWORKER_BACKEND_DATABASE_CONNECTION;
@@ -113,7 +113,7 @@ static void powa_main(Datum main_arg)
 
     die_on_too_small_frequency();
     /*
-       Set up signal handlers, then unblock signalsl 
+       Set up signal handlers, then unblock signalsl
      */
     pqsignal(SIGHUP, powa_sighup);
     pqsignal(SIGTERM, powa_sigterm);
@@ -121,19 +121,19 @@ static void powa_main(Datum main_arg)
     BackgroundWorkerUnblockSignals();
 
     /*
-       We only connect when powa_frequency >0. If not, powa has been deactivated 
+       We only connect when powa_frequency >0. If not, powa has been deactivated
      */
     if (powa_frequency < 0)
-      {
-          elog(LOG, "POWA is deactivated (powa.frequency = %i), exiting",
-               powa_frequency);
-          exit(1);
-      }
+    {
+        elog(LOG, "POWA is deactivated (powa.frequency = %i), exiting",
+             powa_frequency);
+        exit(1);
+    }
     // We got here: it means powa_frequency > 0. Let's connect
 
 
     /*
-       Connect to POWA database 
+       Connect to POWA database
      */
     BackgroundWorkerInitializeConnection(powa_database, NULL);
 
@@ -150,49 +150,49 @@ static void powa_main(Datum main_arg)
 
     /*
        let's store the current time. It will be used to
-       calculate a quite stable interval between each measure 
+       calculate a quite stable interval between each measure
      */
     while (!got_sigterm)
-      {
-          /*
-             We can get here with a new value of powa_frequency
-             because of a reload. Let's suicide to disconnect
-             if this value is <0 
-           */
-          if (powa_frequency < 0)
-            {
-                elog(LOG, "POWA exits to disconnect from the database now");
-                exit(1);
-            }
-          INSTR_TIME_SET_CURRENT(begin);
-          ResetLatch(&MyProc->procLatch);
-          SetCurrentStatementStartTimestamp();
-	  StartTransactionCommand();
-          SPI_connect();
-          PushActiveSnapshot(GetTransactionSnapshot());
-          SPI_execute(q1, false, 0);
-          SPI_finish();
-          PopActiveSnapshot();
-          CommitTransactionCommand();
-          INSTR_TIME_SET_CURRENT(end);
-          INSTR_TIME_SUBTRACT(end, begin);
-          /*
-             Wait powa.frequency, compensate for work time of last snapshot 
-           */
-          /*
-             If we got off schedule (because of a compact or delete,
-             just do another operation right now 
-           */
-          time_to_wait = powa_frequency - INSTR_TIME_GET_MILLISEC(end);
-          elog(DEBUG1,"Waiting for %li milliseconds",time_to_wait);
-          if (time_to_wait > 0)
-            {
+    {
+        /*
+           We can get here with a new value of powa_frequency
+           because of a reload. Let's suicide to disconnect
+           if this value is <0
+         */
+        if (powa_frequency < 0)
+        {
+            elog(LOG, "POWA exits to disconnect from the database now");
+            exit(1);
+        }
+        INSTR_TIME_SET_CURRENT(begin);
+        ResetLatch(&MyProc->procLatch);
+        SetCurrentStatementStartTimestamp();
+        StartTransactionCommand();
+        SPI_connect();
+        PushActiveSnapshot(GetTransactionSnapshot());
+        SPI_execute(q1, false, 0);
+        SPI_finish();
+        PopActiveSnapshot();
+        CommitTransactionCommand();
+        INSTR_TIME_SET_CURRENT(end);
+        INSTR_TIME_SUBTRACT(end, begin);
+        /*
+           Wait powa.frequency, compensate for work time of last snapshot
+         */
+        /*
+           If we got off schedule (because of a compact or delete,
+           just do another operation right now
+         */
+        time_to_wait = powa_frequency - INSTR_TIME_GET_MILLISEC(end);
+        elog(DEBUG1, "Waiting for %li milliseconds", time_to_wait);
+        if (time_to_wait > 0)
+        {
 
-                WaitLatch(&MyProc->procLatch,
-                          WL_LATCH_SET | WL_TIMEOUT | WL_POSTMASTER_DEATH,
-                          time_to_wait);
-            }
-      }
+            WaitLatch(&MyProc->procLatch,
+                      WL_LATCH_SET | WL_TIMEOUT | WL_POSTMASTER_DEATH,
+                      time_to_wait);
+        }
+    }
     proc_exit(0);
 }
 
