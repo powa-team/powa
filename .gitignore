@@ -1,4 +1,2 @@
-powa.o
-powa.so
-ui/powa.conf
-ui/log
+*.o
+*.so
