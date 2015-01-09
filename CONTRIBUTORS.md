@@ -14,3 +14,4 @@ Contributors to PoWA :
   * Justin Miller
   * Arthur Lutz
   * Luis Pinto Da Costa
+  * Ronan Dunklau
