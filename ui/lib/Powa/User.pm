@@ -15,11 +15,6 @@ sub login {
     my $password;
     my $server;
 
-    # Do not go through the login process if the user is already in
-    if ( $self->perm->is_authd ) {
-        return $self->redirect_to('site_home');
-    }
-
     my $method = $self->req->method;
     if ( $method =~ m/^POST$/i ) {
 
