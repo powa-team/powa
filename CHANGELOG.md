@@ -1,4 +1,19 @@
-## 1.2 (Not released yet)
+## 1.2.1 (2015-01-16)
+
+No changes in core.
+
+New features and changes in UI :
+  - UI is now compatible with mojolicious 5.0 and more
+  - UI can now connect to multiple servers, and credentials can be specified for each server
+  - Use ISO 8601 timestamp format
+  - Add POWA_CONFIG_FILE variable to specify config file location
+  - Better charts display on small screens
+
+When upgrading from 1.2:
+  - No change on the extension
+  - the format of the database section of the powa.conf has changed, to allow multiple servers specification. Please read INSTALL.md for more details about it.
+
+## 1.2 (2014-10-27)
 
 News features and fixes in core :
   - Display more metrics : temporary data, I/O time, average runtime

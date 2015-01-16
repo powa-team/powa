@@ -5,7 +5,7 @@ use Mojo::Base 'Mojolicious';
 # For license terms, see the LICENSE file.
 
 use vars qw($VERSION);
-$VERSION = '1.2';
+$VERSION = '1.2.1';
 
 # This method will run once at server start
 sub startup {
