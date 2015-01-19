@@ -164,41 +164,41 @@ CREATE TYPE powa_qualstats_history_item AS (
   filter_ratio float
 );
 
-CREATE TABLE public.powa_qualstats_nodehash (
-    nodehash bigint,
+CREATE TABLE public.powa_qualstats_quals (
+    qualid bigint,
     queryid bigint,
     dbid oid,
     userid oid,
     quals public.qual_type[],
-    PRIMARY KEY (nodehash, queryid, dbid, userid),
+    PRIMARY KEY (qualid, queryid, dbid, userid),
     FOREIGN KEY (queryid, dbid, userid) REFERENCES powa_statements(queryid, dbid, userid)
       MATCH FULL ON UPDATE CASCADE ON DELETE CASCADE
 );
 
-CREATE TABLE public.powa_qualstats_nodehash_current (
-    nodehash bigint,
+CREATE TABLE public.powa_qualstats_quals_history (
+    qualid bigint,
+    queryid bigint,
+    dbid oid,
+    userid oid,
+    coalesce_range tstzrange,
+    records powa_qualstats_history_item[],
+    FOREIGN KEY (qualid, queryid, dbid, userid) REFERENCES public.powa_qualstats_quals (qualid, queryid, dbid, userid) MATCH FULL ON UPDATE CASCADE ON DELETE CASCADE
+);
+
+CREATE TABLE public.powa_qualstats_quals_history_current (
+    qualid bigint,
     queryid bigint,
     dbid oid,
     userid oid,
     ts timestamptz,
     count   bigint,
     filter_ratio float,
-    FOREIGN KEY (nodehash, queryid, dbid, userid) REFERENCES powa_qualstats_nodehash(nodehash, queryid, dbid, userid)
+    FOREIGN KEY (qualid, queryid, dbid, userid) REFERENCES powa_qualstats_quals(qualid, queryid, dbid, userid)
       MATCH FULL ON UPDATE CASCADE ON DELETE CASCADE
 );
 
-CREATE TABLE public.powa_qualstats_nodehash_history (
-    nodehash bigint,
-    queryid bigint,
-    dbid oid,
-    userid oid,
-    coalesce_range tstzrange,
-    records powa_qualstats_history_item[],
-    FOREIGN KEY (nodehash, queryid, dbid, userid) REFERENCES public.powa_qualstats_nodehash (nodehash, queryid, dbid, userid) MATCH FULL ON UPDATE CASCADE ON DELETE CASCADE
-);
-
-CREATE TABLE public.powa_qualstats_nodehash_constvalues(
-    nodehash bigint,
+CREATE TABLE public.powa_qualstats_constvalues_history (
+    qualid bigint,
     queryid bigint,
     dbid oid,
     userid oid,
@@ -206,11 +206,11 @@ CREATE TABLE public.powa_qualstats_nodehash_constvalues(
     most_filtering qual_values[],
     least_filtering qual_values[],
     most_executed qual_values[],
-    FOREIGN KEY (nodehash, queryid, dbid, userid) REFERENCES public.powa_qualstats_nodehash (nodehash, queryid, dbid, userid) MATCH FULL ON UPDATE CASCADE ON DELETE CASCADE
+    FOREIGN KEY (qualid, queryid, dbid, userid) REFERENCES public.powa_qualstats_quals (qualid, queryid, dbid, userid) MATCH FULL ON UPDATE CASCADE ON DELETE CASCADE
 );
 
-CREATE TABLE public.powa_qualstats_nodehash_constvalues_current(
-    nodehash bigint,
+CREATE TABLE public.powa_qualstats_constvalues_history_current (
+    qualid bigint,
     queryid bigint,
     dbid oid,
     userid oid,
@@ -218,12 +218,12 @@ CREATE TABLE public.powa_qualstats_nodehash_constvalues_current(
     constvalues text[],
     count bigint,
     filter_ratio float,
-    FOREIGN KEY (nodehash, queryid, dbid, userid) REFERENCES public.powa_qualstats_nodehash (nodehash, queryid, dbid, userid) MATCH FULL ON UPDATE CASCADE ON DELETE CASCADE
+    FOREIGN KEY (qualid, queryid, dbid, userid) REFERENCES public.powa_qualstats_quals (qualid, queryid, dbid, userid) MATCH FULL ON UPDATE CASCADE ON DELETE CASCADE
 );
 
-CREATE INDEX ON powa_qualstats_nodehash_constvalues USING gist (queryid, nodehash, coalesce_range);
-CREATE INDEX ON powa_qualstats_nodehash_constvalues(nodehash, queryid);
-CREATE INDEX ON powa_qualstats_nodehash(queryid);
+CREATE INDEX ON powa_qualstats_constvalues_history USING gist (queryid, qualid, coalesce_range);
+CREATE INDEX ON powa_qualstats_constvalues_history (qualid, queryid);
+CREATE INDEX ON powa_qualstats_quals(queryid);
 
 
 /* end of pg_qualstats_integration - part 1 */
@@ -239,11 +239,11 @@ SELECT pg_catalog.pg_extension_config_dump('powa_kcache_metrics','');
 SELECT pg_catalog.pg_extension_config_dump('powa_kcache_metrics_db','');
 SELECT pg_catalog.pg_extension_config_dump('powa_kcache_metrics_current','');
 SELECT pg_catalog.pg_extension_config_dump('powa_kcache_metrics_current_db','');
-SELECT pg_catalog.pg_extension_config_dump('powa_qualstats_nodehash','');
-SELECT pg_catalog.pg_extension_config_dump('powa_qualstats_nodehash_history','');
-SELECT pg_catalog.pg_extension_config_dump('powa_qualstats_nodehash_current','');
-SELECT pg_catalog.pg_extension_config_dump('powa_qualstats_nodehash_constvalues','');
-SELECT pg_catalog.pg_extension_config_dump('powa_qualstats_nodehash_constvalues_current','');
+SELECT pg_catalog.pg_extension_config_dump('powa_qualstats_quals','');
+SELECT pg_catalog.pg_extension_config_dump('powa_qualstats_quals_history','');
+SELECT pg_catalog.pg_extension_config_dump('powa_qualstats_quals_history_current','');
+SELECT pg_catalog.pg_extension_config_dump('powa_qualstats_constvalues_history','');
+SELECT pg_catalog.pg_extension_config_dump('powa_qualstats_constvalues_history_current','');
 
 CREATE OR REPLACE FUNCTION powa_take_snapshot() RETURNS void AS $PROC$
 DECLARE
@@ -610,16 +610,16 @@ language plpgsql;
  */
 CREATE OR REPLACE VIEW powa_qualstats_aggregate_constvalues_current AS
 WITH consts AS (
-  SELECT nodehash, queryid, dbid, userid, min(ts) as mints, max(ts) as maxts, avg(filter_ratio) as filter_ratio,
+  SELECT qualid, queryid, dbid, userid, min(ts) as mints, max(ts) as maxts, avg(filter_ratio) as filter_ratio,
   max(count) - min(count) as count, constvalues
-  FROM powa_qualstats_nodehash_constvalues_current
-  GROUP BY nodehash, queryid, dbid, userid, constvalues
+  FROM powa_qualstats_constvalues_history_current
+  GROUP BY qualid, queryid, dbid, userid, constvalues
   HAVING max(count) - min(count) > 0
 ),
 groups AS (
-  SELECT nodehash, queryid, dbid, userid, tstzrange(min(mints), max(maxts))
+  SELECT qualid, queryid, dbid, userid, tstzrange(min(mints), max(maxts))
   FROM consts
-  GROUP BY nodehash, queryid, dbid, userid
+  GROUP BY qualid, queryid, dbid, userid
 )
 SELECT *
 FROM groups,
@@ -628,7 +628,7 @@ LATERAL (
   FROM (
     SELECT (constvalues, filter_ratio, count)::qual_values as constvalues
     FROM consts
-    WHERE consts.nodehash = groups.nodehash AND consts.queryid = groups.queryid
+    WHERE consts.qualid = groups.qualid AND consts.queryid = groups.queryid
     AND consts.dbid = groups.dbid AND consts.userid = groups.userid
     ORDER BY filter_ratio DESC
     LIMIT 20
@@ -639,7 +639,7 @@ LATERAL (
   FROM (
     SELECT (constvalues, filter_ratio, count)::qual_values as constvalues
     FROM consts
-    WHERE consts.nodehash = groups.nodehash AND consts.queryid = groups.queryid
+    WHERE consts.qualid = groups.qualid AND consts.queryid = groups.queryid
     AND consts.dbid = groups.dbid AND consts.userid = groups.userid
     ORDER BY filter_ratio
     LIMIT 20
@@ -650,7 +650,7 @@ LATERAL (
   FROM (
     SELECT (constvalues, filter_ratio, count)::qual_values as constvalues
     FROM consts
-    WHERE consts.nodehash = groups.nodehash AND consts.queryid = groups.queryid
+    WHERE consts.qualid = groups.qualid AND consts.queryid = groups.queryid
     AND consts.dbid = groups.dbid AND consts.userid = groups.userid
     ORDER BY count desc
     LIMIT 20
@@ -669,29 +669,29 @@ BEGIN
     JOIN powa_statements s USING(queryid, dbid, userid)
   ),
   missing_quals AS (
-      INSERT INTO powa_qualstats_nodehash (nodehash, queryid, dbid, userid, quals)
-        SELECT DISTINCT qs.nodehash, qs.queryid, qs.dbid, qs.userid, array_agg(DISTINCT q::qual_type)
+      INSERT INTO powa_qualstats_quals (qualid, queryid, dbid, userid, quals)
+        SELECT DISTINCT qs.qualnodeid, qs.queryid, qs.dbid, qs.userid, array_agg(DISTINCT q::qual_type)
         FROM capture qs,
         LATERAL (SELECT (unnest(quals)).*) as q
         WHERE NOT EXISTS (
           SELECT 1
-          FROM powa_qualstats_nodehash nh
-          WHERE nh.nodehash = qs.nodehash AND nh.queryid = qs.queryid
+          FROM powa_qualstats_quals nh
+          WHERE nh.qualid = qs.qualnodeid AND nh.queryid = qs.queryid
             AND nh.dbid = qs.dbid AND nh.userid = qs.userid
         )
-        GROUP BY nodehash, queryid, dbid, userid
+        GROUP BY qualnodeid, queryid, dbid, userid
       RETURNING *
   ),
   by_qual AS (
-      INSERT INTO powa_qualstats_nodehash_current (nodehash, queryid, dbid, userid, ts, count, filter_ratio)
-      SELECT qs.nodehash, qs.queryid, qs.dbid, qs.userid, now(), sum(count), CASE sum(count) WHEN 0 THEN 0 ELSE sum(count * filter_ratio) / sum(count) END as filter_ratio
+      INSERT INTO powa_qualstats_quals_history_current (qualid, queryid, dbid, userid, ts, count, filter_ratio)
+      SELECT qs.qualnodeid, qs.queryid, qs.dbid, qs.userid, now(), sum(count), CASE sum(count) WHEN 0 THEN 0 ELSE sum(count * filter_ratio) / sum(count) END as filter_ratio
         FROM capture as qs
-        GROUP BY nodehash, qs.queryid, qs.dbid, qs.userid
+        GROUP BY qualnodeid, qs.queryid, qs.dbid, qs.userid
       RETURNING *
   ),
   by_qual_with_const AS (
-      INSERT INTO powa_qualstats_nodehash_constvalues_current(nodehash, queryid, dbid, userid, ts, count, filter_ratio, constvalues)
-      SELECT nodehash, qs.queryid, qs.dbid, qs.userid, now(), count, filter_ratio, constvalues
+      INSERT INTO powa_qualstats_constvalues_history_current(qualid, queryid, dbid, userid, ts, count, filter_ratio, constvalues)
+      SELECT qualnodeid, qs.queryid, qs.dbid, qs.userid, now(), count, filter_ratio, constvalues
       FROM capture as qs
   )
   SELECT true into result;
@@ -706,17 +706,17 @@ DECLARE
   result bool;
 BEGIN
   RAISE DEBUG 'running powa_qualstats_aggregate';
-  LOCK TABLE powa_qualstats_nodehash_constvalues_current IN SHARE MODE;
-  LOCK TABLE powa_qualstats_nodehash_current IN SHARE MODE;
-  INSERT INTO powa_qualstats_nodehash_constvalues (
-    nodehash, queryid, dbid, userid, coalesce_range, most_filtering, least_filtering, most_executed)
+  LOCK TABLE powa_qualstats_constvalues_history_current IN SHARE MODE;
+  LOCK TABLE powa_qualstats_quals_history_current IN SHARE MODE;
+  INSERT INTO powa_qualstats_constvalues_history (
+    qualid, queryid, dbid, userid, coalesce_range, most_filtering, least_filtering, most_executed)
     SELECT * FROM powa_qualstats_aggregate_constvalues_current;
-  INSERT INTO powa_qualstats_nodehash_history (nodehash, queryid, dbid, userid, coalesce_range, records)
-    SELECT nodehash, queryid, dbid, userid, tstzrange(min(ts), max(ts)), array_agg((ts, count, filter_ratio)::powa_qualstats_history_item)
-    FROM powa_qualstats_nodehash_current
-    GROUP BY nodehash, queryid, dbid, userid;
-  TRUNCATE powa_qualstats_nodehash_constvalues_current;
-  TRUNCATE powa_qualstats_nodehash_current;
+  INSERT INTO powa_qualstats_quals_history (qualid, queryid, dbid, userid, coalesce_range, records)
+    SELECT qualid, queryid, dbid, userid, tstzrange(min(ts), max(ts)), array_agg((ts, count, filter_ratio)::powa_qualstats_history_item)
+    FROM powa_qualstats_quals_history_current
+    GROUP BY qualid, queryid, dbid, userid;
+  TRUNCATE powa_qualstats_constvalues_history_current;
+  TRUNCATE powa_qualstats_quals_history_current;
 END
 $PROC$ language plpgsql;
 
@@ -726,8 +726,8 @@ $PROC$ language plpgsql;
 CREATE OR REPLACE FUNCTION powa_qualstats_purge() RETURNS void as $PROC$
 BEGIN
   RAISE DEBUG 'running powa_qualstats_purge';
-  DELETE FROM powa_qualstats_nodehash_constvalues WHERE upper(coalesce_range) < (now() - current_setting('powa.retention')::interval);
-  DELETE FROM powa_qualstats_nodehash_history WHERE upper(coalesce_range) < (now() - current_setting('powa.retention')::interval);
+  DELETE FROM powa_qualstats_constvalues_history WHERE upper(coalesce_range) < (now() - current_setting('powa.retention')::interval);
+  DELETE FROM powa_qualstats_quals_history WHERE upper(coalesce_range) < (now() - current_setting('powa.retention')::interval);
 END;
 $PROC$ language plpgsql;
 
