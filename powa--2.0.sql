@@ -155,13 +155,13 @@ CREATE TYPE public.qual_type AS (
 CREATE TYPE public.qual_values AS (
     constants text[],
     count bigint,
-    filter_ratio float
+    nbfiltered bigint
 );
 
 CREATE TYPE powa_qualstats_history_item AS (
   ts timestamptz,
   count bigint,
-  filter_ratio float
+  nbfiltered bigint
 );
 
 CREATE TABLE public.powa_qualstats_quals (
@@ -192,7 +192,7 @@ CREATE TABLE public.powa_qualstats_quals_history_current (
     userid oid,
     ts timestamptz,
     count   bigint,
-    filter_ratio float,
+    nbfiltered bigint,
     FOREIGN KEY (qualid, queryid, dbid, userid) REFERENCES powa_qualstats_quals(qualid, queryid, dbid, userid)
       MATCH FULL ON UPDATE CASCADE ON DELETE CASCADE
 );
@@ -217,7 +217,7 @@ CREATE TABLE public.powa_qualstats_constvalues_history_current (
     ts timestamptz,
     constvalues text[],
     count bigint,
-    filter_ratio float,
+    nbfiltered bigint,
     FOREIGN KEY (qualid, queryid, dbid, userid) REFERENCES public.powa_qualstats_quals (qualid, queryid, dbid, userid) MATCH FULL ON UPDATE CASCADE ON DELETE CASCADE
 );
 
@@ -610,11 +610,10 @@ language plpgsql;
  */
 CREATE OR REPLACE VIEW powa_qualstats_aggregate_constvalues_current AS
 WITH consts AS (
-  SELECT qualid, queryid, dbid, userid, min(ts) as mints, max(ts) as maxts, avg(filter_ratio) as filter_ratio,
-  max(count) - min(count) as count, constvalues
+  SELECT qualid, queryid, dbid, userid, min(ts) as mints, max(ts) as maxts, sum(nbfiltered) as nbfiltered,
+  sum(count) as count, constvalues
   FROM powa_qualstats_constvalues_history_current
   GROUP BY qualid, queryid, dbid, userid, constvalues
-  HAVING max(count) - min(count) > 0
 ),
 groups AS (
   SELECT qualid, queryid, dbid, userid, tstzrange(min(mints), max(maxts))
@@ -626,29 +625,29 @@ FROM groups,
 LATERAL (
   SELECT array_agg(constvalues) as mf
   FROM (
-    SELECT (constvalues, filter_ratio, count)::qual_values as constvalues
+    SELECT (constvalues, nbfiltered, count)::qual_values as constvalues
     FROM consts
     WHERE consts.qualid = groups.qualid AND consts.queryid = groups.queryid
     AND consts.dbid = groups.dbid AND consts.userid = groups.userid
-    ORDER BY filter_ratio DESC
+    ORDER BY CASE WHEN count = 0 THEN 0 ELSE nbfiltered / count::numeric END DESC
     LIMIT 20
   ) s
 ) as mf,
 LATERAL (
   SELECT array_agg(constvalues) as lf
   FROM (
-    SELECT (constvalues, filter_ratio, count)::qual_values as constvalues
+    SELECT (constvalues, nbfiltered, count)::qual_values as constvalues
     FROM consts
     WHERE consts.qualid = groups.qualid AND consts.queryid = groups.queryid
     AND consts.dbid = groups.dbid AND consts.userid = groups.userid
-    ORDER BY filter_ratio
+    ORDER BY CASE WHEN count = 0 THEN 0 ELSE nbfiltered / count::numeric END DESC
     LIMIT 20
   ) s
 ) as lf,
 LATERAL (
   SELECT array_agg(constvalues) as me
   FROM (
-    SELECT (constvalues, filter_ratio, count)::qual_values as constvalues
+    SELECT (constvalues, nbfiltered, count)::qual_values as constvalues
     FROM consts
     WHERE consts.qualid = groups.qualid AND consts.queryid = groups.queryid
     AND consts.dbid = groups.dbid AND consts.userid = groups.userid
@@ -683,18 +682,19 @@ BEGIN
       RETURNING *
   ),
   by_qual AS (
-      INSERT INTO powa_qualstats_quals_history_current (qualid, queryid, dbid, userid, ts, count, filter_ratio)
-      SELECT qs.qualnodeid, qs.queryid, qs.dbid, qs.userid, now(), sum(count), CASE sum(count) WHEN 0 THEN 0 ELSE sum(count * filter_ratio) / sum(count) END as filter_ratio
+      INSERT INTO powa_qualstats_quals_history_current (qualid, queryid, dbid, userid, ts, count, nbfiltered)
+      SELECT qs.qualnodeid, qs.queryid, qs.dbid, qs.userid, now(), sum(count), sum(nbfiltered)
         FROM capture as qs
         GROUP BY qualnodeid, qs.queryid, qs.dbid, qs.userid
       RETURNING *
   ),
   by_qual_with_const AS (
-      INSERT INTO powa_qualstats_constvalues_history_current(qualid, queryid, dbid, userid, ts, count, filter_ratio, constvalues)
-      SELECT qualnodeid, qs.queryid, qs.dbid, qs.userid, now(), count, filter_ratio, constvalues
+      INSERT INTO powa_qualstats_constvalues_history_current(qualid, queryid, dbid, userid, ts, count, nbfiltered, constvalues)
+      SELECT qualnodeid, qs.queryid, qs.dbid, qs.userid, now(), count, nbfiltered, constvalues
       FROM capture as qs
   )
   SELECT true into result;
+  PERFORM pg_qualstats_reset();
 END
 $PROC$ language plpgsql;
 
@@ -712,7 +712,7 @@ BEGIN
     qualid, queryid, dbid, userid, coalesce_range, most_filtering, least_filtering, most_executed)
     SELECT * FROM powa_qualstats_aggregate_constvalues_current;
   INSERT INTO powa_qualstats_quals_history (qualid, queryid, dbid, userid, coalesce_range, records)
-    SELECT qualid, queryid, dbid, userid, tstzrange(min(ts), max(ts)), array_agg((ts, count, filter_ratio)::powa_qualstats_history_item)
+    SELECT qualid, queryid, dbid, userid, tstzrange(min(ts), max(ts)), array_agg((ts, count, nbfiltered)::powa_qualstats_history_item)
     FROM powa_qualstats_quals_history_current
     GROUP BY qualid, queryid, dbid, userid;
   TRUNCATE powa_qualstats_constvalues_history_current;
