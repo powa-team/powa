@@ -15,7 +15,7 @@ __You need to be careful about the security of your PostgreSQL server when insta
 
 We designed POWA so that the user interface will only communicate with PostgreSQL via prepared statements. This will prevent the risk of [SQL injection](http://xkcd.com/327/).
 
-However to connect to the POWA User Interface, you will use the login and password of a postgeSQL superuser (see [README.md](https://github.com/dalibo/powa/blob/master/README.md) for more details). If you don't protect your communications, an attacker placed between the GUI and PostgreSQL, or between you and the GUI, could gain superuser rights to your database server.
+However to connect to the POWA User Interface, you will use the login and password of a postgeSQL superuser. See [README.md](https://github.com/dalibo/powa/blob/master/README.md) for more details. If you don't protect your communications, an attacker placed between the GUI and PostgreSQL, or between you and the GUI, could gain superuser rights to your database server.
 
 Therefore we **strongly** recommend the following precautions :
 
@@ -35,10 +35,22 @@ Prerequisites
 The versions showed have been tested, it may work with older versions
 
 * Perl 5.10
-* Mojolicious 4.75
+* Mojolicious 4.75 and later
 * Perl DBI and DBD-Pg modules
 * PostgreSQL 9.3
 * A CGI/Perl webserver
+
+Browser compatibility
+---------------------
+
+PoWA is designed to respect standards and should work on most standard compliant browser. 
+
+If you are using an old version of Microsoft Internet Explorer, you might not see some graphs. 
+We recommend that you either :
+
+* upgrade to a  version (at least IE9) 
+* or switch to Mozilla Firefox.
+
 
 Install
 -------
