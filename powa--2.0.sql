@@ -453,7 +453,7 @@ BEGIN
     TRUNCATE TABLE powa_statements_history_current_db;
     TRUNCATE TABLE powa_statements;
     RETURN true;
-END:
+END;
 $function$;
 
 /* pg_stat_kcache integration - part 2 */
