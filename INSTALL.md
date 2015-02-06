@@ -3,7 +3,7 @@ PostgreSQL Workload Analyzer detailled installation guide
 
 Read [README.md](https://github.com/dalibo/powa/blob/master/README.md) for further details about PoWA.
 
-PoWA requires PostgreSQL 9.3 or more.
+PoWA requires PostgreSQL 9.4 or more.
 
 The following documentation describes the detailed installation steps to install PoWA.
 
@@ -12,7 +12,7 @@ Download PoWA from the website
 ------------------------------
 
 ```
-wget https://github.com/dalibo/powa/archive/REL_1_2.zip
+wget https://github.com/dalibo/powa/archive/REL_2_0.zip
 ```
 
 Unpack the downloaded file
@@ -20,7 +20,7 @@ Unpack the downloaded file
 
 ```
 cd /usr/src
-unzip powa-REL_1_1.zip
+unzip powa-REL_2_0.zip
 ```
 
 Compile and install the software
@@ -28,7 +28,7 @@ Compile and install the software
 
 Before proceeding, be sure to have a compiler installed and the appropriate PostgreSQL development packages. Something like
 ```
-apt-get install postgresql-server-dev-9.3
+apt-get install postgresql-server-dev-9.0
 ```
 or
 ```
@@ -37,7 +37,7 @@ yum install postgresql93-devel
 
 Then:
 ```
-cd /usr/src/powa-REL_1_2
+cd /usr/src/powa-REL_2_0
 make
 ```
 
@@ -164,67 +164,5 @@ ALTER EXTENSION
 Next, you will need to restart PostgreSQL in order to take account of the
 updated background worker. As root, run the following command :
 ```
-service postgresql-9.3 restart
+service postgresql-9.4 restart
 ```
-
-Finally, adapt the ui/powa.conf file to suit the new format. For instance,
-
-* if coming from powa 1.1
-
-
-```
-    "database" : {
-        "dsn"     : "dbi:Pg:database=powa;host=127.0.0.1;port=5432",
-        "options"  : {
-            "AutoCommit" : 0,
-            "pg_enable_utf8" : 1
-        }
-    },
-
-```
-
-must be changed to
-
-```
-    "servers" : {
-        "main" : {
-            "dbname"   : "powa",
-            "host"     : "127.0.0.1",
-            "port"     : "5432"
-        }
-    },
-```
-
-* if coming from powa 1.2
-
-```
-    "database" : {
-        "dbname"   : "powa",
-        "host"     : "127.0.0.1",
-        "port"     : "5432",
-        "options"  : {
-            "AutoCommit" : 0,
-            "pg_enable_utf8" : 1
-        }
-    },
-```
-
-must be changed to
-
-```
-    "servers" : {
-        "main" : {
-            "dbname"   : "powa",
-            "host"     : "127.0.0.1",
-            "port"     : "5432"
-        }
-    },
-```
-
-Set-up the UI
--------------
-
-
-Read [ui/README.md](https://github.com/dalibo/powa/blob/master/ui/README.md) for the UI installation details.
-
-

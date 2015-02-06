@@ -6,7 +6,7 @@ PoWA is an extension designed to historize informations given by the
 to gather useful information on a specified time interval. If possible (verify
 with pg_test_timing), also activate track_io_timing in postgresql.conf.
 
-PoWA requires PostgreSQL 9.3 or more.
+PoWA requires PostgreSQL 9.4 or more.
 
 Connecting on the GUI requires a PostgreSQL user with SUPERUSER and LOGIN privileges.
 
@@ -66,7 +66,7 @@ Reset the stats:
 Set up the UI:
 ------------------------
 
-Read [ui/README.md](https://github.com/dalibo/powa/blob/master/ui/README.md).
+Read [the ui documentation.](https://github.com/dalibo/powa-ui/blob/master/README.md).
 
 
 Impact on performances
@@ -84,4 +84,5 @@ All in all, we strongly feel that the performance impact of POWA is nothing comp
 
 See our own benchmark for more details:
 [POWA vs The Badger](https://github.com/dalibo/powa/wiki/POWA-vs-pgBadger)
+
 
