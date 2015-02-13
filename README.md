@@ -78,6 +78,6 @@ Reset the stats:
 Set up the UI:
 ------------------------
 
-Read [the ui documentation.](https://github.com/dalibo/powa-ui/blob/master/README.md).
+Read [the ui documentation.](https://github.com/dalibo/powa-web/blob/master/README.md).
 
 
