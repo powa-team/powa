@@ -7,8 +7,8 @@ Clone the repository:
 
 .. code:: bash
 
-  git clone https://github.com/dalibo/powa/
-  cd powa/
+  git clone https://github.com/dalibo/powa-archivist/
+  cd powa-archivist/
   make && sudo make install
 
 Any modification to the background-worker code will need a PostgreSQL restart.
