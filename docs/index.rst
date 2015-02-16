@@ -17,7 +17,6 @@ Connecting on the GUI requires a PostgreSQL user with SUPERUSER and LOGIN privil
 .. toctree::
   :maxdepth: 1
 
-  index.rst
   install.rst
   ui.rst
 
