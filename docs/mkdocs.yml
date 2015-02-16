@@ -1,0 +1,7 @@
+site_name: PoWA
+pages:
+- [index.md, Home]
+- [install.md, Installation]
+- [ui.md, User-Interface]
+theme: readthedocs
+docs_dir: ./
