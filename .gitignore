@@ -2,3 +2,5 @@ powa.o
 powa.so
 ui/powa.conf
 ui/log
+docs/site
+docs/_build

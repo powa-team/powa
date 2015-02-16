@@ -1,3 +1,5 @@
+.. _index:
+
 PostgreSQL Workload Analyzer
 ============================
 
@@ -20,12 +22,10 @@ Connecting on the GUI requires a PostgreSQL user with SUPERUSER and LOGIN privil
   ui.rst
 
 
-
-
 Installation
 ------------
 
-For a detailed installation procedure, please read [INSTALL.md](https://github.com/dalibo/powa/blob/master/INSTALL.md).
+For a detailed installation procedure, please read :ref:`the installation guide <install>`.
 
 Optionally, you can create a dedicated user for PoWA. For instance, connected on PostgreSQL :
 `CREATE USER powa SUPERUSER ENCRYPTED PASSWORD 'mypassword'` (don't forget to change the password).
@@ -92,4 +92,4 @@ Using POWA will have a small negative impact on your PostgreSQL server performan
 All in all, we strongly feel that the performance impact of POWA is nothing compared to being in the dark and not knowing what is running on your database. And in most cases the impact is lower than setting ``log_min_duration_statement = 0``.
 
 See our own benchmark for more details:
-[POWA vs The Badger](https://github.com/dalibo/powa/wiki/POWA-vs-pgBadger)
+`POWA vs The Badger <https://github.com/dalibo/powa/wiki/POWA-vs-pgBadger>`_

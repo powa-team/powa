@@ -1,3 +1,5 @@
+.. _ui:
+
 PostgreSQL Workload Analyzer User Interface
 ============================================
 
@@ -11,15 +13,15 @@ But first let's talk about safety:
 /!\ WARNING /!\
 -------------------------
 
-__You need to be careful about the security of your PostgreSQL server when installing POWA.__
+**You need to be careful about the security of your PostgreSQL server when installing POWA**
 
-We designed POWA so that the user interface will only communicate with PostgreSQL via prepared statements. This will prevent the risk of [SQL injection](http://xkcd.com/327/).
+We designed POWA so that the user interface will only communicate with PostgreSQL via prepared statements. This will prevent the risk of `SQL injection <http://xkcd.com/327/>`_.
 
-However to connect to the POWA User Interface, you will use the login and password of a postgeSQL superuser. See [README.md](https://github.com/dalibo/powa/blob/master/README.md) for more details. If you don't protect your communications, an attacker placed between the GUI and PostgreSQL, or between you and the GUI, could gain superuser rights to your database server.
+However to connect to the POWA User Interface, you will use the login and password of a postgeSQL superuser. See :ref:`the main documentation <index>` for more details. If you don't protect your communications, an attacker placed between the GUI and PostgreSQL, or between you and the GUI, could gain superuser rights to your database server.
 
 Therefore we **strongly** recommend the following precautions :
 
-* [Read the Great PostgreSQL Documentation](http://www.postgresql.org/docs/current/static/auth-pg-hba-conf.html)
+* `Read the Great PostgreSQL Documentation <http://www.postgresql.org/docs/current/static/auth-pg-hba-conf.html>`_
 * Check your ``pg_hba.conf`` file
 * Do not allow users to access POWA from the Internet
 * Do not allow users to access PostgreSQL from the Internet
@@ -63,7 +65,7 @@ sometimes packages, for example the package in Debian is
 `libmojolicious-perl`
 
 If the needed version is not available anymore on your distribution, you can
-download Mojolicious 4.75 [here](http://backpan.perl.org/authors/id/S/SR/SRI/Mojolicious-4.75.tar.gz).
+download Mojolicious 4.75 `here <http://backpan.perl.org/authors/id/S/SR/SRI/Mojolicious-4.75.tar.gz>`_.
 
 As you are then not using a package, you may not want to install Mojolicious globally on your system. So here is how to install it locally (let's say you installed powa in /path/to/powa):
 
@@ -79,22 +81,23 @@ Copy `powa.conf-dist` to `powa.conf` and edit it.
 If you have multiple PostgreSQL servers with PoWA installed, you can configure them in the `powa.conf` file, in the **servers** section. Each entry is of the form **"name": { info... }**, and must be coma separated.
 
 For instance, if you have a production server listening on 10.0.0.1, port 5432 and a development server listening on 10.0.0.2, port 5433, the **servers** section should look like :
-```
-    ...
-    "servers" : {
-        "production" : {
-            "dbname"   : "powa",
-            "host"     : "10.0.0.1",
-            "port"     : "5432"
-        },
-        "development" : {
-            "dbname"   : "powa",
-            "host"     : "10.0.0.2",
-            "port"     : "5433"
-        }
-    },
-    ...
-```
+
+.. code-block:: bash
+
+      ...
+      "servers" : {
+          "production" : {
+              "dbname"   : "powa",
+              "host"     : "10.0.0.1",
+              "port"     : "5432"
+          },
+          "development" : {
+              "dbname"   : "powa",
+              "host"     : "10.0.0.2",
+              "port"     : "5433"
+          }
+      },
+      ...
 
 You can also optionally configure a user and a password for each server. If
 credentials are found in the config file for the selected server, they will
@@ -104,20 +107,20 @@ will become optionnal on the login page.
 For instance, if you have a "test" server with must use the username "dba" and
 the password "testing", the **powa.conf** file will look like :
 
-```
-    ...
-    "servers" : {
-        "test" : {
-        "development" : {
-            "dbname"   : "powa",
-            "host"     : "10.0.0.3",
-            "port"     : "5433",
-            "username" : "dba",
-            "password" : "testing"
-        }
-    }
-    ...
-```
+.. code-block:: bash
+
+      ...
+      "servers" : {
+          "test" : {
+          "development" : {
+              "dbname"   : "powa",
+              "host"     : "10.0.0.3",
+              "port"     : "5433",
+              "username" : "dba",
+              "password" : "testing"
+          }
+      }
+      ...
 
 **CAREFUL:** If you use this feature, it's strongly advised to rely on an external security
 method, such as what is built-in on most of the http servers.
@@ -147,6 +150,8 @@ Run With Apache
 -------------------------------
 
 To run the UI with Apache, here is an example using CGI:
+
+.. code-block:: apache
 
     <VirtualHost *:80>
         ServerAdmin webmaster@example.com
