@@ -13,7 +13,7 @@ This includes support for various **stat extensions**:
 
 * :ref:`pg_stat_statements_doc`, providing data about queries being executed
 * :ref:`pg_qualstats`, providing data about predicates, or where clauses
-* :ref:`pg_stat_kcache`, providing data about operating-system level cache
+* :ref:`pg_stat_kcache_doc`, providing data about operating-system level cache
 
 Additionnaly, the PoWA User Interface allows you to make the most sense of this
 information.
