@@ -39,10 +39,16 @@ won't on Windows.
 As seen in :ref:`quickstart`, the PostgreSQL development packages should be
 available.
 
-First, you need to download the lastest release of pg_stat_kcache_.
+First, you need to download and extract the lastest release of pg_stat_kcache_.
 
-Then, extract and go to the directory containing the files you just extracted,
-and compile the extension:
+.. parsed-literal::
+
+  wget |pg_stat_kcache_download| -O pg_stat_kcache-|pg_stat_kcache_release|.tar.gz
+  tar zxvf pg_stat_kcache-|pg_stat_kcache_release|.tar.gz
+  cd pg_stat_kcache-|pg_stat_kcache_release|
+
+
+Then, compile the extension:
 
 .. code-block:: bash
 
@@ -52,7 +58,7 @@ If everything goes fine, you will have this kind of output :
 
 .. code-block:: bash
 
-  -O0 -Wall -Wmissing-prototypes -Wpointer-arith -Wdeclaration-after-statement -Wendif-labels -Wmissing-format-attribute -Wformat-security -fno-strict-aliasing -fwrapv -fexcess-precision=standard -g -fpic -I. -I./ -I/home/rjuju/postgres/pgs/postgresql-9.4.beta2/include/server -I/home/rjuju/postgres/pgs/postgresql-9.4.beta2/include/internal -D_GNU_SOURCE -I/usr/include/libxml2   -c -o pg_stat_kcache.o pg_stat_kcache.c
+  gcc -O0 -Wall -Wmissing-prototypes -Wpointer-arith -Wdeclaration-after-statement -Wendif-labels -Wmissing-format-attribute -Wformat-security -fno-strict-aliasing -fwrapv -fexcess-precision=standard -g -fpic -I. -I./ -I/home/rjuju/postgres/pgs/postgresql-9.4.beta2/include/server -I/home/rjuju/postgres/pgs/postgresql-9.4.beta2/include/internal -D_GNU_SOURCE -I/usr/include/libxml2   -c -o pg_stat_kcache.o pg_stat_kcache.c
   gcc -O0 -Wall -Wmissing-prototypes -Wpointer-arith -Wdeclaration-after-statement -Wendif-labels -Wmissing-format-attribute -Wformat-security -fno-strict-aliasing -fwrapv -fexcess-precision=standard -g -fpic -shared -o pg_stat_kcache.so pg_stat_kcache.o -L/home/rjuju/postgres/pgs/postgresql-9.4.beta2/lib -L/usr/lib/x86_64-linux-gnu  -Wl,--as-needed -Wl,-rpath,'/home/rjuju/postgres/pgs/postgresql-9.4.beta2/lib',--enable-new-dtags
 
 Then install the compiled file. This step has to be made with the user that has
@@ -72,13 +78,17 @@ Else, sudo into the user that owns your PostgreSQL executables, and
 
 Then you just have to declare the extension in the ``postgresql.conf`` file, like this :
 
-``shared_preload_libraries = 'pg_stat_statements,pg_stat_kcache'``
+.. code-block:: ini
+
+  shared_preload_libraries = 'pg_stat_statements,pg_stat_kcache'
 
 Restart the PostgreSQL server to reload the libraries.
 
 Connect to the server as a superuser and type:
 
-``CREATE EXTENSION pg_stats_kcache ;``
+.. code-block:: sql
+
+  CREATE EXTENSION pg_stats_kcache ;
 
 Configuration
 *************

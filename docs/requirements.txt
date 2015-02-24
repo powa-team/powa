@@ -1,0 +1,4 @@
+sphinxcontrib-napoleon
+requests
+sphinxcontrib-domaintools
+

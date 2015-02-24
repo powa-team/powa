@@ -16,6 +16,8 @@
 import sys
 import os
 
+sys.path.insert(0, ".")
+
 # If extensions (or modules to document with autodoc) are in another directory,
 # add these directories to sys.path here. If the directory is relative to the
 # documentation root, use os.path.abspath to make it absolute, like shown here.
@@ -32,7 +34,9 @@ import os
 extensions = [
     'sphinx.ext.intersphinx',
     'sphinx.ext.todo',
+    'autodoc_plpgsql'
 ]
+
 
 # Add any paths that contain templates here, relative to this directory.
 templates_path = ['_templates']
@@ -58,8 +62,8 @@ copyright = '2015, Dalibo'
 version = '2.0'
 # The full version, including alpha/beta/rc tags.
 release = '2.0.0'
-powa_web_release = '0.0.4'
-pg_qualstats_release = '0.0.2'
+powa_web_release = '0.0.5'
+pg_qualstats_release = '0.0.3'
 pg_stat_kcache_release = 'REL1_0'
 
 
@@ -104,9 +108,20 @@ pygments_style = 'sphinx'
 
 # -- Options for HTML output ----------------------------------------------
 
+# on_rtd is whether we are on readthedocs.org, this line of code grabbed from docs.readthedocs.org
+on_rtd = os.environ.get('READTHEDOCS', None) == 'True'
+
+if not on_rtd:  # only import and set the theme if we're building docs locally
+    import sphinx_rtd_theme
+    html_theme = 'sphinx_rtd_theme'
+    html_theme_path = [sphinx_rtd_theme.get_html_theme_path()]
+
+# otherwise, readthedocs.org uses their theme by default, so no need to specify it
+
+
 # The theme to use for HTML and HTML Help pages.  See the documentation for
 # a list of builtin themes.
-html_theme = 'default'
+#html_theme = 'default'
 
 # Theme options are theme-specific and customize the look and feel of a theme
 # further.  For a list of options available for each theme, see the
@@ -268,15 +283,21 @@ texinfo_documents = [
 
 # Example configuration for intersphinx: refer to the Python standard library.
 
-
 rst_epilog = """
-.. |download_link| replace:: https://github.com/dalibo/powa/archive/REL_{tagname}.tar.gz
+.. |download_link| replace:: https://github.com/dalibo/powa-archivist/archive/REL_{tagname}.tar.gz
 .. |rel_tag_name| replace:: REL_{tagname}.tar.gz
+.. |pg_stat_kcache_download| replace:: https://github.com/dalibo/pg_stat_kcache/archive/{pg_stat_kcache_release}.tar.gz
+.. |pg_stat_kcache_release| replace:: {pg_stat_kcache_release}
 .. |powa_web_release| replace:: {powa_web_release}
 .. |powa_web_download_link| replace:: https://pypi.python.org/packages/source/p/powa-web/powa-web-{powa_web_release}.tar.gz
+.. |pg_qualstats_download| replace:: https://github.com/dalibo/pg_qualstats/archive/{pg_qualstats_release}.tar.gz
+.. |pg_qualstats_release| replace:: {pg_qualstats_release}
+
 """.format(**{
     "tagname": "_".join(release.split('.')),
-    "powa_web_release": powa_web_release
+    "powa_web_release": powa_web_release,
+    "pg_qualstats_release": pg_qualstats_release,
+    "pg_stat_kcache_release": pg_stat_kcache_release
 })
 
 intersphinx_mapping = {'http://docs.python.org/': None}
