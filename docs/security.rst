@@ -1,8 +1,10 @@
 Security
 ==============
 
+.. warning::
 
-**You need to be careful about the security of your PostgreSQL instance when installing PoWA.**
+
+  **You need to be careful about the security of your PostgreSQL instance when installing PoWA.**
 
 We designed POWA so that the user interface will only communicate with PostgreSQL via prepared statements. This will prevent the risk of `SQL injection <http://xkcd.com/327/>`_.
 
