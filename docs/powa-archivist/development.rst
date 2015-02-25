@@ -1,7 +1,7 @@
 .. _integration_with_powa:
 
 Integrating another stat extension in Powa
-------------------------------------------
+==========================================
 
 Clone the repository:
 
