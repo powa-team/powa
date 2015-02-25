@@ -3,7 +3,10 @@
 PostgreSQL Workload Analyzer
 ============================
 
-**This is the documentation for PoWA 1.x series. If you're looking for the new (2.x series), please visit the main documentation website**.
+.. warning::
+
+  This is the documentation for PoWA 1.x series. If you're looking for the new (2.x series), please visit `the latest documentation <http://powa.readthedocs.org/en/latest/>`_
+  If you are using PostgreSQL >= 9.4, you should use the 2.x series.
 
 PoWA is an extension designed to historize informations given by the
 `pg_stat_statements extension`. It provides sql SRF (Set Returning Functions)
