@@ -1,7 +1,7 @@
 WARNING !!!
 ===========
 
-**If you're using PostgreSQL 9.3, you should use powa 1.X.
+If you're using PostgreSQL 9.3, you should use powa 1.X.
 
 The code is here:
 https://github.com/dalibo/powa/tree/REL_1_STABLE
@@ -9,10 +9,6 @@ https://github.com/dalibo/powa/tree/REL_1_STABLE
 The documentation is there:
 
 http://powa.readthedocs.org/en/REL_1_STABLE
-**
-
-
-
 
 PostgreSQL Workload Analyzer
 ============================
