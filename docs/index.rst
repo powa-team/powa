@@ -2,6 +2,10 @@
 PoWA: PostreSQL Workload Analyzer
 =================================
 
+.. warning::
+
+  If you want to use PoWA on PostgreSQL < 9.4, please use the `1.x series <http://powa.readthedocs.org/en/REL_1_STABLE/>`_
+
 Overview
 ========
 
