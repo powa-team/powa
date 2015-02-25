@@ -62,20 +62,6 @@ statements:
   CREATE EXTENSION powa;
 
 
-.. note::
-
-  At installation time, PoWA will try to register other extensions that it
-  supports (see :ref:`the stat extensions page <stat_extensions>` for a list of
-  supported extensions).
-  If you install those extensions **after** powa, you should register them manually,
-  using the corresponding functions. For example:
-
-  .. code-block:: sql
-
-    SELECT powa_kcache_register();
-    SELECT powa_qualstats_register();
-
-
 Example:
 
 .. code-block:: bash
