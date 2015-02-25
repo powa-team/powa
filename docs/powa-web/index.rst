@@ -57,13 +57,35 @@ Then, jump on the next section to configure powa-web.
 Configuration
 *************
 
-The powa-web configuration is stored as a simple json document.
+The powa-web configuration is stored as a simple python file.
 Powa-web will search its config as either of these files, in this order:
 
 * /etc/powa-web.conf
 * ~/.config/powa-web.conf
 * ~/.powa-web.conf
 * ./powa-web.conf
+
+The following options are required:
+
+servers (dict):
+  A dictionary mapping server names to connection information.
+
+  .. code-block:: python
+
+    servers={
+      'main': {
+        'host': 'localhost',
+        'port': '5432',
+        'database': 'powa'
+      }
+    }
+cookie_secret (str):
+  A secret key used to secure cookies transiting between the web browser and the
+  server.
+
+  .. code-block:: python
+
+    cookie_secret="SECRET_STRING"
 
 
 See also:
