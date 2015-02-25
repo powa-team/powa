@@ -62,6 +62,7 @@ copyright = '2015, Dalibo'
 version = '2.0'
 # The full version, including alpha/beta/rc tags.
 release = '2.0.0'
+powa_archivist_release = release
 powa_web_release = '0.0.5'
 pg_qualstats_release = '0.0.3'
 pg_stat_kcache_release = 'REL1_0'
@@ -285,7 +286,7 @@ texinfo_documents = [
 
 rst_epilog = """
 .. |download_link| replace:: https://github.com/dalibo/powa-archivist/archive/REL_{tagname}.tar.gz
-.. |rel_tag_name| replace:: REL_{tagname}.tar.gz
+.. |rel_tag_name| replace:: REL_{tagname}
 .. |pg_stat_kcache_download| replace:: https://github.com/dalibo/pg_stat_kcache/archive/{pg_stat_kcache_release}.tar.gz
 .. |pg_stat_kcache_release| replace:: {pg_stat_kcache_release}
 .. |powa_web_release| replace:: {powa_web_release}
@@ -297,7 +298,8 @@ rst_epilog = """
     "tagname": "_".join(release.split('.')),
     "powa_web_release": powa_web_release,
     "pg_qualstats_release": pg_qualstats_release,
-    "pg_stat_kcache_release": pg_stat_kcache_release
+    "pg_stat_kcache_release": pg_stat_kcache_release,
+    "powa-archivist_release": powa_archivist_release
 })
 
 intersphinx_mapping = {'http://docs.python.org/': None}

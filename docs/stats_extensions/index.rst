@@ -1,3 +1,5 @@
+.. _stat_extensions:
+
 Stats Extensions
 ================
 
