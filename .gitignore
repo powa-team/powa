@@ -1,2 +1,2 @@
-*.o
-*.so
+*.pyc
+docs/_build
