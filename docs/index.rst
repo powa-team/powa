@@ -4,7 +4,7 @@ PoWA: PostreSQL Workload Analyzer
 
 .. warning::
 
-  If you want to use PoWA on PostgreSQL < 9.4, please use the `1.x series <http://powa.readthedocs.org/en/REL_1_STABLE/>`_
+  The current version of PoWA is designed for PostgreSQL 9.4 and later. If you want to use PoWA on PostgreSQL < 9.4, please use the `1.x series <http://powa.readthedocs.org/en/REL_1_STABLE/>`_
 
 Overview
 ========
@@ -25,10 +25,10 @@ information.
 Glossary
 ********
 
-* **powa-archivist** is the PostgreSQL extension, collecting statistics.
-* **powa-web** is the graphical user interface to powa-collected metrics.
-* **stat-extensions** are the actual source of data.
-* **powa** is the whole project.
+* **PoWA-archivist** is the PostgreSQL extension, collecting statistics.
+* **PoWA-web** is the graphical user interface to powa-collected metrics.
+* **Stat extensions** are the actual source of data.
+* **PoWA** is the whole project.
 
 You should first take a look at the :ref:`quickstart` guide.
 
