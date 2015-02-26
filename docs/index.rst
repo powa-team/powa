@@ -1,6 +1,11 @@
+.. title:: PostreSQL Workload Analyzer
+
+|PostreSQL Workload Analyzer|
 =================================
-PoWA: PostreSQL Workload Analyzer
-=================================
+
+.. |PostreSQL Workload Analyzer| image:: ../img/powa_logo.410x161.png
+    :alt: PostreSQL Workload Analyzer
+
 
 .. warning::
 
