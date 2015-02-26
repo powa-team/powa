@@ -1,3 +1,4 @@
+![PostgreSQL Workload Analyzer](https://github.com/dalibo/powa/blob/master/img/powa_logo.410x161.png)
 
 PostgreSQL Workload Analyzer
 ============================
