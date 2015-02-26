@@ -42,6 +42,7 @@ You should first take a look at the :ref:`quickstart` guide.
    powa-web/index.rst
    stats_extensions/index.rst
    impact_on_perf.rst
+   support.rst	
 
 .. _pg_stat_statements: http://www.postgresql.org/docs/9.4/static/pgstatstatements.html
 .. _pg_qualstats: https://github.com/dalibo/pg_qualstats
