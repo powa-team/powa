@@ -12,7 +12,7 @@ Download PoWA from the website
 ------------------------------
 
 ```
-wget https://github.com/dalibo/powa/archive/REL_1_2.zip
+wget https://github.com/dalibo/powa/archive/REL_1_2_1.zip
 ```
 
 Unpack the downloaded file
@@ -20,7 +20,7 @@ Unpack the downloaded file
 
 ```
 cd /usr/src
-unzip powa-REL_1_1.zip
+unzip powa-REL_1_2_1.zip
 ```
 
 Compile and install the software
@@ -37,7 +37,7 @@ yum install postgresql93-devel
 
 Then:
 ```
-cd /usr/src/powa-REL_1_2
+cd /usr/src/powa-REL_1_2_1
 make
 ```
 
@@ -65,7 +65,7 @@ It should output something like the following :
 /bin/mkdir -p '/usr/pgsql-9.3/lib'
 /bin/mkdir -p '/usr/pgsql-9.3/share/doc/extension'
 /usr/bin/install -c -m 644 ./powa.control '/usr/pgsql-9.3/share/extension/'
-/usr/bin/install -c -m 644 ./powa--1.0.sql ./powa--1.1.sql ./powa--1.2.sql ./powa--1.1--1.2.sql  '/usr/pgsql-9.3/share/extension/'
+/usr/bin/install -c -m 644 ./powa--1.1.sql ./powa--1.2.sql ./powa--1.1--1.2.sql  '/usr/pgsql-9.3/share/extension/'
 /usr/bin/install -c -m 755  powa.so '/usr/pgsql-9.3/postgresql-9.3.4/lib/'
 /usr/bin/install -c -m 644 ./README.md '/usr/pgsql-9.3/share/doc/extension/'
 ```
