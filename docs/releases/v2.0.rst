@@ -3,28 +3,29 @@ What's new in PoWA 2.0
 
 **March 2, 2015**
 
-New User Interface 
+New User Interface
 --------------------------
 
 * The web interface is now a seprate module called ``powa-web``
 * Complete rewite of the previous HTML UI
-* We dropped mojolicious and using Tornado instead
+* We dropped mojolicious and use Tornado instead
 * New Bar Graph
 * New configuration view
 * New index suggestion widget
+* New physical resource consumption graphs
 * Pie Charts
 * Histogramm for qual constants values
 * Better Global Query Chart
 * Breadcrumbs
 * Check PoWA installation on login
-* Python 2.6 compatibility
+* Python 2.6, 2.7 and 3.4 compatibility
 
 New Stat sources
 ---------------------------
 
 * The core engine is now a seprate module called ``powa-archivist``
 * Integration of pg_qualstats
-* Integration of pg_stat_kcache 
+* Integration of pg_stat_kcache
 
 
 Documentation
@@ -36,6 +37,3 @@ Backward compatibility
 ------------------------------
 
 * PoWA 2.0 and later is NOT COMPATIBLE with PostgreSQL 9.3. If you're using PoWA with PostgreSQL 9.3, you can either keep PoWA 1.2 or upgrade to PostgreSQL 9.4 and switch to PoWA 2.0.
-
-
-
