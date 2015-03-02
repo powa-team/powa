@@ -37,7 +37,7 @@ You should first take a look at the :ref:`quickstart` guide.
    security
    powa-archivist/index
    powa-web/index
-   stats_extensions/indext
+   stats_extensions/index
    impact_on_perf
    support	
    releases
