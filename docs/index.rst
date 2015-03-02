@@ -41,14 +41,15 @@ You should first take a look at the :ref:`quickstart` guide.
 .. toctree::
    :maxdepth: 1
 
-   quickstart.rst
-   security.rst
-   powa-archivist/index.rst
-   powa-web/index.rst
-   stats_extensions/index.rst
-   impact_on_perf.rst
-   support.rst	
-   releases.rst	
+   quickstart
+   security
+   powa-archivist/index
+   powa-web/index
+   stats_extensions/indext
+   impact_on_perf
+   support	
+   releases
+   contributing	
 
 .. _pg_stat_statements: http://www.postgresql.org/docs/9.4/static/pgstatstatements.html
 .. _pg_qualstats: https://github.com/dalibo/pg_qualstats
