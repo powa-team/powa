@@ -6,15 +6,7 @@
 .. |PostreSQL Workload Analyzer| image:: ../img/powa_logo.410x161.png
     :alt: PostreSQL Workload Analyzer
 
-
-.. warning::
-
-  The current version of PoWA is designed for PostgreSQL 9.4 and later. If you want to use PoWA on PostgreSQL < 9.4, please use the `1.x series <http://powa.readthedocs.org/en/REL_1_STABLE/>`_
-
-Overview
-========
-
-The PostgreSQL Workload Analyzer is a PostgreSQL extension for **9.4** and superior allowing to collect, aggregate and
+The **PostgreSQL Workload Analyzer** is performance tool for **PostgreSQL 9.4 and superior** allowing to collect, aggregate and
 purge statistics on a PostgreSQL instance from various sources. It is
 implemented as a `background worker`_.
 
@@ -27,8 +19,8 @@ This includes support for various **stat extensions**:
 Additionnaly, the PoWA User Interface allows you to make the most sense of this
 information.
 
-Glossary
-********
+Main components
+***************
 
 * **PoWA-archivist** is the PostgreSQL extension, collecting statistics.
 * **PoWA-web** is the graphical user interface to powa-collected metrics.
