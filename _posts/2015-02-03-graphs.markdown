@@ -1,0 +1,9 @@
+---
+layout: default
+modal-id: 3
+date: 2015-02-03
+img: powa-web-3.png
+title: Graphs
+description: Watch your servers stats over classic time periods, or define your own time range
+
+---
