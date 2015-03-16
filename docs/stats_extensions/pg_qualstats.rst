@@ -6,7 +6,7 @@ pg_qualstats
 pg_qualstats is a PostgreSQL extension keeping statistics on predicates found
 in ```WHERE``` statements and ```JOIN``` clauses.
 
-The goal of this extension is to allow the DBA to answer to some specific questions, whose answers are quite hard to come by:
+The goal of this extension is to allow the DBA to answer some specific questions, whose answers are quite hard to come by:
 
     * what is the set of queries using this column ?
     * what are the values this where clause is most often using ?

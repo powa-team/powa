@@ -64,7 +64,7 @@ version = '2.0'
 release = '2.0.0'
 powa_archivist_release = release
 powa_web_release = '2.0.4'
-pg_qualstats_release = '0.0.3'
+pg_qualstats_release = '0.0.4'
 pg_stat_kcache_release = 'REL2_0'
 
 
