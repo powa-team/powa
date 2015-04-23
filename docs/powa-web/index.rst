@@ -5,8 +5,18 @@ PoWA-web
 Installation
 ************
 
-You can install PoWA-web either using `pip <http://pypi.python.org>` or
+You can install PoWA-web either using `pip <http://pypi.python.org>`_ or
 manually.
+
+On Centos 6, you can avoid installing the header files for Python and PostgreSQL
+by using the package for psycopg2:
+
+
+.. code-block:: bash
+
+  yum install python-pip python-psycopg2
+  pip install powa-web
+
 
 Manual install
 --------------
@@ -31,6 +41,8 @@ You'll need the following dependencies:
   .. code-block:: bash
 
     pacman -S python python-psycopg2 python-sqlalchemy python-tornado
+
+
 
 
 .. admonition:: fedora
