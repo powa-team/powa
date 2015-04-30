@@ -90,6 +90,16 @@ Connect to the server as a superuser and type:
 
   CREATE EXTENSION pg_stats_kcache ;
 
+Using with PoWA
+***************
+
+If you want PoWA to handle this extension, you have to connect as a superuser
+on the database where you installed PoWA, and type:
+
+.. code-block:: sql
+
+  SELECT powa_kcache_register();
+
 Configuration
 *************
 
