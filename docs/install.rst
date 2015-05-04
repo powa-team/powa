@@ -5,7 +5,7 @@ PostgreSQL Workload Analyzer detailled installation guide
 
 Read :ref:`the introduction <index>` for further details about PoWA.
 
-PoWA requires PostgreSQL 9.3 or more.
+PoWA requires **PostgreSQL 9.3 or more**. **The contrib must also be available**.
 
 The following documentation describes the detailed installation steps to install PoWA.
 
