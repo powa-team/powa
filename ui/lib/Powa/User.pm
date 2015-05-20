@@ -72,7 +72,10 @@ sub login {
             }
         }
         else {
-            $self->msg->error("Wrong username or password.");
+            $self->msg->error("Authentication failed. Please check if:",
+                "username/password is correct",
+                "user is superuser",
+                "pg_hba.conf is correct");
             return $self->render();
         }
     }
