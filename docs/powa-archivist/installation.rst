@@ -7,7 +7,7 @@ Prerequisites
 -------------
 
 * PostgreSQL >= 9.4
-* PostgreSQL contrib modules
+* PostgreSQL contrib modules (pg_stat_statements and btree_gist)
 * PostgreSQL server headers
 
 On Debian, the PostgreSQL server headers are installed via the
