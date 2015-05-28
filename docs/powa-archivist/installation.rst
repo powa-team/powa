@@ -7,6 +7,7 @@ Prerequisites
 -------------
 
 * PostgreSQL >= 9.4
+* PostgreSQL contrib modules
 * PostgreSQL server headers
 
 On Debian, the PostgreSQL server headers are installed via the
@@ -14,13 +15,13 @@ On Debian, the PostgreSQL server headers are installed via the
 
 .. code-block:: bash
 
-  apt-get install postgresql-server-dev-9.4
+  apt-get install postgresql-server-dev-9.4 postgresql-contrib-9.4
 
 On RPM-based distros:
 
 .. code-block:: bash
 
-  yum install postgresql94-devel
+  yum install postgresql94-devel postgresql94-contrib
 
 Installation
 ------------

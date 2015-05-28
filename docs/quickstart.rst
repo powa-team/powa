@@ -15,7 +15,8 @@ Install PoWA-archivist on the PostgreSQL instance
 Prerequisites
 -------------
 
-You will need a compiler, and the appropriate PostgrESQL development packages.
+You will need a compiler, and the appropriate PostgreSQL development packages,
+and contrib modules:
 
 On Debian:
 
