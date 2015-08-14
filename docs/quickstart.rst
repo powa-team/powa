@@ -57,6 +57,13 @@ advantage of:
 This script will ask you for your super user password, provided the sudo command
 is available, and install powa, pg_qualstats and pg_stat_kcache for you.
 
+.. warning::
+
+  This script is not intended to be run on a production server, as it will
+  install the development version of each extension and not the latest stable
+  release. It has been removed since the 2.0.1 release of PoWA.
+
+
 Once done, you should modify your PostgreSQL configuration as mentioned by the
 script, putting the following line in your `postgresql.conf` file:
 
