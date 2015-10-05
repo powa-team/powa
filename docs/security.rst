@@ -8,7 +8,7 @@ Security
 
 We designed POWA so that the user interface will only communicate with PostgreSQL via prepared statements. This will prevent the risk of `SQL injection <http://xkcd.com/327/>`_.
 
-However to connect to the PoWA User Interface, you will use the login and password of a postgeSQL superuser. If you don't protect your communications, an attacker placed between the GUI and PostgreSQL, or between you and the GUI, could gain superuser rights to your database server.
+However to connect to the PoWA User Interface, you will use the login and password of a postgeSQL ruser. If you don't protect your communications, an attacker placed between the GUI and PostgreSQL, or between you and the GUI, could gain your user rights to your database server.
 
 Therefore we **strongly** recommend the following precautions:
 
@@ -21,4 +21,9 @@ Therefore we **strongly** recommend the following precautions:
 * Reject unprotected connections between the GUI and PostgreSQL (*hostnossl .... reject*)
 * Check your *pg_hba.conf* file again
 
+Please also note that you need to manually authorize you users to see the data
+in the powa database. For instance, you might run :
 
+.. code-blocks:: sql
+
+  powa=# GRANT SELECT ON ALL TABLES IN SCHEMA public TO ui_user;
