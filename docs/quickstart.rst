@@ -116,6 +116,7 @@ Prerequisites
 -------------
 
 * The Python language, either 2.7 or > 3
+* The Python language headers, either 2.7 or > 3
 * The pip installer for Python. It is usually packaged as "python-pip", for example:
 
 
@@ -123,13 +124,13 @@ Debian:
 
 .. code-block:: bash
 
-  sudo apt-get install python-pip
+  sudo apt-get install python-pip python-dev
 
 RHEL / Centos:
 
 .. code-block:: bash
 
-  sudo yum install python-pip
+  sudo yum install python-pip python-devel
 
 
 Installation
