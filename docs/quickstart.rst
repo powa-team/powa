@@ -50,7 +50,7 @@ Then, download it:
 A convenience script is offered to build every project that PoWA can take
 advantage of:
 
-.. code-block:: bash
+.. parsed-literal::
 
 
   #!/bin/bash
