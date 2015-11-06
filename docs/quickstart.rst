@@ -52,7 +52,34 @@ advantage of:
 
 .. code-block:: bash
 
-  ./install_all.sh
+
+#!/bin/bash
+# This script is meant to install every PostgreSQL extension compatbile with
+# PoWA.
+wget |pg_qualstats_download| -O pg_qualstats-|pg_qualstats_release|.tar.gz
+tar zxvf pg_qualstats-|pg_qualstats_release|.tar.gz
+cd pg_qualstats-|pg_qualstats_release|
+(make && sudo make install)  > /dev/null 2>&1
+cd ..
+rm pg_qualstats-|pg_qualstats_release|.tar.gz
+rm pg_qualstats-|pg_qualstats_release| -rf
+wget |pg_stat_kcache_download| -O pg_stat_kcache-|pg_stat_kcache_release|.tar.gz
+tar zxvf pg_stat_kcache-|pg_stat_kcache_release|.tar.gz
+cd pg_stat_kcache-|pg_stat_kcache_release|
+(make && sudo make install)  > /dev/null 2>&1
+cd ..
+rm pg_stat_kcache-|pg_stat_kcache_release|.tar.gz
+rm pg_stat_kcache-|pg_stat_kcache_release| -rf
+(make && sudo make install)  > /dev/null 2>&1
+echo ""
+echo "You should add the following line to your postgresql.conf:"
+echo ''
+echo "shared_preload_libraries='pg_stat_statements,powa,pg_stat_kcache,pg_qualstats'"
+echo ""
+echo "Once done, restart your postgresql server and run the install_all.sql file"
+echo "with a superuser, for example: "
+echo "  psql -U postgres -f install_all.sql"
+
 
 This script will ask you for your super user password, provided the sudo command
 is available, and install powa, pg_qualstats and pg_stat_kcache for you.
