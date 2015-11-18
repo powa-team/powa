@@ -25,7 +25,7 @@ You'll need the following dependencies:
 
     * `python <http://www.python.org>`_
     * `psycopg2 <http://initd.org/psycopg/>`_
-    * `sqlalchemy <http://sqlalchemy.org>`_
+    * `sqlalchemy >= 0.7.2 <http://sqlalchemy.org>`_
     * `tornado >= 2.0 <http://tornadoweb.org>`_
 
 
