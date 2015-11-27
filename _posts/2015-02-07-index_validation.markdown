@@ -1,6 +1,6 @@
 ---
 layout: default
-modal-id: 1
+modal-id: 8
 date: 2015-02-01
 img: powa_pgs_hypo_1.png
 title: Validate suggested index
