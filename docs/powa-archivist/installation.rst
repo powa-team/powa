@@ -23,6 +23,20 @@ On RPM-based distros:
 
   yum install postgresql94-devel postgresql94-contrib
 
+You also need a C compiler and other standard development tools.
+
+On Debian, these can be installed via the ``build-essential`` package:
+
+.. code-block:: bash
+
+  apt-get install build-essential
+
+On RPM-based distros, the "Development Tools" can be used:
+
+.. code-block:: bash
+
+  yum groupinstall "Development Tools"
+
 Installation
 ------------
 
