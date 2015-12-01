@@ -54,7 +54,7 @@ advantage of:
 
 
   #!/bin/bash
-  # This script is meant to install every PostgreSQL extension compatbile with
+  # This script is meant to install every PostgreSQL extension compatible with
   # PoWA.
   wget |pg_qualstats_download| -O pg_qualstats-|pg_qualstats_release|.tar.gz
   tar zxvf pg_qualstats-|pg_qualstats_release|.tar.gz
