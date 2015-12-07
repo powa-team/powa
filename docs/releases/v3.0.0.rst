@@ -43,4 +43,4 @@ Backward compatibility
 
 * PoWA 2.0 and later is NOT COMPATIBLE with PostgreSQL 9.3. If you're using PoWA
   with PostgreSQL 9.3, you can either keep PoWA 1.2 or upgrade to PostgreSQL 9.4
-  and switch to PoWA 2.0.
+  and switch to PoWA 3.0.0.
