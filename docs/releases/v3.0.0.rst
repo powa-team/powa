@@ -1,0 +1,46 @@
+What's new in PoWA 3.0.0
+=========================
+
+**December 7, 2015**
+
+Better predicate analyzer
+-------------------------
+
+The [pg\_qualstats](https://github.com/dalibo/pg_qualstats) extension stores
+new counters. It's now possible to know the most executed predicates in
+relation to all the related queries. It also tracks non-normalized queries so
+that it’s possible to execute an EXPLAIN of any query tracked by pg\_stat\_statements.
+
+
+Database global optimization
+----------------------------
+
+PoWA is now able to use statistics about every predicate used by any query
+executed on a database to suggest the smallest index set that optimizes every
+one of those predicates.
+
+In particular, the heuristics place heavy emphasis in consolidating many
+indexes into one by giving preference to definitions spanning multiple
+columns. This can provide new information about the actual load and correlation
+between predicates that are traditionally hard to discover for the DBA.
+
+Index suggestion check
+----------------------
+
+Thanks to the [HypoPG](https://github.com/dalibo/hypoopg) extension, the
+benefits of the suggested index creations can automatically be checked by
+running the queries against  hypothetical indexes.  You can see instantly if the
+suggested index is relevant and how much it'll improve the query.
+
+
+Documentation
+----------------------
+
+* Complete user documentation available at http://powa.readthedocs.org/
+
+Backward compatibility
+------------------------------
+
+* PoWA 2.0 and later is NOT COMPATIBLE with PostgreSQL 9.3. If you're using PoWA
+  with PostgreSQL 9.3, you can either keep PoWA 1.2 or upgrade to PostgreSQL 9.4
+  and switch to PoWA 2.0.
