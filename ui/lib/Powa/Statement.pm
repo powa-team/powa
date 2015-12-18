@@ -134,7 +134,6 @@ sub dbdata {
             total_temp_blks_written * b.blocksize AS total_temp_blks_written,
             total_blk_read_time AS total_blk_read_time,
             total_blk_write_time AS total_blk_write_time,
-            CASE WHEN length(query) > 35 THEN substr(query,1,35) || '...' ELSE query END AS short_query,
             md5query,
             query
         FROM powa_getstatdata_detailed_db(to_timestamp(?), to_timestamp(?), ?) s
@@ -146,8 +145,8 @@ sub dbdata {
 
     my $stats = [];
     while ( my $row = $sql->fetchrow_hashref() ) {
-        my $query = highlight_code( $row->{query} );
-        $row->{query} =  $query;
+        my $query_highlight = highlight_code( $row->{query} );
+        $row->{query_highlight} =  $query_highlight;
         push @{$stats}, $row;
     }
     $sql->finish();

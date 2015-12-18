@@ -36,7 +36,7 @@ function byteFormatter(val,row,index) {
 function queryFormatter(val,row,index) {
   return '<button class="btn btn-info btn-xs btn-query" title="View query text"><span class="glyphicon glyphicon-fullscreen"></span></button> '
     + '<a href="' + getQueryUrl($('#dbname').text(), row.md5query) + '"><button class="btn btn-default btn-xs" title="View query charts"><span class="glyphicon glyphicon-search" title="View query charts"></span></button></a> '
-    + row.short_query;
+    + row.query;
 }
 
 // Format database (only add a button). Used in table in listdb page.
@@ -57,7 +57,7 @@ function customSorter(a,b){
 // Display prettified query on click in showdb table.
 window.queryModal = {
   'click .btn-query': function (e,value,row,index) {
-    $('#query-content').html(row.query);
+    $('#query-content').html(row.query_highlight);
     $('#query').modal();
   }
 }

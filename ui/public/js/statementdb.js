@@ -95,14 +95,21 @@ function loadChart(){
         formatter: timeFormatter,
         sorter: customSorter
       }, {
-        field: 'short_query',
+        field: 'query',
         title: 'Query',
         sortable: true,
         formatter: queryFormatter,
         events: queryModal,
+        class: 'truncate'
     }],
     onDblClickRow: function(row){
       window.location = getQueryUrl($('#dbname').text(), row.md5query);
     }
+  });
+
+  $('#toolbar').find('select').change(function () {
+    $('table').bootstrapTable('refreshOptions', {
+      exportDataType: 'all'
+    });
   });
 }

@@ -24,7 +24,9 @@
 <div class="row">
   <div class="box" id="server_list">
     <b>Details for database <u><span id="dbname"><%= stash 'dbname' %></span></u>:</b><br />
-    <table id="dbdata" class="table-condensed">
+    <div id="toolbar">
+    </div>
+    <table id="dbdata" class="table-condensed" data-show-export="true">
     </table>
   </div>
   <div id="query" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="query-label" aria-hidden="true">

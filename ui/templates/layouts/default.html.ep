@@ -119,6 +119,8 @@
     <script type="text/javascript" src="<%= url_for '/js/bootstrap-typeahead.js' %>"></script>
     <script type="text/javascript" src="<%= url_for '/js/bootstrap-datetimepicker.min.js' %>"></script>
     <script type="text/javascript" src="<%= url_for '/js/bootstrap-table.min.js' %>"></script>
+    <script type="text/javascript" src="<%= url_for '/js/bootstrap-table-export.js' %>"></script>
+    <script type="text/javascript" src="<%= url_for '/js/tableExport.min.js' %>"></script>
     <script type="text/javascript" src="<%= url_for '/js/powa.js' %>"></script>
     <script type="text/javascript" src="<%= url_for '/js/grapher.js' %>"></script>
     <script>

@@ -159,6 +159,13 @@ a.critical{
   color: #000000;
 }
 
+.truncate, .truncate td {
+  max-width: 30em;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
 /* SQL beautifier
 --------------------------------------------------- */
 
