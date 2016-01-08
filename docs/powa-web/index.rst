@@ -91,6 +91,25 @@ servers (dict):
         'database': 'powa'
       }
     }
+
+.. warning::
+
+  If any of your databases is not in **utf8** encoding, you should specify a
+  client_encoding option as shown below. This requires at least psycopg2 version
+  2.4.3
+
+ .. code-block:: python
+
+    servers={
+      'main': {
+        'host': 'localhost',
+        'port': '5432',
+        'database': 'powa',
+        'query': {'client_encoding': 'utf8'}
+      }
+    }
+
+
 cookie_secret (str):
   A secret key used to secure cookies transiting between the web browser and the
   server.
