@@ -21,9 +21,23 @@ Therefore we **strongly** recommend the following precautions:
 * Reject unprotected connections between the GUI and PostgreSQL (*hostnossl .... reject*)
 * Check your *pg_hba.conf* file again
 
-Please also note that you need to manually authorize you users to see the data
-in the powa database. For instance, you might run :
+Please also note that you need to manually authorize the roles to see the data
+in the powa database. For instance, you might run:
 
 .. code-block:: sql
 
   powa=# GRANT SELECT ON ALL TABLES IN SCHEMA public TO ui_user;
+  powa=# GRANT SELECT ON pg_statistic TO ui_user;
+
+User objects
+------------
+
+powa-web will connect to the databases you select to help you optimize them.
+
+Therefore, for each postgres roles using powa, you also need to:
+
+  * grant **SELECT** privilege on the pg\_statistic and the user tables (don't
+    forget tables that aren't in the public schema).
+  * give CONNECT privilege on the databases.
+
+If you don't, some useful parts of the UI won't work as intended.
