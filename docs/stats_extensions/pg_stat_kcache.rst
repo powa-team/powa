@@ -23,6 +23,10 @@ graphs on the query page:
 .. image:: ../images/pg_stat_kcache_1.png
 .. image:: ../images/pg_stat_kcache_2.png
 
+The **CPU time** metrics indicate the percentage of query runtime spent consuming
+either *user cpu time* or *system cpu time*.
+
+
 The "Hit ratio" graph will also handle this extension, displaying the following
 metrics :
 
