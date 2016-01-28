@@ -1,8 +1,21 @@
+## 1.2.2 (2016-01-28)
+
+Fixes in Core:
+
+  - Don't keep track of 2PC related statements, which could lead to performance
+    issue
+  - Remove 2PC related statements when upgrading to 1.2.2
+
+New feature and changes in UI:
+
+  - Add an export option to the list of queries table
+  - Hint possible failed authentication causes when login failed
+
 ## 1.2.1 (2015-01-16)
 
 No changes in core.
 
-New features and changes in UI :
+New features and changes in UI:
   - UI is now compatible with mojolicious 5.0 and more
   - UI can now connect to multiple servers, and credentials can be specified for each server
   - Use ISO 8601 timestamp format
@@ -15,14 +28,14 @@ When upgrading from 1.2:
 
 ## 1.2 (2014-10-27)
 
-News features and fixes in core :
-  - Display more metrics : temporary data, I/O time, average runtime
+New features and fixes in core:
+  - Display more metrics: temporary data, I/O time, average runtime
   - Fix timestamp for snapshots
   - DEALLOCATE and BEGIN statements are now ignored
   - PoWA history tables are now marked as "to be dumped" by pg_dump
   - Improve performance for "per database aggregated stats"
 
-News features and changes in UI :
+New features and changes in UI:
   - Follow the selected time interval between each page
   - Add a title to each page
   - Display metrics for each query page
@@ -30,9 +43,9 @@ News features and changes in UI :
   - Display human readable metrics
   - Fix empty graph bug
 
-When upgrading from older versions :
+When upgrading from older versions:
   - Upgrade the core with ALTER EXTENSION powa UPDATE.
-  - The format of the database section of the powa.conf has changed. The new format is :
+  - The format of the database section of the powa.conf has changed. The new format is:
 
      "dbname"   : "powa",
      "host"     : "127.0.0.1",
