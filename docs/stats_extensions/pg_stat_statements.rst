@@ -37,7 +37,7 @@ Restart the PostgreSQL server to reload the libraries.
 
 Connect to the server as a superuser and type:
 
-``CREATE EXTENSION pg_stats_statements``
+``CREATE EXTENSION pg_stat_statements``
 
 
 Configuration

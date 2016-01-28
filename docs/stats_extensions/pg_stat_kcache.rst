@@ -92,7 +92,7 @@ Connect to the server as a superuser and type:
 
 .. code-block:: sql
 
-  CREATE EXTENSION pg_stats_kcache ;
+  CREATE EXTENSION pg_stat_kcache ;
 
 Using with PoWA
 ***************
