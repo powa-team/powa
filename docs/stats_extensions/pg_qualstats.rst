@@ -96,6 +96,12 @@ pg_qualstats.resolve_oids:
 pg_qualstats.track_constants:
   Defaults to ``true``.
   If true, each new value for each predicate will result in a new entry. Eg, ``WHERE id = 3`` and ``WHERE id = 4`` will results in two entries in pg_qualstats. If disabled, only one entry for ``WHERE id = ?`` will be kept. Turning this off drastically reduces the number of entries to keep, at the price of not getting any hindsight on most frequently used values.
+pg_qualstats.sample_ratio:
+  Defaults to ``1``, which means ``1 / MAX_CONNECTIONS``
+  The ratio of queries that should be sampled. 1 means sample every single
+  query, 0 basically deactivates the feature, and -1 is automatically sized to
+  ``1/ MAX_CONNECTIONS``. For example, a sample_ratio of ``0.1`` would mean one
+  of out ten queries should be sampled.
 
 SQL Objects
 ***********
