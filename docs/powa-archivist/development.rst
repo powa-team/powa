@@ -81,7 +81,7 @@ Each of these functions should then be registered:
 .. code-block:: sql
 
   INSERT INTO powa_functions (module, operation, function_name, added_manually)
-  VALUES  ('my_data_source', 'snapshot',   'powa_mydatasource_snapshot',  true),
-          ('my_data_source', 'aggregate',  'powa_mydatasource_aggregate', true),
-          ('my_data_source', 'unregister', 'powa_mydatasource_purge',     true),
-          ('my_data_source', 'purge',      'powa_mydatasource_purge',     true);
+  VALUES  ('my_data_source', 'snapshot',   'powa_mydatasource_snapshot',   true),
+          ('my_data_source', 'aggregate',  'powa_mydatasource_aggregate',  true),
+          ('my_data_source', 'unregister', 'powa_mydatasource_unregister', true),
+          ('my_data_source', 'purge',      'powa_mydatasource_purge',      true);
