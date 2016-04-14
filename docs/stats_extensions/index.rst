@@ -15,3 +15,8 @@ Currently, the list of supported stat extensions is as follows:
   pg_stat_statements.rst
   pg_qualstats.rst
   pg_stat_kcache.rst
+  hypopg.rst
+
+Except the hypopg extension, which have to be install in each database, pg_stat_statements, pg_qualstats and pg_stat_kcache 
+just have to be install on 'powa' database.
+
