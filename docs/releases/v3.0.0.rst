@@ -36,7 +36,7 @@ suggested index is relevant and how much it'll improve the query.
 Documentation
 ----------------------
 
-* Complete user documentation available at http://powa.readthedocs.org/
+* Complete user documentation available at http://powa.readthedocs.io/
 
 Backward compatibility
 ------------------------------
