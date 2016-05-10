@@ -109,6 +109,25 @@ servers (dict):
       }
     }
 
+.. note::
+
+  You can set a username and password to allow logging into powa-web without
+  providing credentials.  In this case, the powa-web.conf file must be modified
+  like this:
+
+ .. code-block:: python
+
+    servers={
+      'main': {
+        'host': 'localhost',
+        'port': '5432',
+        'database': 'powa',
+        'username' : 'pg_username',
+        'password' : 'the password',
+        'query': {'client_encoding': 'utf8'}
+      }
+    }
+
 
 cookie_secret (str):
   A secret key used to secure cookies transiting between the web browser and the
