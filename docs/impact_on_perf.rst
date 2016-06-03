@@ -3,7 +3,7 @@ Impact on performances
 
 Using PoWA will have a small negative impact on your PostgreSQL server performances. It is hard to evaluate precisely this impact but we can analyze it in 3 parts :
 
-* First of all, you need to activate the `pg_stat_statements <http://www.postgresql.org/docs/current/static/pgstatstatements.html>`_ module. This module itself may slow down your instance, but some benchmarks show that the impact is not that big.
+* First of all, you need to activate the `pg_stat_statements <http://www.postgresql.org/docs/current/static/pgstatstatements.html>`_ module. This module itself may slow down your instance, but some benchmarks (for example, `here <https://www.depesz.com/2014/10/14/what-logging-has-least-overhead/>`_ and `here <http://pgsnaga.blogspot.fr/2011/10/performance-impact-of-pgstatstatements.html>`_) show that the impact is not that big.
 
 * Second, the PoWA collector should have a very low impact, but of course that depends on the frequency at which you collect data. If you do it every 5 seconds, you'll definitely see something. At 5 minutes, the impact should be minimal.
 
