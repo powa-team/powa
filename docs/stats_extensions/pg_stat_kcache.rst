@@ -14,6 +14,8 @@ and/or database is consuming. The resources are:
     * CPU (user time and system time)
     * Physical disk access (read and write)
 
+Physical disk access are essential in calculating a real hit ratio (cached_reads/all_reads). Without this, we only have the shared_buffers' hit ratio, and some of the reads made by Postgres could be served by the system cache.
+
 Where is it used in powa-web ?
 ******************************
 
