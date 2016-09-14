@@ -23,7 +23,7 @@ Manual install
 
 You'll need the following dependencies:
 
-    * `python <http://www.python.org>`_
+    * `python 2.6, 2.7 or > 3 <http://www.python.org>`_
     * `psycopg2 <http://initd.org/psycopg/>`_
     * `sqlalchemy >= 0.8.0 <http://sqlalchemy.org>`_
     * `tornado >= 2.0 <http://tornadoweb.org>`_

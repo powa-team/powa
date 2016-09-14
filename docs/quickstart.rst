@@ -142,8 +142,8 @@ You do not have to install the GUI on the same machine your instance is running.
 Prerequisites
 -------------
 
-* The Python language, either 2.7 or > 3
-* The Python language headers, either 2.7 or > 3
+* The Python language, either 2.6, 2.7 or > 3
+* The Python language headers, either 2.6, 2.7 or > 3
 * The pip installer for Python. It is usually packaged as "python-pip", for example:
 
 
