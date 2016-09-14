@@ -110,4 +110,4 @@ SQL Objects
 The extension defines the following objects:
 
 .. autoplpgsql:: directives
-  :src: https://raw.githubusercontent.com/dalibo/pg_qualstats/master/pg_qualstats--0.0.4.sql
+  :src: https://raw.githubusercontent.com/dalibo/pg_qualstats/master/pg_qualstats--1.0.1.sql
