@@ -57,7 +57,7 @@ Then, download the latest release on `pypi <https://pypi.python.org/pypi/powa-we
 .. parsed-literal::
 
   wget |powa_web_download_link|
-  tar -zxvf powa-web-|powa_web_release|
+  tar -zxvf powa-web-|powa_web_release|.tar.gz
   cd powa-web-|powa_web_release|
   cp ./powa-web.conf-dist ./powa-web.conf
   ./powa-web
