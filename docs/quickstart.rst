@@ -25,7 +25,6 @@ note that only the following modules are required:
   * btree_gist
   * pg_stat_statements
 
-
 On Debian:
 
 .. code-block:: bash
@@ -39,6 +38,7 @@ On RHEL / CentOS:
   yum install postgresql94-devel postgresql94-contrib
 
 
+
 Installation
 ------------
 
@@ -47,8 +47,11 @@ Then, download it:
 .. parsed-literal::
   wget |download_link|
 
-A convenience script is offered to build every project that PoWA can take
+A convenience script is offered to build other non-contrib extensions that PoWA can take
 advantage of:
+
+* pg_qualstats
+* pg_stat_kcache
 
 .. parsed-literal::
 
@@ -83,6 +86,7 @@ advantage of:
 
 This script will ask you for your super user password, provided the sudo command
 is available, and install powa, pg_qualstats and pg_stat_kcache for you.
+
 
 .. warning::
 
@@ -120,7 +124,23 @@ Systemd:
     systemctl restart postgresql
 
 The last step is to create a database dedicated to the PoWA repository, and
-create every extension in it. The install_all.sql file performs this task:
+create every extension in it. You do not need the extensions in other databases
+(except optionally hypopg)
+
+
+The following script (install_all.sql) performs this task:
+
+.. code-block:: sql
+
+  CREATE DATABASE powa;
+  \c powa
+  CREATE EXTENSION btree_gist;
+  CREATE EXTENSION pg_stat_statements;
+  CREATE EXTENSION pg_qualstats;
+  CREATE EXTENSION pg_stat_kcache;
+  CREATE EXTENSION powa;
+
+Execute it this way: 
 
 .. code-block:: bash
 
@@ -196,11 +216,13 @@ You should ensure that the pg_hba.conf file is properly configured.
 The cookie_secret is used as a key to crypt cookies between the client and the
 server. You should DEFINETLY not keep the default if you value your security.
 
+Other options are described in the full documentation.
+
 Then, run powa-web:
 
 .. code-block:: bash
 
   powa-web
 
-The UI is now available on the 8888 port.
+The UI is now available on the 8888 port. The user and password are those from PostgreSQL.
 
