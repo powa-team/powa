@@ -44,9 +44,9 @@ following functions:
     $PROC$ language plpgsql;
 
 **purge**:
-  This function will be called after every 10 aggregates, and is responsible for
+  This function will be called after every 10 aggregates and is responsible for
   purging stale data that should not be kept. The function should take the
-  'powa.retention' global parameter into account to prevent removing data that
+  `powa.retention` global parameter into account to prevent removing data that
   would still be valid.
 
   .. code-block:: plpgsql
