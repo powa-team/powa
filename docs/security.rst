@@ -8,7 +8,7 @@ Security
 
 We designed POWA so that the user interface will only communicate with PostgreSQL via prepared statements. This will prevent the risk of `SQL injection <http://xkcd.com/327/>`_.
 
-However to connect to the PoWA User Interface, you will use the login and password of a postgeSQL user. If you don't protect your communications, an attacker placed between the GUI and PostgreSQL, or between you and the GUI, could gain your user rights to your database server.
+However to connect to the PoWA User Interface, you will use the login and password of a PostgreSQL user. If you don't protect your communications, an attacker placed between the GUI and PostgreSQL, or between you and the GUI, could gain your user rights to your database server.
 
 Therefore we **strongly** recommend the following precautions:
 
@@ -38,6 +38,6 @@ Therefore, for each postgres roles using powa, you also need to:
 
   * grant **SELECT** privilege on the pg\_statistic and the user tables (don't
     forget tables that aren't in the public schema).
-  * give CONNECT privilege on the databases.
+  * give **CONNECT** privilege on the databases.
 
 If you don't, some useful parts of the UI won't work as intended.
