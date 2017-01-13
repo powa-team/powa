@@ -132,7 +132,7 @@ something from your own. For example to connect to the local instance throught
   }
   cookie_secret="SUPERSECRET_THAT_YOU_SHOULD_CHANGE"
 
-Don't forget to let the Web-server connect to the database, edit your
+Don't forget to let the Web-server connect to the PostgreSQL cluster, edit your
 `pg_hba.conf` accordingly.
 
 Then, run powa-web:
