@@ -83,6 +83,19 @@ Create the required extensions in this database :
     CREATE EXTENSION pg_qualstats;
     CREATE EXTENSION pg_stat_kcache;
 
+One last step is to create a role that has superuser privileges and is able to
+login to the cluster (use your own credentials) :
+
+.. code-block:: bash
+
+    psql -c "CREATE ROLE powa SUPERUSER LOGIN PASSWORD 'powa'"
+
+The Web UI requires you to log in with a PostgreSQL role that has superuser
+privileges as only a superuser can access to the query text in PostgreSQL, PoWA
+follows the same principle. Also, PoWA has to install the `hypopg` extension in
+order to check the suggested indexes are efficient, in any database of the
+PostgreSQL cluster.
+
 PoWA is now up and running on the PostgreSQL-side. You still need to set-up the
 Web interface in order to access your history.  Also, by default,
 powa-archivist stores history for 1 day and takes a snapshot every 5 minutes.
@@ -141,6 +154,8 @@ Then, run powa-web:
 
   powa-web
 
+You can now access to the Web UI by accessing the service throught the port 8888,
+use the role created earlier in PostgreSQL to connect to the UI.
 
 
 Build and install PoWA from the sources
