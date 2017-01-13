@@ -104,11 +104,11 @@ Again, for example for PostgreSQL 9.6 on CentOS 7 :
 
     yum install https://download.postgresql.org/pub/repos/yum/9.6/redhat/rhel-7-x86_64/pgdg-centos96-9.6-3.noarch.rpm
 
-You also need to install the EPEL repo package to install the required Python dependencies :
+For RHEL / CentOS 6, you may need to install the EPEL repository.
 
 .. code-block:: bash
 
-    yum install https://dl.fedoraproject.org/pub/epel/epel-release-latest-7.noarch.rpm
+    yum install https://dl.fedoraproject.org/pub/epel/epel-release-latest-6.noarch.rpm
 
 This let's you install the `powa_96-web` RPM package :
 
