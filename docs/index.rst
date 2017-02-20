@@ -34,14 +34,15 @@ You should first take a look at the :ref:`quickstart` guide.
    :maxdepth: 1
 
    quickstart
+   FAQ
    security
    powa-archivist/index
    powa-web/index
    stats_extensions/index
    impact_on_perf
-   support	
+   support
    releases
-   contributing	
+   contributing
 
 .. _pg_stat_statements: http://www.postgresql.org/docs/9.4/static/pgstatstatements.html
 .. _pg_qualstats: https://github.com/dalibo/pg_qualstats
