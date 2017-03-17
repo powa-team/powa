@@ -63,7 +63,7 @@ version = '3.1'
 # The full version, including alpha/beta/rc tags.
 release = '3.1.0'
 powa_archivist_release = release
-powa_web_release = '3.1.1'
+powa_web_release = '3.1.2'
 pg_qualstats_release = '1.0.2'
 pg_stat_kcache_release = 'REL2_0_3'
 
