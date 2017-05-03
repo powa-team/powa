@@ -170,20 +170,35 @@ servers (dict):
 
 cookie_secret (str):
   A secret key used to secure cookies transiting between the web browser and the
-  server.
+  server. 
 
-  .. code-block:: python
-
-    cookie_secret="SECRET_STRING"
 
 The following options are optional:
 
 port (int):
-  The port on which the UI will be available (default 8888)
+  The port on which the UI will be available (default 8888).
 
 
 address (str):
-  The IP address on which the UI will be available (default 0.0.0.0)
+  The IP address on which the UI will be available. This must be one of the IP addresses of the powa-web server. Default is 0.0.0.0 and means that the UI is available from the outside. Set to '127.0.0.1' or '::1' to restrict access to the current computer. If you have a firewall, do not forget to add a rule to grant access.
+
+Example:
+
+  .. code-block:: python
+
+    servers={
+      'main': {
+        'host': 'localhost',
+        'port': '5432',
+        'database': 'powa'
+      }
+    }
+    cookie_secret="ed2xoow8shet3eiyai4Odo2OTama2y"
+    port=8887
+    address='127.0.0.1'
+
+
+
 
 See also:
 
