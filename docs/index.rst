@@ -16,6 +16,10 @@ This includes support for various **stat extensions**:
 * :ref:`pg_qualstats`, providing data about predicates, or where clauses
 * :ref:`pg_stat_kcache_doc`, providing data about operating-system level cache
 
+It supports the following extension:
+
+* :ref:`hypopg`, allowing you to create hypothetical indexes and test their usefulness without creating them
+
 Additionnaly, the PoWA User Interface allows you to make the most sense of this
 information.
 
