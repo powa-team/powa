@@ -5,7 +5,7 @@ Quickstart
 
 .. warning::
 
-  The current version of PoWA is designed for PostgreSQL 9.4 and later. If you want to use PoWA on PostgreSQL < 9.4, please use the `1.x series <http://powa.readthedocs.io/en/REL_1_STABLE/>`_
+  The current version of PoWA is designed for PostgreSQL 9.4 and later. If you want to use PoWA on PostgreSQL < 9.4, please use the `1.x series <http://powa.readthedocs.io/en/rel_1_stable/>`_
 
 The following describes the installation of the two modules of PoWA:
   * powa-archivist with the PGDG packages (RedHat/CentOS 6/7, Debian) or from the sources
