@@ -290,7 +290,7 @@ rst_epilog = """
 .. |pg_stat_kcache_download| replace:: https://github.com/dalibo/pg_stat_kcache/archive/{pg_stat_kcache_release}.tar.gz
 .. |pg_stat_kcache_release| replace:: {pg_stat_kcache_release}
 .. |powa_web_release| replace:: {powa_web_release}
-.. |powa_web_download_link| replace:: https://pypi.python.org/packages/source/p/powa-web/powa-web-{powa_web_release}.tar.gz
+.. |powa_web_download_link| replace:: https://pypi.io/packages/source/p/powa-web/powa-web-{powa_web_release}.tar.gz
 .. |pg_qualstats_download| replace:: https://github.com/dalibo/pg_qualstats/archive/{pg_qualstats_release}.tar.gz
 .. |pg_qualstats_release| replace:: {pg_qualstats_release}
 
