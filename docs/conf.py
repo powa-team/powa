@@ -52,7 +52,7 @@ master_doc = 'index'
 
 # General information about the project.
 project = 'PoWA'
-copyright = '2015, Dalibo'
+copyright = '2015-2017, Dalibo'
 
 # The version info for the project you're documenting, acts as replacement for
 # |version| and |release|, also used in various other places throughout the
@@ -63,7 +63,7 @@ version = '3.1'
 # The full version, including alpha/beta/rc tags.
 release = '3.1.0'
 powa_archivist_release = release
-powa_web_release = '3.1.2'
+powa_web_release = '3.1.3'
 pg_qualstats_release = '1.0.2'
 pg_stat_kcache_release = 'REL2_0_3'
 
