@@ -37,7 +37,6 @@ Install the development dependencies:
 .. code:: bash
 
   npm install -g grunt-cli
-  npm install grunt
   npm install .
 
 Then, you can run ``grunt`` to update only the css files, or regenerate optimized
