@@ -264,6 +264,11 @@ section.success {
     transition: all .3s ease-in-out;
 }
 
+.btn-outline.contrast {
+    color: #859145;
+    border-color: #859145;
+}
+
 .btn-outline:hover,
 .btn-outline:focus,
 .btn-outline:active,
@@ -272,6 +277,15 @@ section.success {
 /*    color: #18bc9c; */
     color: #859145;
     background: #fff;
+}
+
+.btn-outline.contrast:hover,
+.btn-outline.contrast:focus,
+.btn-outline.contrast:active,
+.btn-outline.contrast.active {
+    border: solid 2px #859145;
+    color: white;
+    background-color: #859145;
 }
 
 .floating-label-form-group {
