@@ -8,7 +8,7 @@
 
 .. note::
 
-  You can try powa at [demo-powa.dalibo.com](http://demo-powa.dalibo.com)
+  You can try powa at demo-powa.dalibo.com_.
 
   Just click connect and try its features!
 
@@ -58,3 +58,4 @@ You should first take a look at the :ref:`quickstart` guide.
 .. _pg_qualstats: https://github.com/dalibo/pg_qualstats
 .. _pg_stat_kcache: https://github.com/dalibo/pg_stat_kcache
 .. _background worker: http://www.postgresql.org/docs/9.4/static/bgworker.html
+.. _demo-powa.dalibo.com: http://demo-powa.dalibo.com
