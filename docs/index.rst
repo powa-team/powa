@@ -6,6 +6,12 @@
 .. |PostreSQL Workload Analyzer| image:: ../img/powa_logo.410x161.png
     :alt: PostreSQL Workload Analyzer
 
+.. note::
+
+  You can try powa at [demo-powa.dalibo.com](http://demo-powa.dalibo.com)
+
+  Just click connect and try its features!
+
 The **PostgreSQL Workload Analyzer** is performance tool for **PostgreSQL 9.4 and superior** allowing to collect, aggregate and
 purge statistics on a PostgreSQL instance from various sources. It is
 implemented as a `background worker`_.
