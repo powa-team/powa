@@ -21,8 +21,12 @@ With default configuration, pg_qualstats will only sample 1% of the queries.
 This default value is a safeguard to avoid overhead on heavily loaded
 production server.  However, if you're just doing some test that means that
 you'll miss most of the WHERE and JOIN clauses, and index suggestion won't be
-able to suggest indexes.  If you want pg_qualstats to sample every query, you
+able to suggest indexes.
+
+If you want pg_qualstats to sample every query, you
 need to configure `pg_qualstats.sample_rate = 1` in the **postgresql.conf**
-configuration file, and reload the configuration.  Please keep in mind that
+configuration file, and reload the configuration.
+
+Please keep in mind that
 such a configuration can have a strong impact on the performance, especially if
 a lot of concurrent and fast queries are executed.
