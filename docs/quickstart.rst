@@ -21,6 +21,18 @@ Prerequisites
 
 PoWA must be installed on the PostgreSQL instance that you are monitoring. 
 
+.. note::
+
+    All extensions except **hypopg** only need to be installed once, on the
+    **powa** database (or another database configured by the configuration
+    option **powa.database**).
+
+    hypopg must be installed in every databases,
+    including the powa database.
+
+    powa-web must be configured to connect on the database where you
+    installed all the extensions.
+
 We suppose that you are using the packages from the PostgreSQL Development 
 Group (https://yum.postgresql.org/ or https://apt.postgresql.org/). For example
 for PostgreSQL 9.6 on CentOS 7 a cluster is installed with the following commands:
