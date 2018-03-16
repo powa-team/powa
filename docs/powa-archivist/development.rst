@@ -7,7 +7,7 @@ Clone the repository:
 
 .. code:: bash
 
-  git clone https://github.com/dalibo/powa-archivist/
+  git clone https://github.com/powa-team/powa-archivist/
   cd powa-archivist/
   make && sudo make install
 

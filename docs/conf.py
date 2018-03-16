@@ -52,7 +52,7 @@ master_doc = 'index'
 
 # General information about the project.
 project = 'PoWA'
-copyright = '2015-2017, Dalibo'
+copyright = '2015-2017, Dalibo - 2018, The PoWA-team'
 
 # The version info for the project you're documenting, acts as replacement for
 # |version| and |release|, also used in various other places throughout the
@@ -221,7 +221,7 @@ latex_elements = {
 #  author, documentclass [howto, manual, or own class]).
 latex_documents = [
   ('index', 'PoWA.tex', 'PoWA Documentation',
-   'Dalibo', 'manual'),
+   'The PoWA-team', 'manual'),
 ]
 
 # The name of an image file (relative to this directory) to place at the top of
@@ -251,7 +251,7 @@ latex_documents = [
 # (source start file, name, description, authors, manual section).
 man_pages = [
     ('index', 'powa', 'PoWA Documentation',
-     ['Dalibo'], 1)
+     ['The PoWA-team'], 1)
 ]
 
 # If true, show URL addresses after external links.
@@ -265,7 +265,7 @@ man_pages = [
 #  dir menu entry, description, category)
 texinfo_documents = [
   ('index', 'PoWA', 'PoWA Documentation',
-   'Dalibo', 'PoWA', 'One line description of project.',
+   'The PoWA-team', 'PoWA', 'One line description of project.',
    'Miscellaneous'),
 ]
 
@@ -285,13 +285,13 @@ texinfo_documents = [
 # Example configuration for intersphinx: refer to the Python standard library.
 
 rst_epilog = """
-.. |download_link| replace:: https://github.com/dalibo/powa-archivist/archive/REL_{tagname}.tar.gz
+.. |download_link| replace:: https://github.com/powa-team/powa-archivist/archive/REL_{tagname}.tar.gz
 .. |rel_tag_name| replace:: REL_{tagname}
-.. |pg_stat_kcache_download| replace:: https://github.com/dalibo/pg_stat_kcache/archive/{pg_stat_kcache_release}.tar.gz
+.. |pg_stat_kcache_download| replace:: https://github.com/powa-team/pg_stat_kcache/archive/{pg_stat_kcache_release}.tar.gz
 .. |pg_stat_kcache_release| replace:: {pg_stat_kcache_release}
 .. |powa_web_release| replace:: {powa_web_release}
 .. |powa_web_download_link| replace:: https://pypi.io/packages/source/p/powa-web/powa-web-{powa_web_release}.tar.gz
-.. |pg_qualstats_download| replace:: https://github.com/dalibo/pg_qualstats/archive/{pg_qualstats_release}.tar.gz
+.. |pg_qualstats_download| replace:: https://github.com/powa-team/pg_qualstats/archive/{pg_qualstats_release}.tar.gz
 .. |pg_qualstats_release| replace:: {pg_qualstats_release}
 
 """.format(**{

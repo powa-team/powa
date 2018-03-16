@@ -8,9 +8,10 @@
 
 .. note::
 
-  You can try powa at demo-powa.dalibo.com_.
+  You can try powa at demo-powa.dalibo.com_.  Just click connect and try its
+  features!
 
-  Just click connect and try its features!
+  Thanks to `Dalibo <https://dalibo.com/en/>`_ for providing it.
 
 The **PostgreSQL Workload Analyzer** is performance tool for **PostgreSQL 9.4 and superior** allowing to collect, aggregate and
 purge statistics on a PostgreSQL instance from various sources. It is
@@ -55,7 +56,8 @@ You should first take a look at the :ref:`quickstart` guide.
    contributing
 
 .. _pg_stat_statements: http://www.postgresql.org/docs/9.4/static/pgstatstatements.html
-.. _pg_qualstats: https://github.com/dalibo/pg_qualstats
-.. _pg_stat_kcache: https://github.com/dalibo/pg_stat_kcache
+.. _pg_qualstats: https://github.com/powa-team/pg_qualstats
+.. _pg_stat_kcache: https://github.com/powa-team/pg_stat_kcache
 .. _background worker: http://www.postgresql.org/docs/9.4/static/bgworker.html
 .. _demo-powa.dalibo.com: http://demo-powa.dalibo.com
+.. _dalibo.com: https://dalibo.com/en/

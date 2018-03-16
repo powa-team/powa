@@ -14,4 +14,4 @@ All in all, we strongly feel that the performance impact of POWA is nothing comp
 
 See our own benchmark for more details:
 
-* `PoWA vs The Badger <https://github.com/dalibo/powa/wiki/POWA-vs-pgBadger>`_
+* `PoWA vs The Badger <https://github.com/powa-team/powa/wiki/POWA-vs-pgBadger>`_

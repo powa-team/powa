@@ -1,3 +1,5 @@
+.. _powa_web:
+
 PoWA-web
 ========
 

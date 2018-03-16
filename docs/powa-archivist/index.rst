@@ -1,3 +1,5 @@
+.. _powa_archivist:
+
 PoWA archivist
 ==============
 

@@ -16,7 +16,7 @@ Clone the repository:
 
 .. code:: bash
 
-  git clone https://github.com/dalibo/powa-web/
+  git clone https://github.com/powa-team/powa-web/
   cd powa/
   make && sudo make install
 

@@ -6,7 +6,7 @@ What's new in PoWA 3.0.0
 Better predicate analyzer
 -------------------------
 
-The pg_qualstats (https://github.com/dalibo/pg_qualstats) extension stores
+The pg_qualstats (https://github.com/powa-team/pg_qualstats) extension stores
 new counters. It's now possible to know the most executed predicates in
 relation to all the related queries. It also tracks non-normalized queries so
 that it’s possible to execute an EXPLAIN of any query tracked by pg\_stat\_statements.
@@ -27,7 +27,7 @@ between predicates that are traditionally hard to discover for the DBA.
 Index suggestion check
 ----------------------
 
-Thanks to the HypoPG (https://github.com/dalibo/hypoopg) extension, the
+Thanks to the HypoPG (https://github.com/hypopg/hypoopg) extension, the
 benefits of the suggested index creations can automatically be checked by
 running the queries against  hypothetical indexes.  You can see instantly if the
 suggested index is relevant and how much it'll improve the query.

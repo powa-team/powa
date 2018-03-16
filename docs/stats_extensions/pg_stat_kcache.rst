@@ -1,4 +1,4 @@
-.. _pg_stat_kcache: https://github.com/dalibo/pg_stat_kcache
+.. _pg_stat_kcache: https://github.com/powa-team/pg_stat_kcache
 
 .. _pg_stat_kcache_doc:
 

@@ -10,7 +10,7 @@ Quickstart
 The following describes the installation of the two modules of PoWA:
   * powa-archivist with the PGDG packages (RedHat/CentOS 6/7, Debian) or from the sources
   * powa-web from the PGDG packages (RedHat/CentOS 7) or with python pip
- 
+
 
 
 Install PoWA from packages on RHEL/CentOS
@@ -19,7 +19,7 @@ Install PoWA from packages on RHEL/CentOS
 Prerequisites
 -------------
 
-PoWA must be installed on the PostgreSQL instance that you are monitoring. 
+PoWA must be installed on the PostgreSQL instance that you are monitoring.
 
 .. note::
 
@@ -33,7 +33,7 @@ PoWA must be installed on the PostgreSQL instance that you are monitoring.
     powa-web must be configured to connect on the database where you
     installed all the extensions.
 
-We suppose that you are using the packages from the PostgreSQL Development 
+We suppose that you are using the packages from the PostgreSQL Development
 Group (https://yum.postgresql.org/ or https://apt.postgresql.org/). For example
 for PostgreSQL 9.6 on CentOS 7 a cluster is installed with the following commands:
 
@@ -41,7 +41,7 @@ for PostgreSQL 9.6 on CentOS 7 a cluster is installed with the following command
 
     yum install https://download.postgresql.org/pub/repos/yum/9.6/redhat/rhel-7-x86_64/pgdg-centos96-9.6-3.noarch.rpm
     yum install postgresql96 postgresql96-server
-    /usr/pgsql-9.6/bin/postgresql96-setup initdb 
+    /usr/pgsql-9.6/bin/postgresql96-setup initdb
     systemctl start postgresql-9.6
 
 You will also need the PostgreSQL contrib package to provide the `pg_stat_statements` extension:
@@ -61,7 +61,7 @@ On Debian, that would be:
 Installation of the PostgreSQL extensions
 -----------------------------------------
 
-On RedHat/CentOS, you can simply install the packages provided by the PGDG 
+On RedHat/CentOS, you can simply install the packages provided by the PGDG
 repository according to your PostgreSQL version. For example for PostgreSQL 9.6:
 
 .. code-block:: bash
@@ -69,15 +69,15 @@ repository according to your PostgreSQL version. For example for PostgreSQL 9.6:
     yum install powa_96 pg_qualstats96 pg_stat_kcache96 hypopg_96
 
 On Debian the PoWA package exists but pg_qualstats, pg_stat_kcache and hypopg
-are not packaged and you will have to compile them manually :ref:`as described in 
+are not packaged and you will have to compile them manually :ref:`as described in
 the next section<powa-archivist-from-the-sources>`:
 
 .. code-block:: bash
 
-   apt-get install postgresql-9.6-powa 
+   apt-get install postgresql-9.6-powa
 
 
-Once all extensions are installed or compiled, add the required modules to 
+Once all extensions are installed or compiled, add the required modules to
 `shared_preload_libraries` in the `postgresql.conf` of your instance:
 
 .. code-block:: ini
@@ -119,7 +119,7 @@ Create the required extensions in this new database:
     CREATE EXTENSION pg_qualstats;
     CREATE EXTENSION pg_stat_kcache;
 
-PoWA needs the `hypopg` extension in all databases of the cluster in order to 
+PoWA needs the `hypopg` extension in all databases of the cluster in order to
 check that the suggested indexes are efficient:
 
 .. code-block:: sql
@@ -142,11 +142,11 @@ Web interface in order to access your history.  By default
 powa-archivist stores history for 1 day and takes a snapshot every 5 minutes.
 This default settings can be changed easily afterwards.
 
-Install the Web UI 
+Install the Web UI
 ------------------
 
-The RPM packages work for now only on RedHat/CentOS 7. For RedHat/CentOS 6 or Debian, 
-see :ref:`the installation through pip<powa-web-from-pip>` or 
+The RPM packages work for now only on RedHat/CentOS 7. For RedHat/CentOS 6 or Debian,
+see :ref:`the installation through pip<powa-web-from-pip>` or
 :ref:`the full manual installation guide<powa-web-manual-installation>`.
 
 You can install the web-client on any server you like. The only requirement is
@@ -162,7 +162,7 @@ Again, for example for PostgreSQL 9.6 on CentOS 7:
 
     yum install https://download.postgresql.org/pub/repos/yum/9.6/redhat/rhel-7-x86_64/pgdg-centos96-9.6-3.noarch.rpm
 
-.. useless until a solution for installing rpms on rh6 is found 
+.. useless until a solution for installing rpms on rh6 is found
    For RHEL/CentOS 6, you may need to install the EPEL repository too.
    code-block:: bash
     yum install https://dl.fedoraproject.org/pub/epel/epel-release-latest-6.noarch.rpm
@@ -175,7 +175,7 @@ Install the `powa_96-web` RPM package with its dependencies:
 
 Create the `/etc/powa-web.conf` config-file to tell the UI how to connect to
 your freshly installed PoWA database. Of course, change the given cookie to
-something from your own. For example to connect to the local instance on 
+something from your own. For example to connect to the local instance on
 `localhost`:
 
 .. code-block:: json
@@ -199,7 +199,7 @@ Then, run powa-web:
   powa-web
 
 The Web UI is now available on port 8888,
-for example on http://localhost:8888/. 
+for example on http://localhost:8888/.
 You may have to configure your firewall to open the access to the outside.
 Use the role created earlier in PostgreSQL to connect to the UI.
 
@@ -294,7 +294,7 @@ script, putting the following line in your `postgresql.conf` file:
 
   shared_preload_libraries='pg_stat_statements,powa,pg_stat_kcache,pg_qualstats'
 
-Optionally, you can install the hypopg extension the same way from https://github.com/dalibo/hypopg/releases.
+Optionally, you can install the hypopg extension the same way from https://github.com/hypopg/hypopg/releases.
 
 And restart your server, according to your distribution's preferred way of doing
 so, for example:
@@ -403,4 +403,5 @@ Then, run powa-web:
 
   powa-web
 
-The UI is now available on the 8888 port. Login with the credentials of the `powa` PostgreSQL user. 
+The UI is now available on the 8888 port. Login with the credentials of the
+`powa` PostgreSQL user.
