@@ -80,7 +80,7 @@ Powa-web will search its config as either of these files, in this order:
 * ./powa-web.conf
 
 You'll then be noticed of the address and port on which the UI is available.
-The default is 0.0.0.0:888, as indicated in this message:
+The default is 0.0.0.0:8888, as indicated in this message:
 
 * [I 161105 20:27:39 powa-web:12] Starting powa-web on 0.0.0.0:8888
 
