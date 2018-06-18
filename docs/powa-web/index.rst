@@ -30,7 +30,6 @@ You'll need the following dependencies:
     * `sqlalchemy >= 0.8.0 <http://sqlalchemy.org>`_
     * `tornado >= 2.0 <http://tornadoweb.org>`_
 
-
 .. admonition:: debian
 
   .. code-block:: bash
@@ -65,6 +64,19 @@ Then, download the latest release on `pypi <https://pypi.python.org/pypi/powa-we
   ./powa-web
 
 Then, jump on the next section to configure powa-web.
+
+.. note::
+
+    If you need to install `powa-web` on CentOS 6, here's a workaround to
+    install sqlalchemy 0.8:
+
+    * An RPM can be found at `this address
+      <http://mirrors.ircam.fr/pub/fedora/epel/6/x86_64/python-sqlalchemy0.8-0.8.2-4.el6.x86_64.rpm>`_
+    * After installing the RPM, it's required to perform
+
+      .. code-block:: bash
+
+          ln -s /usr/lib64/python2.6/site-packages/SQLAlchemy-0.8.2-py2.6-linux-x86_64.egg/sqlalchemy /usr/lib64/python2.6/site-packages/
 
 
 
