@@ -8,8 +8,8 @@ Quickstart
   The current version of PoWA is designed for PostgreSQL 9.4 and later. If you want to use PoWA on PostgreSQL < 9.4, please use the `1.x series <http://powa.readthedocs.io/en/rel_1_stable/>`_
 
 The following describes the installation of the two modules of PoWA:
-  * powa-archivist with the PGDG packages (RedHat/CentOS 6/7, Debian) or from the sources
-  * powa-web from the PGDG packages (RedHat/CentOS 7) or with python pip
+  * powa-archivist with the PGDG packages (Red Hat/CentOS 6/7, Debian) or from the sources
+  * powa-web from the PGDG packages (Red Hat/CentOS 7) or with python pip
 
 
 
@@ -61,7 +61,7 @@ On Debian, that would be:
 Installation of the PostgreSQL extensions
 -----------------------------------------
 
-On RedHat/CentOS, you can simply install the packages provided by the PGDG
+On Red Hat/CentOS, you can simply install the packages provided by the PGDG
 repository according to your PostgreSQL version. For example for PostgreSQL 9.6:
 
 .. code-block:: bash
@@ -145,7 +145,7 @@ This default settings can be changed easily afterwards.
 Install the Web UI
 ------------------
 
-The RPM packages work for now only on RedHat/CentOS 7. For RedHat/CentOS 6 or Debian,
+The RPM packages work for now only on Red Hat/CentOS 7. For Red Hat/CentOS 6 or Debian,
 see :ref:`the installation through pip<powa-web-from-pip>` or
 :ref:`the full manual installation guide<powa-web-manual-installation>`.
 
@@ -223,7 +223,7 @@ note that only the following modules are required:
   * btree_gist
   * pg_stat_statements
 
-On RedHat/CentOS:
+On Red Hat/CentOS:
 
 .. code-block:: bash
 
@@ -352,7 +352,7 @@ Debian:
 
   sudo apt-get install python-pip python-dev
 
-RedHat/CentOS:
+Red Hat/CentOS:
 
 .. code-block:: bash
 
