@@ -17,7 +17,7 @@ Compile the doc
 Sphinx Theme
 ------------------------------------------------------------
 
-Install the [Read The Doc theme](https://github.com/snide/sphinx_rtd_theme)
+Install the [Read The Doc theme](https://github.com/snide/sphinx_rtd_theme):
 
 ``
         pip install sphinx_rtd_theme
