@@ -8,13 +8,13 @@ Quickstart
   The current version of PoWA is designed for PostgreSQL 9.4 and later. If you want to use PoWA on PostgreSQL < 9.4, please use the `1.x series <http://powa.readthedocs.io/en/rel_1_stable/>`_
 
 The following describes the installation of the two modules of PoWA:
-  * powa-archivist with the PGDG packages (RedHat/CentOS 6/7, Debian) or from the sources
-  * powa-web from the PGDG packages (RedHat/CentOS 7) or with python pip
+  * powa-archivist with the PGDG packages (Red Hat/CentOS 6/7, Debian) or from the sources
+  * powa-web from the PGDG packages (Red Hat/CentOS 7) or with python pip
 
 
 
-Install PoWA from packages on RHEL/CentOS
-*****************************************
+Install PoWA from packages (Red Hat/CentOS/Debian)
+**************************************************
 
 Prerequisites
 -------------
@@ -23,11 +23,11 @@ PoWA must be installed on the PostgreSQL instance that you are monitoring.
 
 .. note::
 
-    All extensions except **hypopg** only need to be installed once, on the
+    All extensions except **hypopg** only need to be installed once, in the
     **powa** database (or another database configured by the configuration
     option **powa.database**).
 
-    hypopg must be installed in every databases,
+    hypopg must be installed in every database,
     including the powa database.
 
     powa-web must be configured to connect on the database where you
@@ -56,20 +56,29 @@ On Debian, that would be:
 
    apt-get install postgresql-9.6 postgresql-client-9.6 postgresql-contrib-9.6
 
+In these examples and the following ones, replace 9.6 or 96 according to your
+version (11, 10, 9.5...).
 
 
 Installation of the PostgreSQL extensions
 -----------------------------------------
 
-On RedHat/CentOS, you can simply install the packages provided by the PGDG
-repository according to your PostgreSQL version. For example for PostgreSQL 9.6:
+You can simply install the packages provided by the PGDG
+repository according to your PostgreSQL version. For example on
+Red Hat/CentOS for PostgreSQL 9.6:
 
 .. code-block:: bash
 
     yum install powa_96 pg_qualstats96 pg_stat_kcache96 hypopg_96
 
-On Debian the PoWA package exists but pg_qualstats, pg_stat_kcache and hypopg
-are not packaged and you will have to compile them manually :ref:`as described in
+On Debian, this will be:
+
+.. code-block:: bash
+
+   apt-get install postgresql-9.6-powa postgresql-9.6-pg-qualstats postgresql-9.6-pg-stat-kcache postgresql-9.6-hypopg
+
+On other systems, or to test newer unpackaged version,
+you will have to compile some extensions manually :ref:`as described in
 the next section<powa-archivist-from-the-sources>`:
 
 .. code-block:: bash
@@ -84,7 +93,7 @@ Once all extensions are installed or compiled, add the required modules to
 
     shared_preload_libraries='pg_stat_statements,powa,pg_stat_kcache,pg_qualstats'
 
-Now restart PostgreSQL. Under RHEL/CentOS 6:
+Now restart PostgreSQL. Under RHEL/CentOS 6 (as root):
 
 .. code-block:: bash
 
@@ -134,23 +143,23 @@ login to the cluster (use your own credentials):
     CREATE ROLE powa SUPERUSER LOGIN PASSWORD 'astrongpassword' ;
 
 The Web UI requires you to log in with a PostgreSQL role that has superuser
-privileges as only a superuser can access to the query text in PostgreSQL, PoWA
+privileges as only a superuser can access to the query text in PostgreSQL. PoWA
 follows the same principle.
 
 PoWA is now up and running on the PostgreSQL-side. You still need to set up the
-Web interface in order to access your history.  By default
+web interface in order to access your history.  By default
 powa-archivist stores history for 1 day and takes a snapshot every 5 minutes.
-This default settings can be changed easily afterwards.
+These default settings can be easily changed afterwards.
 
 Install the Web UI
 ------------------
 
-The RPM packages work for now only on RedHat/CentOS 7. For RedHat/CentOS 6 or Debian,
+The RPM packages work for now only on Red Hat/CentOS 7. For Red Hat/CentOS 6 or Debian,
 see :ref:`the installation through pip<powa-web-from-pip>` or
 :ref:`the full manual installation guide<powa-web-manual-installation>`.
 
-You can install the web-client on any server you like. The only requirement is
-that the web-client can connect to the previously set-up PostgreSQL cluster.
+You can install the web client on any server you like. The only requirement is
+that the web client can connect to the previously set up PostgreSQL cluster.
 
 If you're setting up PoWA on another server, you have to install the PGDG repo
 package again. This is required to install the `powa_96-web` package and some
@@ -223,7 +232,7 @@ note that only the following modules are required:
   * btree_gist
   * pg_stat_statements
 
-On RedHat/CentOS:
+On Red Hat/CentOS:
 
 .. code-block:: bash
 
@@ -352,7 +361,7 @@ Debian:
 
   sudo apt-get install python-pip python-dev
 
-RedHat/CentOS:
+Red Hat/CentOS:
 
 .. code-block:: bash
 
@@ -376,7 +385,7 @@ Then you'll have to configure a config file somewhere, in one of those location:
 * ./powa-web.conf
 
 The configuration file is a simple JSON one. Copy the following content to one
-of the above locations:
+of the above locations and modify it according to your setup:
 
 .. code-block:: json
 
@@ -393,9 +402,10 @@ The servers key define a list of server available for connection by PoWA-web.
 You should ensure that the pg_hba.conf file is properly configured.
 
 The cookie_secret is used as a key to crypt cookies between the client and the
-server. You should DEFINETLY not keep the default if you value your security.
+server. You should DEFINITELY not keep the default if you value your security.
 
-Other options are described in the full documentation.
+Other options are described in
+:ref:`the full manual installation guide<powa-web-manual-installation>`.
 
 Then, run powa-web:
 
@@ -403,5 +413,5 @@ Then, run powa-web:
 
   powa-web
 
-The UI is now available on the 8888 port. Login with the credentials of the
+The UI is now available on the 8888 port (eg. http://localhost:8888). Login with the credentials of the
 `powa` PostgreSQL user.
