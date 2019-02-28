@@ -1,5 +1,15 @@
 ![PostgreSQL Workload Analyzer](https://github.com/powa-team/powa/blob/master/img/powa_logo.410x161.png)
 
+Demo
+====
+
+You can try powa at [demo-powa.anayrat.info](https://demo-powa.anayrat.info/).
+Just click "Login" and try its features!  Note that in order to get interesting
+metrics, resources have been limited on this server (2 vCPU, 384MB of RAM and
+150iops for the disks).  Please be patient when using it.
+
+Thanks to [Adrien Nayrat](https://blog.anayrat.info) for providing it.
+
 PostgreSQL Workload Analyzer
 ============================
 
