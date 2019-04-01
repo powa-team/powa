@@ -60,8 +60,8 @@ You should first take a look at the :ref:`quickstart` guide.
    releases
    contributing
 
-.. _pg_stat_statements: http://www.postgresql.org/docs/9.4/static/pgstatstatements.html
+.. _pg_stat_statements: http://www.postgresql.org/docs/current/static/pgstatstatements.html
 .. _pg_qualstats: https://github.com/powa-team/pg_qualstats
 .. _pg_stat_kcache: https://github.com/powa-team/pg_stat_kcache
-.. _background worker: http://www.postgresql.org/docs/9.4/static/bgworker.html
+.. _background worker: http://www.postgresql.org/docs/current/static/bgworker.html
 .. _demo-powa.anayrat.info: https://demo-powa.anayrat.info/
