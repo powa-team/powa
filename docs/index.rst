@@ -15,19 +15,22 @@
 
   Thanks to `Adrien Nayrat <https://blog.anayrat.info>`_ for providing it.
 
-The **PostgreSQL Workload Analyzer** is performance tool for **PostgreSQL 9.4 and superior** allowing to collect, aggregate and
-purge statistics on a PostgreSQL instance from various sources. It is
-implemented as a `background worker`_.
+The **PostgreSQL Workload Analyzer** is performance tool for **PostgreSQL 9.4
+and superior** allowing to collect, aggregate and purge statistics on multiple
+PostgreSQL instances from various sources. It is implemented as a `background
+worker`_
 
 This includes support for various **stat extensions**:
 
 * :ref:`pg_stat_statements_doc`, providing data about queries being executed
 * :ref:`pg_qualstats`, providing data about predicates, or where clauses
 * :ref:`pg_stat_kcache_doc`, providing data about operating-system level cache
+* :ref:`pg_wait_sampling_doc`, providing data about wait events
 
 It supports the following extension:
 
-* :ref:`hypopg`, allowing you to create hypothetical indexes and test their usefulness without creating them
+* :ref:`hypopg`, allowing you to create hypothetical indexes and test their
+  usefulness without creating them
 
 Additionnaly, the PoWA User Interface allows you to make the most sense of this
 information.
