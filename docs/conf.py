@@ -59,11 +59,12 @@ copyright = '2015-2017, Dalibo - 2018-2019, The PoWA-team'
 # built documents.
 #
 # The short X.Y version.
-version = '3.2'
+version = '4.0'
 # The full version, including alpha/beta/rc tags.
-release = '3.2.0'
+release = '4.0.0'
 powa_archivist_release = release
-powa_web_release = '3.2.0'
+powa_collector_release = '0.0.1'
+powa_web_release = '4.0.0'
 pg_qualstats_release = '1.0.7'
 pg_stat_kcache_release = 'REL2_1_1'
 pg_wait_sampling_release = 'v1.1'
@@ -296,6 +297,8 @@ rst_epilog = """
 .. |powa_web_download_link| replace:: https://pypi.io/packages/source/p/powa-web/powa-web-{powa_web_release}.tar.gz
 .. |pg_qualstats_download| replace:: https://github.com/powa-team/pg_qualstats/archive/{pg_qualstats_release}.tar.gz
 .. |pg_qualstats_release| replace:: {pg_qualstats_release}
+.. |powa_collector_release| replace:: {powa_collector_release}
+.. |powa_collector_download_link| replace:: https://pypi.io/packages/source/p/powa-collector/powa-collector-{powa_collector_release}.tar.gz
 
 """.format(**{
     "tagname": "_".join(release.split('.')),
@@ -304,6 +307,7 @@ rst_epilog = """
     "pg_stat_kcache_release": pg_stat_kcache_release,
     "pg_wait_sampling_release": pg_wait_sampling_release,
     "powa-archivist_release": powa_archivist_release,
+    "powa_collector_release": powa_collector_release
 })
 
 intersphinx_mapping = {'http://docs.python.org/': None}

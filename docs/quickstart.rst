@@ -5,12 +5,20 @@ Quickstart
 
 .. warning::
 
-  The current version of PoWA is designed for PostgreSQL 9.4 and later. If you want to use PoWA on PostgreSQL < 9.4, please use the `1.x series <http://powa.readthedocs.io/en/rel_1_stable/>`_
+  The current version of PoWA is designed for PostgreSQL 9.4 and newer. If you
+  want to use PoWA on PostgreSQL < 9.4, please use the `1.x series
+  <http://powa.readthedocs.io/en/rel_1_stable/>`_
 
 The following describes the installation of the two modules of PoWA:
   * powa-archivist with the PGDG packages (Red Hat/CentOS 6/7, Debian) or from the sources
   * powa-web from the PGDG packages (Red Hat/CentOS 7) or with python pip
 
+.. note::
+
+    This page shows how to configure a local PoWA setup.  If you're interested
+    in configuring PoWA for multiple servers, and/or for standby servers,
+    please also refer to the :ref:`remote_setup` page to see the differences
+    in such setups.
 
 
 Install PoWA from packages (Red Hat/CentOS/Debian)
@@ -35,7 +43,8 @@ PoWA must be installed on the PostgreSQL instance that you are monitoring.
 
 We suppose that you are using the packages from the PostgreSQL Development
 Group (https://yum.postgresql.org/ or https://apt.postgresql.org/). For example
-for PostgreSQL 9.6 on CentOS 7 a cluster is installed with the following commands:
+for PostgreSQL 9.6 on CentOS 7 a cluster is installed with the following
+commands:
 
 .. code-block:: bash
 
@@ -44,7 +53,8 @@ for PostgreSQL 9.6 on CentOS 7 a cluster is installed with the following command
     /usr/pgsql-9.6/bin/postgresql96-setup initdb
     systemctl start postgresql-9.6
 
-You will also need the PostgreSQL contrib package to provide the `pg_stat_statements` extension:
+You will also need the PostgreSQL contrib package to provide the
+`pg_stat_statements` extension:
 
 .. code-block:: bash
 
@@ -164,9 +174,9 @@ These default settings can be easily changed afterwards.
 Install the Web UI
 ------------------
 
-The RPM packages work for now only on Red Hat/CentOS 7. For Red Hat/CentOS 6 or Debian,
-see :ref:`the installation through pip<powa-web-from-pip>` or
-:ref:`the full manual installation guide<powa-web-manual-installation>`.
+The RPM packages work for now only on Red Hat/CentOS 7. For Red Hat/CentOS 6 or
+Debian, see :ref:`the installation through pip<powa-web-from-pip>` or :ref:`the
+full manual installation guide<powa-web-manual-installation>`.
 
 You can install the web client on any server you like. The only requirement is
 that the web client can connect to the previously set up PostgreSQL cluster.
@@ -208,8 +218,8 @@ something from your own. For example to connect to the local instance on
   }
   cookie_secret="SUPERSECRET_THAT_YOU_SHOULD_CHANGE"
 
-Don't forget to allow the web server to connect to the PostgreSQL cluster, and edit your
-`pg_hba.conf` accordingly.
+Don't forget to allow the web server to connect to the PostgreSQL cluster, and
+edit your `pg_hba.conf` accordingly.
 
 Then, run powa-web:
 
@@ -337,7 +347,8 @@ script, putting the following line in your `postgresql.conf` file:
 
   shared_preload_libraries='pg_stat_statements,powa,pg_stat_kcache,pg_qualstats,pg_wait_sampling'
 
-Optionally, you can install the hypopg extension the same way from https://github.com/hypopg/hypopg/releases.
+Optionally, you can install the hypopg extension the same way from
+https://github.com/hypopg/hypopg/releases.
 
 And restart your server, according to your distribution's preferred way of doing
 so, for example:
@@ -448,5 +459,5 @@ Then, run powa-web:
 
   powa-web
 
-The UI is now available on the 8888 port (eg. http://localhost:8888). Login with the credentials of the
-`powa` PostgreSQL user.
+The UI is now available on the 8888 port (eg. http://localhost:8888). Login
+with the credentials of the `powa` PostgreSQL user.

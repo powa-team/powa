@@ -117,3 +117,17 @@ If possible, activate ``track_io_timing`` too:
   track_io_timing = on
 
 PostgreSQL should then be restarted.
+
+.. warning::
+
+    Since PoWA 4, you need to specify **powa** in the
+    `shared_preload_libraries` configuration **ONLY** if you want to store the
+    performance data locally.  For remote storage, please see the
+    :ref:`remote_setup` documentation.
+    The :ref:`pg_stat_statements_doc` extension (as all other
+    :ref:`stat_extensions`) still required to be configured in the
+    `shared_preload_libraries` setting.
+
+    If you're setting up a repository database for a remote server, you can
+    also entirely skip the :ref:`pg_stat_statements_doc` configuration and the
+    restart.

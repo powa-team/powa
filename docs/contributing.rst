@@ -24,6 +24,7 @@ Code
 
 PoWA is composed of multiples tools:
 
-* a backgroung worler, see :ref:`powa_archivist`
+* a background worker, see :ref:`powa_archivist`
+* a collector daemon, see :ref:`powa_collector`
 * stats extensions, see :ref:`stat_extensions`
 * a UI, see :ref:`powa_web`
