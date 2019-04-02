@@ -8,12 +8,12 @@ Quickstart
   The current version of PoWA is designed for PostgreSQL 9.4 and later. If you want to use PoWA on PostgreSQL < 9.4, please use the `1.x series <http://powa.readthedocs.io/en/rel_1_stable/>`_
 
 The following describes the installation of the two modules of PoWA:
-  * powa-archivist with the PGDG packages (Red Hat/CentOS 6/7, Debian) or from the sources
-  * powa-web from the PGDG packages (Red Hat/CentOS 7) or with python pip
+  * powa-archivist with the PGDG packages (Red Hat/CentOS 6/7, Debian) or from the sources
+  * powa-web from the PGDG packages (Red Hat/CentOS 7) or with python pip
 
 
 
-Install PoWA from packages (Red Hat/CentOS/Debian)
+Install PoWA from packages (Red Hat/CentOS/Debian)
 **************************************************
 
 Prerequisites
@@ -27,8 +27,8 @@ PoWA must be installed on the PostgreSQL instance that you are monitoring.
     **powa** database (or another database configured by the configuration
     option **powa.database**).
 
-    hypopg must be installed in every database,
-    including the powa database.
+    hypopg must be installed in every database on which you want to be able to
+    get automatic index suggestion, including the powa database if needed.
 
     powa-web must be configured to connect on the database where you
     installed all the extensions.
@@ -65,7 +65,7 @@ Installation of the PostgreSQL extensions
 
 You can simply install the packages provided by the PGDG
 repository according to your PostgreSQL version. For example on
-Red Hat/CentOS for PostgreSQL 9.6:
+Red Hat/CentOS for PostgreSQL 9.6:
 
 .. code-block:: bash
 
@@ -92,6 +92,11 @@ Once all extensions are installed or compiled, add the required modules to
 .. code-block:: ini
 
     shared_preload_libraries='pg_stat_statements,powa,pg_stat_kcache,pg_qualstats'
+
+.. note::
+
+    If you also installed the pg_wait_sampling extension, don't forget to add
+    it to ``shared_preload_libraries`` too.
 
 Now restart PostgreSQL. Under RHEL/CentOS 6 (as root):
 
@@ -128,6 +133,11 @@ Create the required extensions in this new database:
     CREATE EXTENSION pg_qualstats;
     CREATE EXTENSION pg_stat_kcache;
 
+.. note::
+
+    If you also installed the pg_wait_sampling extension, don't forget to
+    create the extension too.
+
 PoWA needs the `hypopg` extension in all databases of the cluster in order to
 check that the suggested indexes are efficient:
 
@@ -154,7 +164,7 @@ These default settings can be easily changed afterwards.
 Install the Web UI
 ------------------
 
-The RPM packages work for now only on Red Hat/CentOS 7. For Red Hat/CentOS 6 or Debian,
+The RPM packages work for now only on Red Hat/CentOS 7. For Red Hat/CentOS 6 or Debian,
 see :ref:`the installation through pip<powa-web-from-pip>` or
 :ref:`the full manual installation guide<powa-web-manual-installation>`.
 
@@ -232,7 +242,7 @@ note that only the following modules are required:
   * btree_gist
   * pg_stat_statements
 
-On Red Hat/CentOS:
+On Red Hat/CentOS:
 
 .. code-block:: bash
 
@@ -252,8 +262,23 @@ Download powa-archivist latest release:
 .. parsed-literal::
   wget |download_link|
 
-A convenience script is offered to build every project that PoWA can take
-advantage of:
+Convenience scripts are offered to build every project that PoWA can take
+advantage of.
+
+First, the install_all.sql file:
+
+.. code-block:: sql
+
+    CREATE DATABASE IF NOT EXISTS powa;
+    \c powa
+    CREATE EXTENSION IF NOT EXISTS btree_gist;
+    CREATE EXTENSION IF NOT EXISTS pg_stat_statements;
+    CREATE EXTENSION IF NOT EXISTS pg_stat_kcache;
+    CREATE EXTENSION IF NOT EXISTS pg_qualstats;
+    CREATE EXTENSION IF NOT EXISTS pg_wait_sampling;
+    CREATE EXTENSION IF NOT EXISTS powa;
+
+And the main build script:
 
 .. parsed-literal::
 
@@ -276,10 +301,18 @@ advantage of:
   rm pg_stat_kcache-|pg_stat_kcache_release|.tar.gz
   rm pg_stat_kcache-|pg_stat_kcache_release| -rf
   (make && sudo make install)  > /dev/null 2>&1
+  cd ..
+  wget |pg_wait_sampling_download| -O pg_wait_sampling-|pg_wait_sampling_release|.tar.gz
+  tar zxvf pg_wait_sampling-|pg_wait_sampling_release|.tar.gz
+  cd pg_wait_sampling-|pg_wait_sampling_release|
+  (make && sudo make install)  > /dev/null 2>&1
+  cd ..
+  rm pg_wait_sampling-|pg_wait_sampling_release|.tar.gz
+  rm pg_wait_sampling-|pg_wait_sampling_release| -rf
   echo ""
   echo "You should add the following line to your postgresql.conf:"
   echo ''
-  echo "shared_preload_libraries='pg_stat_statements,powa,pg_stat_kcache,pg_qualstats'"
+  echo "shared_preload_libraries='pg_stat_statements,powa,pg_stat_kcache,pg_qualstats,pg_wait_sampling'"
   echo ""
   echo "Once done, restart your postgresql server and run the install_all.sql file"
   echo "with a superuser, for example: "
@@ -287,13 +320,14 @@ advantage of:
 
 
 This script will ask for your super user password, provided the sudo command
-is available, and install powa, pg_qualstats and pg_stat_kcache for you.
+is available, and install powa, pg_qualstats, pg_stat_kcache and
+pg_wait_sampling for you.
 
 .. warning::
 
-  This script is not intended to be run on a production server, as it will
-  install the development version of each extension and not the latest stable
-  release. It has been removed since the 2.0.1 release of PoWA.
+  This script is not intended to be run on a production server, as it
+  compiles all the extensions.  You should prefer to install packages on your
+  production servers.
 
 
 Once done, you should modify your PostgreSQL configuration as mentioned by the
@@ -301,7 +335,7 @@ script, putting the following line in your `postgresql.conf` file:
 
 .. code-block:: ini
 
-  shared_preload_libraries='pg_stat_statements,powa,pg_stat_kcache,pg_qualstats'
+  shared_preload_libraries='pg_stat_statements,powa,pg_stat_kcache,pg_qualstats,pg_wait_sampling'
 
 Optionally, you can install the hypopg extension the same way from https://github.com/hypopg/hypopg/releases.
 
@@ -339,6 +373,7 @@ create every extension in it. The install_all.sql file performs this task:
   CREATE EXTENSION
   CREATE EXTENSION
   CREATE EXTENSION
+  CREATE EXTENSION
 
 .. _powa-web-from-pip:
 
@@ -361,7 +396,7 @@ Debian:
 
   sudo apt-get install python-pip python-dev
 
-Red Hat/CentOS:
+Red Hat/CentOS:
 
 .. code-block:: bash
 

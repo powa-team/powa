@@ -4,6 +4,7 @@ PoWA-web
 ========
 
 .. _powa-web-manual-installation:
+
 Installation
 ************
 
