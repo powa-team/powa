@@ -16,6 +16,7 @@ Currently, the list of supported stat extensions is as follows:
   pg_qualstats.rst
   pg_stat_kcache.rst
   pg_wait_sampling.rst
+  pg_track_settings.rst
   hypopg.rst
 
 Except the hypopg extension, which have to be installed in each database,

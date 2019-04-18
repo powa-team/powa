@@ -3,7 +3,7 @@
 Remote setup
 ============
 
-Before **version 4**, all the performance data collected waere stored locally.
+Before **version 4**, all the performance data collected were stored locally.
 This had two majors drawbacks:
 
   - it adds a non negligeable performance cost, both when collecting data and
