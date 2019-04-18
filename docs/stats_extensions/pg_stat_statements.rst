@@ -25,7 +25,7 @@ so you'll see it used in almost every screen of the tool.
 The most useful feature is probably the "Query details" chart which show
 advanced statistics for each SQL query.
 
-.. image:: ../images/pg_stat_statements.png
+.. thumbnail:: ../images/pg_stat_statements.png
 
 
 
@@ -69,7 +69,7 @@ http://www.postgresql.org/docs/current/static/pgstatstatements.html
 Examples
 ********
 
-.. image:: ../images/example_pgss.gif
+.. thumbnail:: ../images/example_pgss.gif
 
 See Also
 ********
