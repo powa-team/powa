@@ -31,11 +31,11 @@ and show you if PostgreSQL would use it or not.
 
 This can be seen on the per-query page, in the **Predicates** tab:
 
-.. thumbnail:: ./images/hypopg_query.png
+.. thumbnail:: ../images/hypopg_query.png
 
 And on the database page, if you use the "Optimize this database" feature:
 
-.. thumbnail:: ./images/hypopg_db.png
+.. thumbnail:: ../images/hypopg_db.png
 
 Installation
 ************

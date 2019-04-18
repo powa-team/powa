@@ -18,6 +18,10 @@ Currently, the list of supported stat extensions is as follows:
   pg_wait_sampling.rst
   pg_track_settings.rst
 
-Except the hypopg extension, which have to be installed in each database,
-pg_stat_statements, pg_qualstats and pg_stat_kcache just have to be installed
-on 'powa' database.
+All those extensions have to be installed on the dedicated powa database of the
+monitored server.
+
+.. note::
+
+    pg_track_settings has to be also be installed on the dedicated repository
+    server if :ref:`remote_setup` configuration is used.

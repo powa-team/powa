@@ -28,3 +28,8 @@ PoWA is composed of multiples tools:
 * a collector daemon, see :ref:`powa_collector`
 * stats extensions, see :ref:`stat_extensions`
 * a UI, see :ref:`powa_web`
+* external extensions:
+
+    * :ref:`hypopg_doc`
+    * :ref:`pg_wait_sampling_doc`
+    * :ref:`pg_track_settings_doc`

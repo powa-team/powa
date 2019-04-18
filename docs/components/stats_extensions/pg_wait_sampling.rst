@@ -24,14 +24,14 @@ table on the overview page and a "Wait events for all queries" table on the
 database page.  Those tables report the list of reported wait events for the given
 period, either on the overall instance or on the database only.
 
-.. thumbnail:: ../images/powa_waits_overview.png
-.. thumbnail:: ../images/powa_waits_db.png
+.. thumbnail:: /images/powa_waits_overview.png
+.. thumbnail:: /images/powa_waits_db.png
 
 On the query page, a "Wait Events" tab is available, where you'll see both a
 graph of reported wait events, per type, and a table of all reported wait
 events, both for the given period.
 
-.. thumbnail:: ../images/powa_waits_query.png
+.. thumbnail:: /images/powa_waits_query.png
 
 
 Installation

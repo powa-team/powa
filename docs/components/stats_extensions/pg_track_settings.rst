@@ -43,7 +43,7 @@ any was detected in the currently selected time interval (filtered by the
 database currently displayed if any).  This timeline will be displayed on every
 graph of the page, to easily check if this change had any impact.
 
-.. thumbnail:: ../images/pg_track_settings.png
+.. thumbnail:: /images/pg_track_settings.png
 
 
 Installation

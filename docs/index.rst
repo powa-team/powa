@@ -60,11 +60,7 @@ You should first take a look at the :ref:`quickstart` guide.
    remote_setup
    FAQ
    security
-   powa-archivist/index
-   powa-collector/index
-   powa-web/index
-   stats_extensions/index
-   hypopg
+   components/index
    impact_on_perf
    support
    releases
