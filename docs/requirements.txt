@@ -2,4 +2,4 @@ sphinxcontrib-napoleon
 requests
 sphinxcontrib-domaintools
 sphinx_rtd_theme
-
+sphinxcontrib.images

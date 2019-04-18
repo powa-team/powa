@@ -34,7 +34,7 @@ This includes support for various **stat extensions**:
 
 It supports the following extension:
 
-* :ref:`hypopg`, allowing you to create hypothetical indexes and test their
+* :ref:`hypopg_doc`, allowing you to create hypothetical indexes and test their
   usefulness without creating the real index
 
 Additionnaly, the PoWA User Interface allows you to make the most of this
@@ -64,6 +64,7 @@ You should first take a look at the :ref:`quickstart` guide.
    powa-collector/index
    powa-web/index
    stats_extensions/index
+   hypopg
    impact_on_perf
    support
    releases

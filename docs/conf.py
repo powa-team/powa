@@ -34,8 +34,13 @@ sys.path.insert(0, ".")
 extensions = [
     'sphinx.ext.intersphinx',
     'sphinx.ext.todo',
+    'sphinxcontrib.images',
     'autodoc_plpgsql'
 ]
+
+image_config = {
+    "override_image_directive": True
+}
 
 
 # Add any paths that contain templates here, relative to this directory.
@@ -63,6 +68,7 @@ version = '4.0'
 # The full version, including alpha/beta/rc tags.
 release = '4.0.0'
 powa_archivist_release = release
+hypopg_release = '1.1.2'
 powa_collector_release = '0.0.1'
 powa_web_release = '4.0.0'
 pg_qualstats_release = '1.0.7'
@@ -300,6 +306,8 @@ rst_epilog = """
 .. |powa_web_download_link| replace:: https://pypi.io/packages/source/p/powa-web/powa-web-{powa_web_release}.tar.gz
 .. |pg_qualstats_download| replace:: https://github.com/powa-team/pg_qualstats/archive/{pg_qualstats_release}.tar.gz
 .. |pg_qualstats_release| replace:: {pg_qualstats_release}
+.. |hypopg_release| replace:: {hypopg_release}
+.. |hypopg_download_link| replace:: https://github.com/hypopg/hypopg/archive/{hypopg_release}.tar.gz
 .. |powa_collector_release| replace:: {powa_collector_release}
 .. |powa_collector_download_link| replace:: https://pypi.io/packages/source/p/powa-collector/powa-collector-{powa_collector_release}.tar.gz
 
@@ -311,6 +319,7 @@ rst_epilog = """
     "pg_wait_sampling_release": pg_wait_sampling_release,
     "pg_track_settings_release": pg_track_settings_release,
     "powa-archivist_release": powa_archivist_release,
+    "hypopg_release": hypopg_release,
     "powa_collector_release": powa_collector_release
 })
 
