@@ -106,3 +106,8 @@ pg_wait_sampling.profile_queries:
   Whether profile should be per normalized query, as provided by
   :ref:`pg_stat_statements_doc` extension.  **Should be set to true for PoWA
   usage**.
+
+See Also
+********
+
+  * `List of wait events in PostgreSQL <https://www.postgresql.org/docs/current/monitoring-stats.html#WAIT-EVENT-TABLE>`_
