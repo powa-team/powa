@@ -84,3 +84,4 @@ See Also
 ********
 
     * :ref:`pg_qualstats`
+    * `Official documentation <https://hypopg.readthedocs.io>`_
