@@ -37,11 +37,16 @@ PoWA 4.
 Where is it used in powa-web ?
 ******************************
 
-If the extension is peroperly configured, you should see a timeline widget
-between each graph and its overview, displaying any kind of recorded change, if
-any was detected in the currently selected time interval (filtered by the
-database currently displayed if any).  This timeline will be displayed on every
-graph of the page, to easily check if this change had any impact.
+If the extension is properly configured, you should see a timeline widget,
+placed between each graph and its overview, displaying any kind of recorded
+change if any was detected in the currently selected time interval.  This list
+will be filtered by the database currently displayed if the current page is
+displaying a specific database.  This timeline will be displayed on every graph
+of the page, to easily check if this change had any visible impact.
+
+Details of the changes will be displayed on mouseover.  You can click on any
+event on the timeline to make the event stay displayed, and draw a vertical
+line on the underlying graph.
 
 .. thumbnail:: /images/pg_track_settings.png
 
