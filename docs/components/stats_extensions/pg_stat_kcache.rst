@@ -25,8 +25,8 @@ graphs on the query page:
 .. thumbnail:: /images/pg_stat_kcache_1.png
 .. thumbnail:: /images/pg_stat_kcache_2.png
 
-The **CPU time** metrics indicate the percentage of query runtime spent consuming
-either *user cpu time* or *system cpu time*.
+The **CPU time** metrics indicate the percentage of query runtime spent
+consuming either *user cpu time* or *system cpu time*.
 
 
 The "Hit ratio" graph will also handle this extension, displaying the following
@@ -35,6 +35,11 @@ metrics :
     * **Shared buffers hit ratio**: percentage of blocks read from shared buffers (memory)
     * **System cache hit ratio**: precentage of blocks read from the system cache (memory)
     * **Disk hit ratio**: Percentage of blocks which needed a physical disk read
+
+The rest of the available metrics will be displayed on a dedicated **System
+Resources** graph:
+
+.. thumbnail:: /images/pg_stat_kcache_system_resources.png
 
 Installation
 ************
