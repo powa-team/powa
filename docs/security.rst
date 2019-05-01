@@ -41,3 +41,18 @@ Therefore, for each postgres roles using powa, you also need to:
   * give **CONNECT** privilege on the databases.
 
 If you don't, some useful parts of the UI won't work as intended.
+
+Connection on remote servers
+----------------------------
+
+With PoWA version 4 and newer, you can register *remote servers* in the
+`powa_servers` table (usually using the `powa_register_server` function).
+
+This table can optionally store a **password** to connect on this remote
+server.  If the password is NULL, the connection will then be attempted using
+`the authentication method that libpq supports
+<https://www.postgresql.org/docs/current/auth-methods.html>`_ of your choice.
+
+Storing a plain text password in this table is definitely **NOT** a best
+practice, and we encourage you to rely on the `other libpq authentication
+methods <https://www.postgresql.org/docs/current/auth-methods.html>`_.
