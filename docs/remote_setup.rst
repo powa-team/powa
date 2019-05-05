@@ -47,70 +47,10 @@ your choice on each remote PostgreSQL server.
 Declare the list of remote servers and their extensions
 *******************************************************
 
-:ref:`powa_archivist` provides some SQL functions for that:
+:ref:`powa_archivist` provides some SQL functions for that.
 
-powa_register_server
---------------------
-
-This function declare a new remote server and the activated extensions.
-
-The arguments are:
-
-hostname (`text`):
-  Mandatory, default `NULL`.
-  Hostname or IP address of the remote PostgreSQL instance.
-port (`integer`)
-  Mandatory, default `5432`.
-  Port of the remote PostgreSQL instance.
-alias (`text`):
-  Optional, default `NULL`.
-  User-friendly alias of the remote PostgreSQL instance (needs to be unique).
-username (`text`):
-  Mandatory, default `'powa'`.
-  Username to user to connect on the remote PostgreSQL instance.
-password (`text`):
-  Optional, default `NULL`.
-  Password to user to connect on the remote PostgreSQL instance. If no password
-  is provided, the connection can fallback on other standard authentication
-  method (.pgpass file, certificate...) depending on how the remote server is
-  configured.
-dbname (`text`):
-  Mandatory, default `'powa'`.
-  Database to connect on the remote PostgreSQL instance.
-frequency (`integer`):
-  Mandatory, default `300`,
-  Snapshot interval for the remote server, in seconds.
-retention (`interval`):
-  Mandatory, default `'1 day'::interval`.
-  Data retention for the remote server.
-extensions (`text[]`):
-  Optional, default `NULL`.
-  List of extensions on the remote server for which the data should be stored.
-  You don't need to specify :ref:`pg_stat_statements_doc`.  As it's a mandatory
-  extensions, it'll be automatically added.
-
-.. note::
-
-    - The (hostname, port) must be unique.
-    - This function will not try to connect on the remote server to validate
-      that the list of extensions is correct.  If you declared extensions that
-      are not available or properly setup on the remote server, the underlying
-      data won't be available and you'll see errors in the
-      :ref:`powa_collector` logs and the :ref:`powa_web` user interface.
-
-.. warning::
-
-    Connection on the remote server can be attempted by the :ref:`powa_web`
-    user interface and :ref:`powa_collector`.
-    The connection for :ref:`powa_collector` **is mandatory**.  The user
-    interface can work without such remote connection, but with **limited
-    features** (notably, index suggestion will not be available).
-
-You can call this function as any SQL function, using a **superuser**.
-
-For instance, to add a remote server on **myserver.domain.com**, with the alias
-**myserver**, with default port and database, the password **mypassword**, and
-**all the supported extensions**:
+You most likely want to declare a *remote sever* using the
+`powa_register_server` function.  For instance:
 
 .. code-block:: sql
 
@@ -119,36 +59,8 @@ For instance, to add a remote server on **myserver.domain.com**, with the alias
         password => 'mypassword',
         extensions => '{pg_stat_kcache,pg_qualstats,pg_wait_sampling}');
 
-powa_activate_extension
------------------------
-
-This function is automatically called by `powa_register_server`.  It can be
-useful if you setup an additional :ref:`stat_extensions` afterwards.
-
-The arguments are:
-
-_srvid (`integer`):
-  Mandatory, default `NULL`.
-  Interval serveur identifier.  You can find the identifier in the
-  `powa_servers` table, containing the list of remote instances.
-_extname (`text`):
-  Mandatory, default `NULL`.
-  The name of the extension to activate.
-
-powa_deactivate_extension
--------------------------
-
-This function can be useful if you removed a :ref:`stat_extensions` afterwards.
-
-The arguments are:
-
-_srvid (`integer`):
-  Mandatory, default `NULL`.
-  Interval serveur identifier.  You can find the identifier in the
-  `powa_servers` table, containing the list of remote instances.
-_extname (`text`):
-  Mandatory, default `NULL`.
-  The name of the extension to deactivate.
+You can consult the :ref:`powa_archivist_remote_servers_configuration` page
+for a full documentation of the available SQL API.
 
 Configure powa-collector
 ************************
