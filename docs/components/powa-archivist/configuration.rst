@@ -68,6 +68,10 @@ frequency (`integer`):
 retention (`interval`):
   Mandatory, default `'1 day'::interval`.
   Data retention for the remote server.
+allow_ui_connection (`boolean`):
+  Mandatory, default `true`.
+  Specify if the UI is allowed to connect to the remote server to access user
+  objects.
 extensions (`text[]`):
   Optional, default `NULL`.
   List of extensions on the remote server for which the data should be stored.
