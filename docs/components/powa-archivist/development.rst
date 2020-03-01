@@ -127,10 +127,14 @@ Optional functions for data snapshot
 ------------------------------------
 
 **query_cleanup**:
-  This can contain any SQL code, which will be executed as is just after the
-  **query_source** function has been executed.  This is normally not required,
-  but if for example you don't want to store cumulated data in each snapshot,
-  this is the right place to reset the metrics your extension stores.
+  This can contain any SQL code, which will be executed as-is **for remote
+  snapshot** by **powa-collector** just after the **query_source** function has
+  been executed.  The same code should normally be present in the *snapshot
+  function* for *local snapshot*, when the passed `server id` is **0**.  This
+  is normally not required, but if for example you don't want to store
+  cumulated data in each snapshot, this is the right place to reset the metrics
+  your extension stores.  You can refer to `pg_qualstats` integration for a
+  usage example.
 
 .. warning::
 
