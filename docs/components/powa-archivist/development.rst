@@ -105,7 +105,7 @@ Functions required for data snapshot
   This function will be called if the related extension is dropped.
 
   Please note that the **module** name used in the **powa_functions** table
-  has to be the same as the extension name, otherwise the function will not be
+  has to be the same as the extension name, otherwise this function will not be
   called.
 
   This function should at least remove entries from **powa_functions** table.
@@ -122,6 +122,31 @@ Functions required for data snapshot
     END;
     $_$
     language plpgsql;
+
+Optional functions for data snapshot
+------------------------------------
+
+**query_cleanup**:
+  This can contain any SQL code, which will be executed as is just after the
+  **query_source** function has been executed.  This is normally not required,
+  but if for example you don't want to store cumulated data in each snapshot,
+  this is the right place to reset the metrics your extension stores.
+
+.. warning::
+
+    This can't be used as a way to free any resources the **query_source**
+    function could have allocated, as this function isn't guaranteed to be
+    executed in some corner cases (error during **query_source** execution,
+    fast shutdown of the collector...)
+
+.. warning::
+
+    You should obviously be very careful with what you store in this field, or
+    who you allow to update the `powa_functions` table, as no verification is
+    done on the content.
+
+Registering functions for data snapshot
+---------------------------------------
 
 Each of these functions should then be registered:
 
