@@ -4,6 +4,11 @@ Remote setup
 ============
 
 Before **version 4**, all the performance data collected were stored locally.
+
+Here's a schema of how architecture looks like with the local mode:
+
+.. thumbnail:: /images/powa_4_local.svg
+
 This had two majors drawbacks:
 
   - it adds a non negligeable performance cost, both when collecting data and
@@ -11,8 +16,13 @@ This had two majors drawbacks:
   - it's not possible to collect data on hot-standby servers
 
 With version 4, it's now possible to store the data of one or multiples servers
-on an external PostgreSQL database.  This chapter describes how to configure
-such remote mode.
+on an external PostgreSQL database.
+
+Here's a schema for this new architecture:
+
+.. thumbnail:: /images/powa_4_remote.svg
+
+This chapter describes how to configure such remote mode.
 
 What did not change
 *******************

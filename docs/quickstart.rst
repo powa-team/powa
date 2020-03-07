@@ -15,10 +15,10 @@ The following describes the installation of the two modules of PoWA:
 
 .. note::
 
-    This page shows how to configure a local PoWA setup.  If you're interested
-    in configuring PoWA for multiple servers, and/or for standby servers,
-    please also refer to the :ref:`remote_setup` page to see the differences
-    in such setups.
+    This page shows how to configure a **local PoWA setup**.  If you're
+    interested in configuring PoWA for **multiple servers**, and/or for
+    **standby servers**, please also refer to the :ref:`remote_setup` page to
+    see the differences in such setups.
 
 
 Install PoWA from packages (Red Hat/CentOS/Debian)
