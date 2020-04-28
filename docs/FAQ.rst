@@ -1,13 +1,13 @@
-Frequently Asked question
+Frequently Asked Questions
 =========================
 
-Can I use PoWA on a standby server, or store the data on an external server
+Can I use PoWA on a standby server, or store the data on an external server?
 ---------------------------------------------------------------------------
 
-Yes!  Since version 4 of PoWA, it's possible to setup a **remote snapshot**,
+Yes!  Since version 4 of PoWA, it's possible to set up a **remote snapshotting**,
 thus aggregating all the performance data on a dedicated remote PostgreSQL
 server.  This mode greatly limits the performance impact of PoWA on the
-configured servers, and also allows to use PoWA on standby servers too. See the
+configured servers and also allows to use PoWA on standby servers too. See the
 :ref:`remote_setup` documentation more details.
 
 Some queries don't show up in the UI
