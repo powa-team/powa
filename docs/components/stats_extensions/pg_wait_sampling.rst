@@ -53,13 +53,13 @@ Then, compile the extension:
 
 .. code-block:: bash
 
-  make
+  make USE_PGXS=1
 
 Then install the compiled package:
 
 .. code-block:: bash
 
-  make install
+  make USE_PGXS=1 install
 
 Then you just have to declare the extension in the ``postgresql.conf`` file, like this :
 
