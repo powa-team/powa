@@ -1,10 +1,10 @@
-.. title:: PostreSQL Workload Analyzer
+.. title:: PostgreSQL Workload Analyzer
 
-|PostreSQL Workload Analyzer|
+|PostgreSQL Workload Analyzer|
 =================================
 
-.. |PostreSQL Workload Analyzer| image:: ../img/powa_logo.410x161.png
-    :alt: PostreSQL Workload Analyzer
+.. |PostgreSQL Workload Analyzer| image:: ../img/powa_logo.410x161.png
+    :alt: PostgreSQL Workload Analyzer
 
 .. note::
 
@@ -37,7 +37,7 @@ It supports the following extension:
 * :ref:`hypopg_doc`, allowing you to create hypothetical indexes and test their
   usefulness without creating the real index
 
-Additionnaly, the PoWA User Interface allows you to make the most of this
+Additionally, the PoWA User Interface allows you to make the most of this
 information.
 
 Main components
