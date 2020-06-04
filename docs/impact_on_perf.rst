@@ -9,7 +9,7 @@ First of all, you need to activate at least `pg_stat_statements
 <http://www.postgresql.org/docs/current/static/pgstatstatements.html>`_
 extension, and possibly the other supported :ref:`stat_extensions` of your choice.
 Those extensions can slow down your instance, depending on how you
-configuraiton them.
+configure them.
 
 If you don't use the :ref:`remote_setup` mode, the data will be stored locally
 on a regular basis.  Depending on the snapshot frequency, the overhead could be
