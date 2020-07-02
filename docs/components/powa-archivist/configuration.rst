@@ -71,7 +71,7 @@ retention (`interval`):
 powa_coalesce (`integer`):
   Optional, default `100`.
   Defines the amount of records to group together in the table for
-  the correspondig remote server.
+  the corresponding remote server.
 allow_ui_connection (`boolean`):
   Mandatory, default `true`.
   Specify if the UI is allowed to connect to the remote server to access user
