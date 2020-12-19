@@ -31,7 +31,7 @@ New Stat sources
 Documentation
 --------------
 
-* Complete user documentation available at http://powa.readthedocs.io/
+* Complete user documentation available at https://powa.readthedocs.io/
 
 Backward compatibility
 ----------------------

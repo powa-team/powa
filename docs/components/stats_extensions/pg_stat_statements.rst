@@ -1,4 +1,4 @@
-.. _pg_stat_statements: http://www.postgresql.org/docs/current/static/pgstatstatements.html
+.. _pg_stat_statements: https://www.postgresql.org/docs/current/pgstatstatements.html
 
 .. _pg_stat_statements_doc:
 
@@ -62,7 +62,7 @@ distinct queries:
 For more information about the pg_stat_statements_, please read the PostgreSQL
 documentation:
 
-http://www.postgresql.org/docs/current/static/pgstatstatements.html
+https://www.postgresql.org/docs/current/pgstatstatements.html
 
 Examples
 ********
@@ -72,5 +72,5 @@ Examples
 See Also
 ********
 
-* http://www.craigkerstiens.com/2013/01/10/more-on-postgres-performance/
+* https://www.craigkerstiens.com/2013/01/10/more-on-postgres-performance/
 

@@ -2,9 +2,9 @@ PoWA Documentation
 =========================
 
 
-See http://powa.readthedocs.io/
+See https://powa.readthedocs.io/
 
-[![Documentation Status](https://readthedocs.io/projects/powa/badge/?version=latest)](https://readthedocs.io/projects/powa/?badge=latest)
+[![Documentation Status](https://readthedocs.org/projects/powa/badge/?version=latest)](https://powa.readthedocs.io/en/latest/?badge=latest)
 
 
 Compile the doc

@@ -323,4 +323,4 @@ rst_epilog = """
     "powa_collector_release": powa_collector_release
 })
 
-intersphinx_mapping = {'http://docs.python.org/': None}
+intersphinx_mapping = {'https://docs.python.org/': None}

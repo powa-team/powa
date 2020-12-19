@@ -1,1 +1,1 @@
-See http://powa.readthedocs.io/en/latest/contributing.html
+See https://powa.readthedocs.io/en/latest/contributing.html

@@ -6,7 +6,7 @@ performances. It is hard to evaluate precisely this impact, as it can come from
 different parts.
 
 First of all, you need to activate at least `pg_stat_statements
-<http://www.postgresql.org/docs/current/static/pgstatstatements.html>`_
+<https://www.postgresql.org/docs/current/pgstatstatements.html>`_
 extension, and possibly the other supported :ref:`stat_extensions` of your choice.
 Those extensions can slow down your instance, depending on how you
 configure them.
