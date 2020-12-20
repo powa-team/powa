@@ -1,5 +1,5 @@
 Frequently Asked Questions
-=========================
+==========================
 
 Can I use PoWA on a standby server, or store the data on an external server?
 ---------------------------------------------------------------------------
