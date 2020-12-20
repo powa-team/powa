@@ -8,7 +8,7 @@ PoWA-collector
 Installation
 ************
 
-You can install PoWA-collector either using `pip <http://pypi.python.org>`_ or
+You can install PoWA-collector either using `pip <https://pypi.org/>`_ or
 manually.
 
 On Centos 6, you can avoid installing the header files for Python and
@@ -26,8 +26,8 @@ Manual install
 
 You'll need the following dependencies:
 
-    * `python 2.6, 2.7 or > 3 <http://www.python.org>`_
-    * `psycopg2 <http://initd.org/psycopg/>`_
+    * `python 2.6, 2.7 or > 3 <https://www.python.org/>`_
+    * `psycopg2 <https://www.psycopg.org/>`_
 
 .. admonition:: debian
 

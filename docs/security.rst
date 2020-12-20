@@ -6,13 +6,13 @@ Security
 
   **You need to be careful about the security of your PostgreSQL instance when installing PoWA.**
 
-We designed POWA so that the user interface will only communicate with PostgreSQL via prepared statements. This will prevent the risk of `SQL injection <http://xkcd.com/327/>`_.
+We designed POWA so that the user interface will only communicate with PostgreSQL via prepared statements. This will prevent the risk of `SQL injection <https://xkcd.com/327/>`_.
 
 However to connect to the PoWA User Interface, you will use the login and password of a PostgreSQL user. If you don't protect your communications, an attacker placed between the GUI and PostgreSQL, or between you and the GUI, could gain your user rights to your database server.
 
 Therefore we **strongly** recommend the following precautions:
 
-* `Read the Great PostgreSQL Documentation <http://www.postgresql.org/docs/current/static/auth-pg-hba-conf.html>`_
+* `Read the Great PostgreSQL Documentation <https://www.postgresql.org/docs/current/auth-pg-hba-conf.html>`_
 * Check your *pg_hba.conf* file
 * Do not allow users to access PoWA from the Internet
 * Do not allow users to access PostgreSQL from the Internet

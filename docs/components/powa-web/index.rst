@@ -8,7 +8,7 @@ PoWA-web
 Installation
 ************
 
-You can install PoWA-web either using `pip <http://pypi.python.org>`_ or
+You can install PoWA-web either using `pip <https://pypi.org/>`_ or
 manually.
 
 On Centos 6, you can avoid installing the header files for Python and PostgreSQL
@@ -26,10 +26,10 @@ Manual install
 
 You'll need the following dependencies:
 
-    * `python 2.6, 2.7 or > 3 <http://www.python.org>`_
-    * `psycopg2 <http://initd.org/psycopg/>`_
-    * `sqlalchemy > 0.9.8 <http://sqlalchemy.org>`_
-    * `tornado >= 2.0 <http://tornadoweb.org>`_
+    * `python 2.6, 2.7 or > 3 <https://www.python.org/>`_
+    * `psycopg2 <https://www.psycopg.org/>`_
+    * `sqlalchemy > 0.9.8 <https://www.sqlalchemy.org/>`_
+    * `tornado >= 2.0 <https://www.tornadoweb.org/>`_
 
 .. admonition:: debian
 
@@ -54,7 +54,7 @@ You'll need the following dependencies:
     TODO
 
 
-Then, download the latest release on `pypi <https://pypi.python.org/pypi/powa-web/>`_,  uncompress it, and copy the sample configuration file:
+Then, download the latest release on `pypi <https://pypi.org/project/powa-web/>`_,  uncompress it, and copy the sample configuration file:
 
 .. parsed-literal::
 
@@ -72,7 +72,7 @@ Then, jump on the next section to configure powa-web.
     install sqlalchemy 0.8:
 
     * An RPM can be found at `this address
-      <http://mirrors.ircam.fr/pub/fedora/epel/6/x86_64/python-sqlalchemy0.8-0.8.2-4.el6.x86_64.rpm>`_
+      <https://archives.fedoraproject.org/pub/archive/epel/6/x86_64/Packages/p/python-sqlalchemy0.8-0.8.2-4.el6.x86_64.rpm>`_
     * After installing the RPM, it's required to perform
 
       .. code-block:: bash

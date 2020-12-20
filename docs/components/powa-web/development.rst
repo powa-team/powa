@@ -25,9 +25,9 @@ That means the javascript files will not be minified, and will not be compiled
 into one giant source file.
 
 
-CSS files are generated using `sass <http://sass-lang.com>`.
+CSS files are generated using `sass <https://sass-lang.com/>`.
 Javascript files are splitted into AMD modules, which are managed by `requirejs
-<http://requirejs.org/>` and compiled using `grunt <http://gruntjs.com>`.
+<https://requirejs.org/>` and compiled using `grunt <https://gruntjs.com/>`.
 
 These projects depend on NodeJS, and NPM, its package manager, so make sure you are able to install them on your
 distribution.
