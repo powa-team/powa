@@ -1,5 +1,8 @@
 Security
-==============
+========
+
+PoWA-web
+********
 
 .. warning::
 
@@ -42,6 +45,9 @@ Therefore, for each postgres roles using powa, you also need to:
 
 If you don't, some useful parts of the UI won't work as intended.
 
+PoWA-archivist & PoWA-collector in remote mode
+**********************************************
+
 Connection on remote servers
 ----------------------------
 
@@ -56,3 +62,25 @@ server.  If the password is NULL, the connection will then be attempted using
 Storing a plain text password in this table is definitely **NOT** a best
 practice, and we encourage you to rely on the `other libpq authentication
 methods <https://www.postgresql.org/docs/current/auth-methods.html>`_.
+
+Required privileges on remote servers
+-------------------------------------
+
+In order to perform the metric snapshots, the role defined to connect on the
+remote servers requires the following privilege for each remote server:
+
+  * remote servers
+
+    * for PostgreSQL 9.6 and lower: a superuser role
+
+    * for PostgreSQL 10 and above: either a superuser role or a roler member of
+      the group **pg_read_all_stats** (see the `default roles documentation
+      <https://www.postgresql.org/docs/current/default-roles.html>`_)
+
+  * repository servers
+
+    * read & write privileges on all the PoWA tables
+
+  * remote & repository servers
+
+    * execute privilege on all the PoWA functions
