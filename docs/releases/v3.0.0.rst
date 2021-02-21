@@ -27,7 +27,7 @@ between predicates that are traditionally hard to discover for the DBA.
 Index suggestion check
 ----------------------
 
-Thanks to the HypoPG (https://github.com/hypopg/hypoopg) extension, the
+Thanks to the HypoPG (https://github.com/hypopg/hypopg) extension, the
 benefits of the suggested index creations can automatically be checked by
 running the queries against  hypothetical indexes.  You can see instantly if the
 suggested index is relevant and how much it'll improve the query.
