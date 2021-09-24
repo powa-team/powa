@@ -5,11 +5,14 @@ PoWA-web
 
 .. _powa-web-manual-installation:
 
-Installation
-************
+Install 
+*****************
 
 You can install PoWA-web either using `pip <https://pypi.org/>`_ or
 manually.
+
+Install with pip
+------------------------
 
 On Centos 6, you can avoid installing the header files for Python and PostgreSQL
 by using the package for psycopg2:
@@ -21,8 +24,24 @@ by using the package for psycopg2:
   pip install powa-web
 
 
+Install on Red Hat / CentOS / Fedora / Rocky Linux
+----------------------------------------------------------
+
+The RPM package is available on the PostgreSQL YUM Repository. Follow the 
+installation guidelines below to add this repository to your system:
+
+https://www.postgresql.org/download/linux/redhat/
+
+Then install the package with:
+
+.. code-block:: bash
+    yum install powa_13-web
+
+Replace `13` by the major version number of the PostgreSQL instance.
+
+
 Manual install
---------------
+********************
 
 You'll need the following dependencies:
 

@@ -5,11 +5,14 @@ PoWA-collector
 
 .. _powa-collector-manual-installation:
 
-Installation
+Install
 ************
 
-You can install PoWA-collector either using `pip <https://pypi.org/>`_ or
-manually.
+You can install PoWA Collector either using `pip <https://pypi.org/>`_, RPM 
+packages or manually.
+
+Install with pip
+--------------------
 
 On Centos 6, you can avoid installing the header files for Python and
 PostgreSQL by using the package for psycopg2:
@@ -19,6 +22,20 @@ PostgreSQL by using the package for psycopg2:
 
   yum install python-pip python-psycopg2
   pip install powa-collector
+
+
+Install on Red Hat / CentOS / Fedora / Rocky Linux
+-----------------------------------------------------
+
+The RPM package is available on the PostgreSQL YUM Repository. Follow the
+installation guidelines below to add this repository to your system:
+
+https://www.postgresql.org/download/linux/redhat/
+
+Then install the package with:
+
+.. code-block:: bash
+  yum install powa_collector
 
 
 Manual install
