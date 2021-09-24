@@ -98,9 +98,8 @@ Example:
   powa=# create extension powa;
   CREATE EXTENSION
 
-
-As PoWA-archivist is implemented as a background worker, the library must be
-loaded at server start time.
+As PoWA-archivist can provide a background worker, the library must be loaded
+at server start time if local metric collection is wanted.
 
 For this, modify the ``postgresql.conf`` configuration file, and add powa and
 pg_stat_statements to the ``shared_preload_libraries`` parameter:
