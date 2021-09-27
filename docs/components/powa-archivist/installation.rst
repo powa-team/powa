@@ -3,6 +3,17 @@
 Installation
 ************
 
+Introduction
+------------
+
+PoWA-archivist is the core component of the PoWA project. It is composed of 2
+elements:
+
+* an extension named "powa" containing management functions
+* a module name "powa" that runs a background worker collecting the
+  performance metadata
+
+
 Prerequisites
 -------------
 
