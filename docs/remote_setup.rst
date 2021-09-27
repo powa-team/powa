@@ -51,7 +51,7 @@ instance restart is not required anymore.
 Configure PoWA and stats extensions on each remote server
 *********************************************************
 
-You need to install configure :ref:`powa_archivist` and the
+You need to install and configure :ref:`powa_archivist` and the
 :ref:`stat_extensions` of your choice on each remote PostgreSQL server.
 
 Declare the list of remote servers and their extensions
