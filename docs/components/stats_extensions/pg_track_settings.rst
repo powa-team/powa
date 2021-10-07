@@ -97,4 +97,4 @@ on the database where you installed PoWA, and type:
 
 .. code-block:: sql
 
-  SELECT powa_wait_sampling_register();
+  SELECT powa_track_settings_register();
