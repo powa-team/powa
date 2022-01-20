@@ -99,6 +99,7 @@ Install and set up the UI (powa-web)
 ***************************************
 
 First, install the PoWA web UI:
+
 .. code-block:: bash
 
    apt install powa-web
@@ -106,6 +107,7 @@ First, install the PoWA web UI:
 
 
 Now, install the Nginx Web Server:
+
 .. code-block:: bash
 
    apt install nginx-full
