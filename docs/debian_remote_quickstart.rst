@@ -223,7 +223,7 @@ First, install the required packages:
    apt install postgresql-14 postgresql-client-14 postgresql-contrib-14
    apt install postgresql-14-powa postgresql-14-pg-qualstats postgresql-14-pg-stat-kcache postgresql-14-hypopg
 
-Second, set up an new instance, called powa, running PostgreSQL 14, listening on port 50000:
+Second, set up an new instance, called powa, running PostgreSQL 14, listening on port 30001:
 
 .. code-block:: bash
 
