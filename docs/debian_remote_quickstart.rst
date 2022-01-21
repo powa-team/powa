@@ -5,7 +5,7 @@ Remote PoWA Quickstart on Debian
 
 .. warning::
 
-  _The current version of PoWA is designed for PostgreSQL 9.4 and newer. If you
+  The current version of PoWA is designed for PostgreSQL 9.4 and newer. If you
   want to use PoWA on PostgreSQL < 9.4, please use the `1.x series
   <https://powa.readthedocs.io/en/rel_1_stable/>`_
 
@@ -18,11 +18,11 @@ The following describes the installation of a remote setup of PoWA:
 
 .. note::
 
-  _This document only shows how to set up **PoWA in remote mode** targeted to
+  This document only shows how to set up **PoWA in remote mode** targeted to
   monitor the activity of **multiple servers** and/or **standby servers**. It
   only shows the set-up on a Debian system.
   The document assumes that you use the PGDG repository to install PostgreSQL.
-  Please refer to https://wiki.postgresql.org/wiki/Apt for more informations._
+  Please refer to https://wiki.postgresql.org/wiki/Apt for more informations.
 
 Architecture
 ************
@@ -292,10 +292,10 @@ And finally, reload the collector:
 
 .. note::
 
-    _If you also installed the pg_wait_sampling extension, don't forget to
+    If you also installed the pg_wait_sampling extension, don't forget to
     modify the shared_preload_libraries accordingly and create the extension.
     Don't forget to add the pg_wait_sampling extension in the extension list of
-    the register function call._
+    the register function call.
 
 Repeat this steps for any other PostgreSQL instance you want to monitor with PoWA.
 
