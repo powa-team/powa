@@ -29,10 +29,8 @@ Architecture
 
 As the goal of this document is to present how to set up PoWA in remote mode with
 multiple PostgreSQL servers monitored, here is the topology of our network :
-Servers:
   * powasrv, PoWA repository and Web Server for the UI
   * pgsrv1, PostgreSQL database server #1
-  * pgsrv2, PostgreSQL database server #2
 
 
 Install the PoWA repository
@@ -90,7 +88,7 @@ Create the required extensions in this new database:
 .. note::
 
     If you also installed the pg_wait_sampling extension, don't forget to
-    create the extension too.
+    modify the shared_preload_libraries accordingly and create the extension too.
 
 
 One last step is to create a role that has superuser privileges and is able to
@@ -204,14 +202,100 @@ Configure the collector to connect to our repository:
                 "debug": false
    }
 
+Now enable and restart the service:
+
+.. code-block:: bash
+
+   systemctl enable powa-collector
+   systemctl restart powa-collector
+
+Please visit the configuration page of PoWA to check that the collector is connected: http://powasrv/powa/config/
+
+
 Install and set up a PostgreSQL instance
 ****************************************
 
 This step is to be done on server pgsrv1
 
-Add another PostgreSQL instance
-*******************************
+First, install the required packages:
 
-This step is to be done on server pgsrv2
+.. code-block:: bash
 
+   apt install postgresql-14 postgresql-client-14 postgresql-contrib-14
+   apt install postgresql-14-powa postgresql-14-pg-qualstats postgresql-14-pg-stat-kcache postgresql-14-hypopg
+
+Second, set up an new instance, called powa, running PostgreSQL 14, listening on port 50000:
+
+.. code-block:: bash
+
+   pg_createcluster 14 inst1 -p 30001
+
+Next, add all required modules to `shared_preload_libraries` in the `postgresql.conf` of the
+newly created instance:
+
+.. code-block:: ini
+
+    shared_preload_libraries='pg_stat_statements,powa,pg_stat_kcache,pg_qualstats'
+
+Modify file `/etc/postgresql/14/inst1/pg_hba.conf` to permit access to the postgres database to
+you powa. Add the following line at the end of the file:
+
+.. code-block:: ini
+
+    host        postgres        powa    <powasrv_ip_addresse>/32        md5
+
+Restart the instance, as root or using `sudo` :
+
+.. code-block:: bash
+
+   systemctl restart postgresql@14-inst1.service
+
+Log in to your PostgreSQL as a superuser and create a `powa` database:
+
+.. code-block:: sql
+
+Create the required extensions in this new database:
+
+.. code-block:: sql
+
+    \c postgres
+    CREATE EXTENSION pg_stat_statements;
+    CREATE EXTENSION btree_gist;
+    CREATE EXTENSION powa;
+    CREATE EXTENSION pg_qualstats;
+    CREATE EXTENSION pg_stat_kcache;
+
+One last step is to create a role that has superuser privileges and is able to
+login to the cluster (use your own credentials):
+
+.. code-block:: sql
+
+    CREATE ROLE powa SUPERUSER LOGIN PASSWORD 'astrongpassword' ;
+
+As a final step, get back on `powasrv`, register the instance:
+
+.. code-block:: bash
+
+   psql -d powa -c "SELECT powa_register_server(hostname => 'pgsrv1',
+                                                port => 30001,
+                                                alias => 'inst1',
+                                                username => 'powa',
+                                                password => 'astrongpassword',
+                                                dbname => 'postgres',
+                                                retention => '7 days',
+                                                extensions => '{pg_stat_kcache,pg_qualstats}');"
+
+And finally, reload the collector:
+.. code-block:: bash
+
+   systemctl reload powa-collector
+
+.. note::
+
+    If you also installed the pg_wait_sampling extension, don't forget to
+    modify the shared_preload_libraries accordingly and create the extension.
+    Don't forget to add the pg_wait_sampling extension in the extension list of
+    the register function call.
+
+Repeat this steps for any other PostgreSQL instance you want to monitor with PoWA.
 
