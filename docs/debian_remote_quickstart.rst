@@ -10,11 +10,11 @@ Remote PoWA Quickstart on Debian
   <https://powa.readthedocs.io/en/rel_1_stable/>`_
 
 The following describes the installation of a remote setup of PoWA:
-  * set up the repository
-  * set up the PoWA Web UI and nginx web server
-  * set up the collector
-  * set up a production PostgreSQL instance
-  * register the instance in PoWA
+* set up the repository
+* set up the PoWA Web UI and nginx web server
+* set up the collector
+* set up a production PostgreSQL instance
+* register the instance in PoWA
 
 .. note::
 
@@ -39,8 +39,8 @@ Install the PoWA repository
 This step is to be done on server named powasrv.
 
 The PoWA repository is a PostgreSQL database that stores:
-  * the configuration of the remote PostgreSQL instances
-  * the metrics of the remote PostgreSQL instances
+* the configuration of the remote PostgreSQL instances
+* the metrics of the remote PostgreSQL instances
 
 First, install the required packages:
 
