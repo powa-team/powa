@@ -7,7 +7,7 @@ Remote PoWA Quickstart on Debian
 
   The current version of PoWA is designed for PostgreSQL 9.4 and newer. If you
   want to use PoWA on PostgreSQL < 9.4, please use the `1.x series
-  <https://powa.readthedocs.io/en/rel_1_stable/>`_
+  <https://powa.readthedocs.io/en/rel_1_stable/>`.
 
 The following describes the installation of a remote setup of PoWA:
   * set up the repository
