@@ -32,7 +32,6 @@ multiple PostgreSQL servers monitored, here is the topology of our network:
   * powasrv, PoWA repository and Web Server for the UI
   * pgsrv1, PostgreSQL database server #1
 
-
 Install the PoWA repository
 ***************************
 
