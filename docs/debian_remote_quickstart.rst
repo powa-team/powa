@@ -30,7 +30,7 @@ Architecture
 As the goal of this document is to present how to set up PoWA in remote mode with
 multiple PostgreSQL servers monitored, here is the topology of our network :
 Servers:
-  * powa, PoWA repository and Web Server for the UI
+  * powasrv, PoWA repository and Web Server for the UI
   * pgsrv1, PostgreSQL database server #1
   * pgsrv2, PostgreSQL database server #2
 
@@ -38,7 +38,7 @@ Servers:
 Install the PoWA repository
 ***************************
 
-This step is to be done on server named powa.
+This step is to be done on server named powasrv.
 
 The PoWA repository is a PostgreSQL database that stores:
   * the configuration of the remote PostgreSQL instances
@@ -111,7 +111,7 @@ in order to access your history.
 Install and set up the UI (powa-web)
 ***************************************
 
-This step is to be done on server named powa.
+This step is to be done on server named powasrv.
 
 First, install the PoWA web UI:
 
@@ -160,6 +160,7 @@ Let's add a new location `/powa` in the `server` configuration.
         (...)
 
 Check the new configuration:
+
 .. code-block:: bash
 
    nginx -t
@@ -177,7 +178,7 @@ Reload nginx:
 
    systemctl reload nginx.service
 
-Now, the UI throught can be accessed throught the following URL: http://powa/powa/
+Now, the UI throught can be accessed throught the following URL: http://powasrv/powa/
 
 To log in, remind the previous creation of user `powa` with password `astrongpassword`.
 
@@ -186,12 +187,22 @@ To log in, remind the previous creation of user `powa` with password `astrongpas
 Install and set up the collector (powa-collector)
 ****************************************************
 
-This step is to be done on server named powa.
+This step is to be done on server named powasrv.
 
 .. code-block:: bash
 
    apt install powa-collector
 
+Configure the collector to connect to our repository:
+
+.. code-block:: python
+
+   {
+        "repository": {
+                "dsn": "postgresql://powa:astrongpassword@powasrv:50000/powa"
+                },
+                "debug": false
+   }
 
 Install and set up a PostgreSQL instance
 ****************************************
