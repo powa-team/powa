@@ -172,6 +172,7 @@ It should give the following output:
    nginx: configuration file /etc/nginx/nginx.conf test is successful
 
 Reload nginx:
+
 .. code-block:: bash
 
    systemctl reload nginx.service
