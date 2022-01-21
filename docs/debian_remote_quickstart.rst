@@ -119,6 +119,25 @@ First, install the PoWA web UI:
 
    apt install powa-web
 
+Let's edit `/etc/powa-web.conf` to point to the repository database:
+
+.. code-block:: python
+    servers={
+      'main': {
+        'host': '/var/run/postgresql',
+        'port': '50000',
+        'database': 'powa',
+        'query': {'client_encoding': 'utf8'}
+      }
+    }
+    cookie_secret="ed2xoow8shet3eiyai4Odo2OTama2y"
+    url_prefix="/powa"
+    port=9999
+    address='127.0.0.1'
+
+The powa-web Web daemon will listen on localhost, on port 9999. The UI will be accessible
+under `/powa`.
+
 Now, install the Nginx Web Server:
 
 .. code-block:: bash
@@ -145,11 +164,22 @@ Check the new configuration:
 
    nginx -t
 
+It should give the following output:
+
+.. code-block::
+
+   nginx: the configuration file /etc/nginx/nginx.conf syntax is ok
+   nginx: configuration file /etc/nginx/nginx.conf test is successful
 
 Reload nginx:
 .. code-block:: bash
 
    systemctl reload nginx.service
+
+Now, the UI throught can be accessed throught the following URL: http://powa/powa/
+
+To log in, remind the previous creation of user `powa` with password `astrongpassword`.
+
 
 
 Install and set up the collector (powa-collector)
