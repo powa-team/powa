@@ -18,14 +18,27 @@ The following describes the installation of a remote setup of PoWA:
 
 .. note::
 
-  This document only shows how to set up a **remote PoWA setup** targeted to
+  This document only shows how to set up **PoWA in remote mode** targeted to
   monitor the activity of **multiple servers** and/or **standby servers**. It
   only shows the set-up on a Debian system.
   The document assumes that you use the PGDG repository to install PostgreSQL.
   Please refer to https://wiki.postgresql.org/wiki/Apt for more informations.
 
+Architecture
+************
+
+As the goal of this document is to present how to set up PoWA in remote mode with
+multiple PostgreSQL servers monitored, here is the topology of our network :
+Servers :
+  * powa, PoWA repository and Web Server for the UI
+  * pgsrv1, PostgreSQL database server #1
+  * pgsrv2, PostgreSQL database server #2
+
+
 Install the PoWA repository
 ***************************
+
+This step is to be done on server named powa.
 
 The PoWA repository is a PostgreSQL database that stores:
   * the configuration of the remote PostgreSQL instances
@@ -98,13 +111,13 @@ in order to access your history.
 Install and set up the UI (powa-web)
 ***************************************
 
+This step is to be done on server named powa.
+
 First, install the PoWA web UI:
 
 .. code-block:: bash
 
    apt install powa-web
-
-
 
 Now, install the Nginx Web Server:
 
@@ -112,18 +125,51 @@ Now, install the Nginx Web Server:
 
    apt install nginx-full
 
+Edit the default nginx server configuration, file `/etc/nginx/sites-enabled/default`.
+Let's add a new location `/powa` in the `server` configuration.
+
+.. code-block:: ini
+
+   server {
+        listen 80 default_server;
+        listen [::]:80 default_server;
+        (...)
+        location /powa {
+                include proxy_params;
+                proxy_pass      http://localhost:9999;
+        }
+        (...)
+
+Check the new configuration:
+.. code-block:: bash
+
+   nginx -t
+
+
+Reload nginx:
+.. code-block:: bash
+
+   systemctl reload nginx.service
 
 
 Install and set up the collector (powa-collector)
 ****************************************************
+
+This step is to be done on server named powa.
 
 .. code-block:: bash
 
    apt install powa-collector
 
 
-Install and set up a production PostgreSQL instance
-***************************************************
+Install and set up a PostgreSQL instance
+****************************************
 
+This step is to be done on server pgsrv1
+
+Add another PostgreSQL instance
+*******************************
+
+This step is to be done on server pgsrv2
 
 
