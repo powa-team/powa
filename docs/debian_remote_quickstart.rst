@@ -286,6 +286,7 @@ As a final step, get back on `powasrv`, register the instance:
                                                 extensions => '{pg_stat_kcache,pg_qualstats}');"
 
 And finally, reload the collector:
+
 .. code-block:: bash
 
    systemctl reload powa-collector
