@@ -28,7 +28,7 @@ Architecture
 ************
 
 As the goal of this document is to present how to set up PoWA in remote mode with
-multiple PostgreSQL servers monitored, here is the topology of our network :
+multiple PostgreSQL servers monitored, here is the topology of our network:
   * powasrv, PoWA repository and Web Server for the UI
   * pgsrv1, PostgreSQL database server #1
 
