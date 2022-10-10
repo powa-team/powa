@@ -10,8 +10,10 @@ Quickstart
   <https://powa.readthedocs.io/en/rel_1_stable/>`_
 
 The following describes the installation of the two modules of PoWA:
-  * powa-archivist with the PGDG packages (Red Hat/CentOS 6/7, Debian) or from the sources
-  * powa-web from the PGDG packages (Red Hat/CentOS 7) or with python pip
+  * powa-archivist with the PGDG packages (Red Hat/Rocky Linux,
+    Debian/Ubuntu) or from the sources
+  * powa-web from the PGDG packages (Red Hat/CentOS/Rocky Linux, Debian/Ubuntu)
+    or with python pip
 
 .. note::
 
@@ -21,7 +23,7 @@ The following describes the installation of the two modules of PoWA:
     see the differences in such setups.
 
 
-Install PoWA from packages (Red Hat/CentOS/Debian)
+Install PoWA from packages (Red Hat/Rocky Linux/Debian/Ubuntu)
 **************************************************
 
 Prerequisites
@@ -43,31 +45,46 @@ PoWA must be installed on the PostgreSQL instance that you are monitoring.
 
 We suppose that you are using the packages from the PostgreSQL Development
 Group (https://yum.postgresql.org/ or https://apt.postgresql.org/). For example
-for PostgreSQL 9.6 on CentOS 7 a cluster is installed with the following
-commands:
+for PostgreSQL 14 on Rocky Linux 8 a cluster is installed with the following
+commands, following `the official
+instructions <https://www.postgresql.org/download/linux/redhat/>`_):
 
 .. code-block:: bash
 
-    yum install https://download.postgresql.org/pub/repos/yum/9.6/redhat/rhel-7-x86_64/pgdg-centos96-9.6-3.noarch.rpm
-    yum install postgresql96 postgresql96-server
-    /usr/pgsql-9.6/bin/postgresql96-setup initdb
-    systemctl start postgresql-9.6
+    # Install the repository RPM:
+    sudo dnf install -y https://download.postgresql.org/pub/repos/yum/reporpms/EL-8-x86_64/pgdg-redhat-repo-latest.noarch.rpm
+
+    # Disable the built-in PostgreSQL module:
+    sudo dnf -qy module disable postgresql
+
+    # Install PostgreSQL:
+    sudo dnf install -y postgresql14-server
+
+    # Optionally initialize the database and enable automatic start:
+    sudo /usr/pgsql-14/bin/postgresql-14-setup initdb
+    sudo systemctl enable postgresql-14
+    sudo systemctl start postgresql-14
+
 
 You will also need the PostgreSQL contrib package to provide the
 `pg_stat_statements` extension:
 
 .. code-block:: bash
 
-    yum install postgresql96-contrib
+    sudo dnf install postgresql14-contrib
 
-On Debian, that would be:
+On `Debian / Ubuntu <https://wiki.postgresql.org/wiki/Apt>_`, that would be:
 
 .. code-block:: bash
 
-   apt-get install postgresql-9.6 postgresql-client-9.6 postgresql-contrib-9.6
+    sudo apt install curl ca-certificates gnupg
+    curl https://www.postgresql.org/media/keys/ACCC4CF8.asc | gpg --dearmor | sudo tee /etc/apt/trusted.gpg.d/apt.postgresql.org.gpg >/dev/null
+    sudo sh -c 'echo "deb http://apt.postgresql.org/pub/repos/apt $(lsb_release -cs)-pgdg main" > /etc/apt/sources.list.d/pgdg.list'
+    sudo apt update
+    sudo apt install postgresql-14 postgresql-client-14 postgresql-contrib-14
 
-In these examples and the following ones, replace 9.6 or 96 according to your
-version (11, 10, 9.5...).
+In these examples and the following ones, replace 14 according to your version
+(13, 10, 9.5...).
 
 
 Installation of the PostgreSQL extensions
@@ -75,17 +92,17 @@ Installation of the PostgreSQL extensions
 
 You can simply install the packages provided by the PGDG
 repository according to your PostgreSQL version. For example on
-Red Hat/CentOS for PostgreSQL 9.6:
+Red Hat/Rocky Linux for PostgreSQL 14:
 
 .. code-block:: bash
 
-    yum install powa_96 pg_qualstats96 pg_stat_kcache96 hypopg_96
+    sudo dnf install powa_14 pg_qualstats_14 pg_stat_kcache_14 hypopg_14
 
 On Debian, this will be:
 
 .. code-block:: bash
 
-   apt-get install postgresql-9.6-powa postgresql-9.6-pg-qualstats postgresql-9.6-pg-stat-kcache postgresql-9.6-hypopg
+   apt-get install postgresql-14-powa postgresql-14-pg-qualstats postgresql-14-pg-stat-kcache postgresql-14-hypopg
 
 On other systems, or to test newer unpackaged version,
 you will have to compile some extensions manually :ref:`as described in
@@ -93,7 +110,7 @@ the next section<powa-archivist-from-the-sources>`:
 
 .. code-block:: bash
 
-   apt-get install postgresql-9.6-powa
+   apt-get install postgresql-14-powa
 
 
 Once all extensions are installed or compiled, add the required modules to
@@ -108,23 +125,23 @@ Once all extensions are installed or compiled, add the required modules to
     If you also installed the pg_wait_sampling extension, don't forget to add
     it to ``shared_preload_libraries`` too.
 
-Now restart PostgreSQL. Under RHEL/CentOS 6 (as root):
+Now restart PostgreSQL. Under RHEL/Rocky Linux (as root):
 
 .. code-block:: bash
 
-    /etc/init.d/postgresql-9.6 restart
+    /etc/init.d/postgresql-14 restart
 
-Under RHEL/CentOS 7:
+Under RHEL/Rocky Linux:
 
 .. code-block:: bash
 
-    systemctl restart postgresql-9.6
+    systemctl restart postgresql-14
 
 On Debian:
 
 .. code-block:: bash
 
-    pg_ctlcluster 9.6 main restart
+    pg_ctlcluster 14 main restart
 
 Log in to your PostgreSQL as a superuser and create a `powa` database:
 
@@ -174,33 +191,30 @@ These default settings can be easily changed afterwards.
 Install the Web UI
 ------------------
 
-The RPM packages work for now only on Red Hat/CentOS 7. For Red Hat/CentOS 6 or
-Debian, see :ref:`the installation through pip<powa-web-from-pip>` or :ref:`the
-full manual installation guide<powa-web-manual-installation>`.
+The RPM packages should work for currently supported Red Hat/Rocky Linux and
+Debian / Ubuntu. For unsupported platforms, see :ref:`the installation through
+pip<powa-web-from-pip>` or :ref:`the full manual installation
+guide<powa-web-manual-installation>`.
 
 You can install the web client on any server you like. The only requirement is
 that the web client can connect to the previously set up PostgreSQL cluster.
 
 If you're setting up PoWA on another server, you have to install the PGDG repo
-package again. This is required to install the `powa_96-web` package and some
+package again. This is required to install the `powa_14-web` package and some
 dependencies.
 
-Again, for example for PostgreSQL 9.6 on CentOS 7:
+Again, for example for PostgreSQL 14 on Rocky Linux 8, install the
+`powa_14-web` RPM package with its dependencies using:
 
 .. code-block:: bash
 
-    yum install https://download.postgresql.org/pub/repos/yum/9.6/redhat/rhel-7-x86_64/pgdg-centos96-9.6-3.noarch.rpm
+    sudo dnf install powa_14-web
 
-.. useless until a solution for installing rpms on rh6 is found
-   For RHEL/CentOS 6, you may need to install the EPEL repository too.
-   code-block:: bash
-    yum install https://dl.fedoraproject.org/pub/epel/epel-release-latest-6.noarch.rpm
-
-Install the `powa_96-web` RPM package with its dependencies:
+And on Debian / Ubuntu:
 
 .. code-block:: bash
 
-    yum install powa_96-web
+    sudo apt install powa-web
 
 Create the `/etc/powa-web.conf` config-file to tell the UI how to connect to
 your freshly installed PoWA database. Of course, change the given cookie to
@@ -252,17 +266,17 @@ note that only the following modules are required:
   * btree_gist
   * pg_stat_statements
 
-On Red Hat/CentOS:
+On Red Hat/Rocky Linux:
 
 .. code-block:: bash
 
-  yum install postgresql96-devel postgresql96-contrib
+  sudo dng install postgresql14-devel postgresql14-contrib
 
-On Debian:
+On Debian/Ubuntu:
 
 .. code-block:: bash
 
-  apt-get install postgresql-server-dev-9.6 postgresql-contrib-9.6
+  apt-get install postgresql-server-dev-14 postgresql-contrib-14
 
 Installation
 ------------
@@ -357,13 +371,13 @@ Init scripts:
 
 .. code-block:: bash
 
-    /etc/init.d/postgresql-9.6 restart
+    /etc/init.d/postgresql-14 restart
 
 Debian pg_ctlcluster wrapper:
 
 .. code-block:: bash
 
-    pg_ctlcluster 9.6 main restart
+    pg_ctlcluster 14 main restart
 
 Systemd:
 
@@ -407,7 +421,7 @@ Debian:
 
   sudo apt-get install python-pip python-dev
 
-Red Hat/CentOS:
+Red Hat/Rocky Linux:
 
 .. code-block:: bash
 
