@@ -19,20 +19,58 @@ Prerequisites
 
 * PostgreSQL >= 9.4
 * PostgreSQL contrib modules (pg_stat_statements and btree_gist)
-* PostgreSQL server headers
+* PostgreSQL server headers (if compiling from sources)
 
-On Debian, the PostgreSQL server headers are installed via the
-``postgresql-server-dev-X.Y`` package:
+Installation
+------------
+
+The recommended way to install PoWA-archivist is to use the packaged version
+available in the PGDG repositories, which available for GNU/Linux distributions
+based on Debian/Ubuntu or RHEL/Rocky/Fedora.  If you're using a distribution
+where no PGDG repository or prepackaged version is available, we document
+installation from source code.
+
+Installation from PGDG repository
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+On Debian/Ubuntu, please refer to the `APT PGDG repository documentation
+<https://apt.postgresql.org>` for the initial setup (which should already be
+done if you have PostgreSQL installed), and simply install
+``postgresql-XY-powa``.  For instance, if you're using PostgreSQL 15:
 
 .. code-block:: bash
 
-  apt-get install postgresql-server-dev-9.4 postgresql-contrib-9.4
+  sudo apt-get install postgresql-15-powa
+
+On RHEL/Rock/Fedora, please refer to the `YUM PGDG repository documentation
+<https://yum.postgresql.org>` for the iniial setup (which should already be
+done if you have PostgreSQL installed), and simply install
+``powa_XY``.  For instance, if you're using PostgreSQL 15:
+
+.. code-block:: bash
+
+  sudo dnf install powa_15
+
+.. note::
+
+    Package names for older PostgreSQL version may vary and not contain an
+    ``_`` between the package name and the PostgreSQL major version.
+
+Installation from sources
+^^^^^^^^^^^^^^^^^^^^^^^^^
+
+On Debian, the PostgreSQL server headers are installed via the
+``postgresql-server-dev-XY`` package:
+
+.. code-block:: bash
+
+  sudo apt-get install postgresql-server-dev-15 postgresql-contrib-15
 
 On RPM-based distros:
 
 .. code-block:: bash
 
-  yum install postgresql94-devel postgresql94-contrib
+  sudo dnf install postgresql15-devel postgresql15-contrib
 
 You also need a C compiler and other standard development tools.
 
@@ -47,10 +85,6 @@ On RPM-based distros, the "Development Tools" can be used:
 .. code-block:: bash
 
   yum groupinstall "Development Tools"
-
-Installation
-------------
-
 
 Grab the latest release, and install it:
 
@@ -68,18 +102,26 @@ Compile and install it:
   make
   sudo make install
 
+.. note::
+
+    Make sure that ``sudo`` refers to the same PostgreSQL headers.  Using
+    ``pg_config`` and ``sudo pg_config`` should produce the same output.
+
 It should output something like the following :
 
 .. code-block:: bash
 
-  /bin/mkdir -p '/usr/share/postgresql-9.4/extension'
-  /bin/mkdir -p '/usr/share/postgresql-9.4/extension'
-  /bin/mkdir -p '/usr/lib64/postgresql-9.4/lib64'
-  /bin/mkdir -p '/usr/share/doc/postgresql-9.4/extension'
-  /usr/bin/install -c -m 644 powa.control '/usr/share/postgresql-9.4/extension/'
-  /usr/bin/install -c -m 644 powa--2.0.sql '/usr/share/postgresql-9.4/extension/'
-  /usr/bin/install -c -m 644 README.md '/usr/share/doc/postgresql-9.4/extension/'
-  /usr/bin/install -c -m 755  powa.so '/usr/lib64/postgresql-9.4/lib64/'
+  /bin/mkdir -p '/usr/share/postgresql-15/extension'
+  /bin/mkdir -p '/usr/share/postgresql-15/extension'
+  /bin/mkdir -p '/usr/lib64/postgresql-15/lib64'
+  /bin/mkdir -p '/usr/share/doc/postgresql-15/extension'
+  /usr/bin/install -c -m 644 powa.control '/usr/share/postgresql-15/extension/'
+  /usr/bin/install -c -m 644 powa--2.0.sql '/usr/share/postgresql-15/extension/'
+  /usr/bin/install -c -m 644 README.md '/usr/share/doc/postgresql-15/extension/'
+  /usr/bin/install -c -m 755  powa.so '/usr/lib64/postgresql-15/lib64/'
+
+PostgreSQL installation
+-----------------------
 
 Create the PoWA database and create the required extensions, with the following
 statements:
@@ -96,7 +138,7 @@ Example:
 .. code-block:: bash
 
   bash-4.1$ psql
-  psql (9.3.5)
+  psql (15.2)
   Type "help" for help.
   postgres=# create database powa;
   CREATE DATABASE
