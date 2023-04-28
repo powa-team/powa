@@ -45,6 +45,13 @@ Therefore, for each postgres roles using powa, you also need to:
 
 If you don't, some useful parts of the UI won't work as intended.
 
+TLS and default HTTP/HTTPS ports
+--------------------------------
+
+As powa-web is just a python script, it's probably better not to run it as root. This means it won't be able to bind to the default HTTP port.
+
+The most secure way of doing is putting a reverse proxy, like nginx, in front of it. You'll also get the possibility of using an SSL certificate.
+
 PoWA-archivist & PoWA-collector in remote mode
 **********************************************
 
