@@ -185,6 +185,16 @@ port (int):
 address (str):
   The IP address on which the UI will be available (default 0.0.0.0)
 
+certfile (str):
+  Path to certificate file, to allow HTTPS traffic (keyfile is also required)
+
+keyfile (str)/
+  Path to certificate private key file, to allow HTTPS traffic (certfile is
+  also required)
+
+url_prefix (str):
+  Custom URL prefix the UI should be available on
+
 See also:
 
 .. toctree::
