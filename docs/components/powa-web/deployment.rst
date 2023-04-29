@@ -65,6 +65,11 @@ If you just need HTTP, just change listen to 0.0.0.0:80, and remove ssl. Somethi
 Apache
 ------
 
+.. note::
+
+    The wsgi compatibility has been removed from tornado 6.1.0 and is not a
+    recommended way to deploy powa-web anymore.
+
 PoWA can also easily be deployed using Apache mod_wsgi module.
 
 In your apache configuration file, you should:
