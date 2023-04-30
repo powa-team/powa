@@ -2,16 +2,24 @@ Deployment Options
 ==================
 
 
-PoWA can be deployed easily using NGINX or Apache
+PoWA can be deployed easily using multiple methods.
 
-First you have to install and configure Powa like in the `quickstart` section.
-Check that the powa-web executable works before proceeding.
+First you have to install and configure PoWA and `powa-web` like in the
+`quickstart` section.  Check that the powa-web executable works before
+proceeding.
+
+Powa-web script
+---------------
+
+The easiest option is to rely only on the provided `powa-web` script.  You can
+configure it to serve HTTPS traffic, however it's not recommended to expose it
+directly but instead configure a reverse proxy like NGINX.
 
 NGINX
 -----
 
-You can use NGINX as a reverse proxy to PoWA. It makes it possible to bind it
-to system ports (lower than 1024), and add HTTPS.
+You can use NGINX as a reverse proxy to `powa-web`. It makes it possible to
+bind it to system ports (lower than 1024), and add HTTPS.
 
 Just add a new site to your configuration. Depending on your distribution, it will be
 somewhere like /etc/nginx/sites (RedHat derivatives), /etc/nginx/sites-available
@@ -60,7 +68,6 @@ If you just need HTTP, just change listen to 0.0.0.0:80, and remove ssl. Somethi
         proxy_pass http://127.0.0.1:8888;
       }
     }
-
 
 Apache
 ------

@@ -54,9 +54,13 @@ If you don't, some useful parts of the UI won't work as intended.
 TLS and default HTTP/HTTPS ports
 --------------------------------
 
-As powa-web is just a python script, it's probably better not to run it as root. This means it won't be able to bind to the default HTTP port.
+As powa-web is just a python script, it's probably better not to run it as
+root. This means it won't be able to bind to the default HTTP (or HTTPS) port.
 
-The most secure way of doing is putting a reverse proxy, like nginx, in front of it. You'll also get the possibility of using an SSL certificate.
+The most secure way of doing is putting a reverse proxy, like nginx, in front
+of it. You'll also get the possibility of using an SSL certificate (which can
+be also done using powa-web script, but is not recommended due to the same
+security concerns).
 
 PoWA-archivist & PoWA-collector in remote mode
 **********************************************
