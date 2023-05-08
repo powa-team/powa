@@ -99,10 +99,11 @@ pg_wait_sampling.profile_period:
 
 pg_wait_sampling.profile_pid:
   Defaults to ``true``.
-  Whether profile should be per pid.  **Should be set to true for PoWA usage**.
+  Whether profile should be per pid.  **Should be set to false for PoWA usage**.
+  true will work, but consume resources needlessly.
 
 pg_wait_sampling.profile_queries:
-  Defaults to ``false``.
+  Defaults to ``true``.
   Whether profile should be per normalized query, as provided by
   :ref:`pg_stat_statements_doc` extension.  **Should be set to true for PoWA
   usage**.
