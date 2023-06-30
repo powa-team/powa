@@ -183,3 +183,20 @@ PostgreSQL should then be restarted.
     If you're setting up a repository database for a remote server, you can
     also entirely skip the :ref:`pg_stat_statements_doc` configuration and the
     restart.
+
+Major PostgreSQL Upgrade
+------------------------
+
+.. warning::
+
+    There is a known issue with all PostgreSQL versions when using pg_upgrade
+    on a instance having custom background workers, like PoWA in local setup
+    mode: PostgreSQL doesn't prevent the background workers from doing their
+    usual activity during pg_upgrade.  It means that if the background worker
+    performs some write when pg_upgrade expects that no write would happen, the
+    resulting cluster can be corrupted.  It's unfortunately not something that
+    can be fixed from PoWA itself.
+
+    If you want to perform a pg_upgrade of any instance having PoWA setup in
+    local mode, you need to disable it before doing the pg_upgrade, and
+    re-enable it once the upgrade is finished.
