@@ -47,7 +47,7 @@ You'll need the following dependencies:
 
     * `python 2.6, 2.7 or > 3 <https://www.python.org/>`_
     * `psycopg2 <https://www.psycopg.org/>`_
-    * `sqlalchemy > 0.9.8 <https://www.sqlalchemy.org/>`_
+    * `sqlalchemy > 0.9.8 and <= 1.4 <https://www.sqlalchemy.org/>`_
     * `tornado >= 2.0 <https://www.tornadoweb.org/>`_
 
 .. admonition:: debian
