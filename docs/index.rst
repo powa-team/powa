@@ -54,11 +54,11 @@ information.
 Main components
 ***************
 
-* **PoWA-archivist** is the PostgreSQL extension, collecting statistics.
-* **PoWA-collector** is the daemon that gather performance metrics from remote
+* :ref:`powa_archivist` is the PostgreSQL extension, collecting statistics.
+* :ref:`powa_collector` is the daemon that gather performance metrics from remote
   PostgreSQL instances (optional) on a dedicated repository server.
-* **PoWA-web** is the graphical user interface to powa-collected metrics.
-* **Stat extensions** are the actual source of data.
+* :ref:`powa_web` is the graphical user interface to powa-collected metrics.
+* the :ref:`stat_extensions` are the actual source of data.
 * **PoWA** is the whole project.
 
 You should first take a look at the :ref:`quickstart` guide.
