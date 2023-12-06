@@ -31,6 +31,8 @@ This includes support for various **stat extensions**:
 * :ref:`pg_qualstats`, providing data about predicates, or where clauses
 * :ref:`pg_stat_kcache_doc`, providing data about operating-system level cache
 * :ref:`pg_wait_sampling_doc`, providing data about wait events
+* :ref:`pg_track_settings_doc`, providing data about configuration changes and
+  server restarts
 
 It supports the following extension:
 
