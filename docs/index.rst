@@ -20,13 +20,21 @@ PostgreSQL versions** (down to 9.4) allowing to collect, aggregate and purge
 statistics on multiple PostgreSQL instances from various
 :ref:`stat_extensions`.
 
-Depending on your needs, you can either use the provided `background worker`_
-(requires a PostgreSQL restart, and more suited for single-instance setups), or
-the provided :ref:`powa_collector` daemon (does not require a PostgreSQL
-restart, can gather performance metrics from multiple instances, including
-standby).
+Depending on your needs, you can choose different approach to setup powa.
 
-This includes support for various **stat extensions**:
+For most people, the preferred approach is to use the provided
+:ref:`powa_collector` daemon to collect the metrics from one or multiple
+**remote** servers, and store them on a single (and usually dedicated)
+repository server.  This is called the "remote mode",  It does not require any
+PostgreSQL restart, and can gather performance metrics from multiple instances -
+including standby server.
+
+The other approach is called the "local mode".  It's a self-contained solution
+that relies on a provided and optional `background worker`_, which requires a
+PostgreSQL restart to enable it, and more suited for a single-instance setup
+only.
+
+In both cases, PoWA will include support for various **stat extensions**:
 
 * :ref:`pg_stat_statements_doc`, providing data about queries being executed
 * :ref:`pg_qualstats`, providing data about predicates, or where clauses
@@ -35,7 +43,7 @@ This includes support for various **stat extensions**:
 * :ref:`pg_track_settings_doc`, providing data about configuration changes and
   server restarts
 
-It supports the following extension:
+It also supports the following extension:
 
 * :ref:`hypopg_doc`, allowing you to create hypothetical indexes and test their
   usefulness without creating the real index
