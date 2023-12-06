@@ -15,9 +15,10 @@
 
   Thanks to `Adrien Nayrat <https://blog.anayrat.info>`_ for providing it.
 
-PoWA (PostgreSQL Workload Analyzer) is a performance tool for **PostgreSQL 9.4
-and newer** allowing to collect, aggregate and purge statistics on multiple
-PostgreSQL instances from various :ref:`stat_extensions`.
+PoWA (PostgreSQL Workload Analyzer) is a performance tool compatible with **all
+PostgreSQL versions** (down to 9.4) allowing to collect, aggregate and purge
+statistics on multiple PostgreSQL instances from various
+:ref:`stat_extensions`.
 
 Depending on your needs, you can either use the provided `background worker`_
 (requires a PostgreSQL restart, and more suited for single-instance setups), or
