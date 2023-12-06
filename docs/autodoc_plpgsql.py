@@ -2,7 +2,7 @@ from sphinx.ext.autodoc import Documenter
 from sphinx.util.console import bold
 from sphinxcontrib.domaintools import custom_domain, GenericObject
 from sphinx.util.docfields import Field, GroupedField, TypedField
-from sphinx.locale import l_, _
+from sphinx.locale import _ as l_, _
 from sphinx import addnodes
 from sphinx.util import ws_re
 
