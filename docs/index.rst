@@ -61,7 +61,9 @@ Main components
 * the :ref:`stat_extensions` are the actual source of data.
 * **PoWA** is the whole project.
 
-You should first take a look at the :ref:`quickstart` guide.
+You should first take a look at the :ref:`quickstart` guide. If you're more interested
+in setting up PoWA in remote mode, take a look at the :ref:`debian_remote_quickstart`
+guide.
 
 
 .. toctree::
