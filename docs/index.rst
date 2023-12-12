@@ -25,9 +25,9 @@ Depending on your needs, you can choose different approach to setup powa.
 For most people, the preferred approach is to use the provided
 :ref:`powa_collector` daemon to collect the metrics from one or multiple
 **remote** servers, and store them on a single (and usually dedicated)
-repository server.  This is called the "remote mode",  It does not require any
-PostgreSQL restart, and can gather performance metrics from multiple instances -
-including standby server.
+**repository** server.  This is called the "remote mode",  It does not require
+any PostgreSQL restart, and can gather performance metrics from multiple
+instances - including standby server.
 
 The other approach is called the "local mode".  It's a self-contained solution
 that relies on a provided and optional `background worker`_, which requires a
@@ -50,6 +50,14 @@ It also supports the following extension:
 
 Additionally, the PoWA User Interface allows you to make the most of this
 information.
+
+.. note::
+
+   **pg_stat_statements** is the main extension and is the basis for all the
+   reports.  It's the only extension that's not optional.  PoWA also relies on
+   the metrics being monotonic, so if you reset the metrics regularly (by
+   calling `pg_stat_statements_rest()` explicitly or using a tool that calls
+   this function), the various reports will be nonsensical.
 
 Main components
 ***************

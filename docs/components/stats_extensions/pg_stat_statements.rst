@@ -16,6 +16,12 @@ However the number of distinct statements tracked cannot exceed a certain limit
 The pg_stat_statements_ extension is a key component of the PoWA Suite,
 installing it is **mandatory**.
 
+.. warning::
+
+   PoWA relies on the metrics being monotonic, so if you reset the metrics
+   regularly (by calling `pg_stat_statements_rest()` explicitly or using a tool
+   that calls this function), the various reports will be nonsensical.
+
 Where is it used in powa-web ?
 ******************************
 
