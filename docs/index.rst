@@ -56,7 +56,7 @@ information.
    **pg_stat_statements** is the main extension and is the basis for all the
    reports.  It's the only extension that's not optional.  PoWA also relies on
    the metrics being monotonic, so if you reset the metrics regularly (by
-   calling `pg_stat_statements_rest()` explicitly or using a tool that calls
+   calling `pg_stat_statements_reset()` explicitly or using a tool that calls
    this function), the various reports will be nonsensical.
 
 Main components
