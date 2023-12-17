@@ -17,10 +17,11 @@
 
 PoWA (PostgreSQL Workload Analyzer) is a performance tool compatible with **all
 PostgreSQL versions** (down to 9.4) allowing to collect, aggregate and purge
-statistics on multiple PostgreSQL instances from various
+statistics gathered from multiple PostgreSQL instances from various
 :ref:`stat_extensions`.
 
-Depending on your needs, you can choose different approach to setup powa.
+Depending on your needs, you can choose one of different approaches to setup
+powa.
 
 For most people, the preferred approach is to use the provided
 :ref:`powa_collector` daemon to collect the metrics from one or multiple
@@ -69,7 +70,10 @@ Main components
 * the :ref:`stat_extensions` are the actual source of data.
 * **PoWA** is the whole project.
 
-You should first take a look at the :ref:`quickstart` guide.
+You should first take a look at the :ref:`quickstart` guide, which covers the
+installation and configuration for the "local mode".  You can then look at the
+:ref:`remote_setup` guide, which covers the necessary additional steps for a
+"remote mode" setup.
 
 
 .. toctree::

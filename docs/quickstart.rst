@@ -9,7 +9,7 @@ Quickstart
   want to use PoWA on PostgreSQL < 9.4, please use the `1.x series
   <https://powa.readthedocs.io/en/rel_1_stable/>`_
 
-The following describes the installation of the two modules of PoWA:
+The following describes the installation of the two main modules of PoWA:
   * powa-archivist with the PGDG packages (Red Hat/Rocky Linux,
     Debian/Ubuntu) or from the sources
   * powa-web from the PGDG packages (Red Hat/CentOS/Rocky Linux, Debian/Ubuntu)
@@ -20,7 +20,7 @@ The following describes the installation of the two modules of PoWA:
     This page shows how to configure a **local PoWA setup**.  If you're
     interested in configuring PoWA for **multiple servers**, and/or for
     **standby servers**, please also refer to the :ref:`remote_setup` page to
-    see the differences in such setups.
+    see additional steps for such a remote setup.
 
 
 Install PoWA from packages (Red Hat/Rocky Linux/Debian/Ubuntu)

@@ -3,6 +3,11 @@
 Remote setup
 ============
 
+This page covers the additional steps required to go from a "local setup" (as
+described in the :ref:`quickstart` guide) to a "remote setup", which allows to
+store metrics from multiple servers, possibly physical standby servers,  on a
+single repository server.
+
 Before **version 4**, all the performance data collected were stored locally.
 
 Here's a schema of how architecture looks like with the local mode:
