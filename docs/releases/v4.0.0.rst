@@ -1,0 +1,48 @@
+What's new in PoWA 4.0.0
+=========================
+
+**April, 8, 2020**
+
+New remote mode
+---------------
+
+The new remote mode is the biggest feature introduced in PoWA 4, though there
+have been other improvements.
+
+With this new mode you can now store the metrics from the various datasources
+(pg_stat_statements, pg_stat_kcache and any other) on a different PostgreSQL
+server.  You can therefore use PoWA without provisionning extra disk space on
+your production instances, or spend any other resource for the data
+collection as it's all done on a different server.  Thanks to this mode it's
+also now possible to use PoWA with read-only physical replication standby
+servers.  And finally with this new mode you can also store the PoWA metrics
+from any number of PostgreSQL servers in a single place and access everything
+using the same web interface.
+
+A new dedicated daemon called powa-collector is provided to take retrieve the
+various PoWA metrics from all the instances and store them on the wanted
+server.
+
+A lot of other enhancements
+---------------------------
+
+As for any other new PoWA versions, a lot of other things have been improved.
+
+This versions adds compatibility with the PostgreSQL 13 and with the new
+metrics added in pg_stat_kcache 2.1.0 and pg_qualstats 2.0.0.
+
+The web interface has a new page to show all the remote servers for which PoWA
+is storing data and inspect any of them.  It also adds new widgets for
+pg_track_settings, showing any detected configuration changes or server
+restarts as events on the varioius graphs.  Multiple other graphs have been
+added and all the graphs get in-app metrics documentation, with optional link
+to some documentation when needed.
+
+Documentation
+-------------
+
+* Complete powa-archivist changelog available at
+  https://github.com/powa-team/powa-archivist/blob/master/CHANGELOG.md#400
+* Complete powa-web changelog available at
+  https://github.com/powa-team/powa-web/blob/master/CHANGELOG
+* Complete user documentation available at https://powa.readthedocs.io/
