@@ -2,7 +2,7 @@ Frequently Asked Questions
 ==========================
 
 Can I use PoWA on a standby server, or store the data on an external server?
----------------------------------------------------------------------------
+----------------------------------------------------------------------------
 
 Yes!  Since version 4 of PoWA, it's possible to set up a **remote snapshotting**,
 thus aggregating all the performance data on a dedicated remote PostgreSQL
