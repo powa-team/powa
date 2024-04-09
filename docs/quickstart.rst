@@ -221,16 +221,16 @@ your freshly installed PoWA database. Of course, change the given cookie to
 something from your own. For example to connect to the local instance on
 `localhost`:
 
-.. code-block:: json
+.. code-block::
 
-  servers={
-    'main': {
-      'host': 'localhost',
-      'port': '5432',
-      'database': 'powa'
+    servers={
+      'main': {
+        'host': 'localhost',
+        'port': '5432',
+        'database': 'powa'
+      }
     }
-  }
-  cookie_secret="SUPERSECRET_THAT_YOU_SHOULD_CHANGE"
+    cookie_secret="SUPERSECRET_THAT_YOU_SHOULD_CHANGE"
 
 Don't forget to allow the web server to connect to the PostgreSQL cluster, and
 edit your `pg_hba.conf` accordingly.
@@ -444,19 +444,19 @@ Then you'll have to configure a config file somewhere, in one of those location:
 * ~/.powa-web.conf
 * ./powa-web.conf
 
-The configuration file is a simple JSON one. Copy the following content to one
-of the above locations and modify it according to your setup:
+The configuration file is a simple tornado config file. Copy the following
+content to one of the above locations and modify it according to your setup:
 
-.. code-block:: json
+.. code-block::
 
-  servers={
-    'main': {
-      'host': 'localhost',
-      'port': '5432',
-      'database': 'powa'
+    servers={
+      'main': {
+        'host': 'localhost',
+        'port': '5432',
+        'database': 'powa'
+      }
     }
-  }
-  cookie_secret="SUPERSECRET_THAT_YOU_SHOULD_CHANGE"
+    cookie_secret="SUPERSECRET_THAT_YOU_SHOULD_CHANGE"
 
 The servers key define a list of server available for connection by PoWA-web.
 You should ensure that the pg_hba.conf file is properly configured.
