@@ -20,8 +20,8 @@ PostgreSQL by using the package for psycopg2:
 
 .. code-block:: bash
 
-  yum install python-pip python-psycopg2
-  pip install powa-collector
+    yum install python-pip python-psycopg2
+    pip install powa-collector
 
 
 Install on Red Hat / CentOS / Fedora / Rocky Linux
@@ -35,7 +35,8 @@ https://www.postgresql.org/download/linux/redhat/
 Then install the package with:
 
 .. code-block:: bash
-  yum install powa_collector
+
+    yum install powa_collector
 
 
 Manual install
