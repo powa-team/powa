@@ -24,7 +24,7 @@ The following describes the installation of the two main modules of PoWA:
 
 
 Install PoWA from packages (Red Hat/Rocky Linux/Debian/Ubuntu)
-**************************************************
+**************************************************************
 
 Prerequisites
 -------------
