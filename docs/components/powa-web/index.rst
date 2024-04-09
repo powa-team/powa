@@ -20,8 +20,8 @@ by using the package for psycopg2:
 
 .. code-block:: bash
 
-  yum install python-pip python-psycopg2
-  pip install powa-web
+    yum install python-pip python-psycopg2
+    pip install powa-web
 
 
 Install on Red Hat / CentOS / Fedora / Rocky Linux
@@ -35,6 +35,7 @@ https://www.postgresql.org/download/linux/redhat/
 Then install the package with:
 
 .. code-block:: bash
+
     yum install powa_13-web
 
 Replace `13` by the major version number of the PostgreSQL instance.
