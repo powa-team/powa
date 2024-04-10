@@ -151,7 +151,7 @@ Log in to your PostgreSQL as a superuser and create a `powa` database:
 
 Create the required extensions in this new database:
 
-.. code-block:: sql
+.. code-block:: psql
 
     \c powa
     CREATE EXTENSION pg_stat_statements;
@@ -291,7 +291,7 @@ advantage of.
 
 First, the install_all.sql file:
 
-.. code-block:: sql
+.. code-block:: psql
 
     CREATE DATABASE IF NOT EXISTS powa;
     \c powa
