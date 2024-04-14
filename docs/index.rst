@@ -79,6 +79,7 @@ installation and configuration for the "local mode".  You can then look at the
 .. toctree::
    :maxdepth: 1
 
+   architecture
    quickstart
    remote_setup
    FAQ

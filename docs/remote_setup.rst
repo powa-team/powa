@@ -3,31 +3,27 @@
 Remote setup
 ============
 
-This page covers the additional steps required to go from a "local setup" (as
-described in the :ref:`quickstart` guide) to a "remote setup", which allows to
-store metrics from multiple servers, possibly physical standby servers,  on a
-single repository server.
+This page covers the additional steps required to go from a "local mode" setup
+(as described in the :ref:`quickstart` guide) to a "remote mode" setup, which
+allows to store metrics from multiple servers, possibly physical standby
+servers,  on a single repository server.
 
-Before **version 4**, all the performance data collected were stored locally.
+If you haven't done so already, please refer to the :ref:`architecture` page
+for more detail on the "local mode" and "remote mode".
 
-Here's a schema of how architecture looks like with the local mode:
-
-.. thumbnail:: /images/powa_4_local.svg
-
-This had two majors drawbacks:
-
-  - it adds a non negligeable performance cost, both when collecting data and
-    when using the user interface
-  - it's not possible to collect data on hot-standby servers
-
-With version 4, it's now possible to store the data of one or multiples servers
-on an external PostgreSQL database.
-
-Here's a schema for this new architecture:
+For conveniency, here's the schema for this "remote mode" architecture:
 
 .. thumbnail:: /images/powa_4_remote.svg
 
 This chapter describes how to configure such remote mode.
+
+Overview of the changes
+***********************
+
+Basically, with the remote mode you now setup the new **powa-collector** to
+perform the snapshots and store them on a new, usually dedicated, repository
+postgres instance rather than using a background worker that saves the changes
+locally.
 
 What did not change
 *******************
