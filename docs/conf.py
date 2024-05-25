@@ -34,7 +34,6 @@ sys.path.insert(0, ".")
 extensions = [
     'sphinx.ext.intersphinx',
     'sphinx.ext.todo',
-    'autodoc_plpgsql'
 ]
 
 image_config = {

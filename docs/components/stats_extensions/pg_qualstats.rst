@@ -105,11 +105,3 @@ pg_qualstats.sample_rate:
   query, 0 basically deactivates the feature, and -1 is automatically sized to
   ``1/ MAX_CONNECTIONS``. For example, a sample_rate of ``0.1`` would mean one
   of out ten queries should be sampled.
-
-SQL Objects
-***********
-
-The extension defines the following objects:
-
-.. autoplpgsql:: directives
-  :src: https://raw.githubusercontent.com/powa-team/pg_qualstats/master/pg_qualstats--1.0.7.sql
