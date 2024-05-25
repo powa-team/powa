@@ -31,7 +31,9 @@ so you'll see it used in almost every screen of the tool.
 The most useful feature is probably the "Query details" chart which show
 advanced statistics for each SQL query.
 
-.. thumbnail:: /images/pg_stat_statements.png
+.. image:: /images/pg_stat_statements.png
+   :width: 800
+   :alt: pg_stat_statements advanced statistics for a query
 
 
 Installation
@@ -73,7 +75,9 @@ https://www.postgresql.org/docs/current/pgstatstatements.html
 Examples
 ********
 
-.. thumbnail:: /images/example_pgss.gif
+.. image:: /images/example_pgss.gif
+   :width: 800
+   :alt: pg_stat_statements manual usage example
 
 See Also
 ********

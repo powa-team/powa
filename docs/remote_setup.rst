@@ -13,7 +13,9 @@ for more detail on the "local mode" and "remote mode".
 
 For conveniency, here's the schema for this "remote mode" architecture:
 
-.. thumbnail:: /images/powa_4_remote.svg
+.. image:: /images/powa_4_remote.svg
+   :width: 800
+   :alt: Remote mode diagram
 
 This chapter describes how to configure such remote mode.
 

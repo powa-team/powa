@@ -34,7 +34,6 @@ sys.path.insert(0, ".")
 extensions = [
     'sphinx.ext.intersphinx',
     'sphinx.ext.todo',
-    'sphinxcontrib.images',
     'autodoc_plpgsql'
 ]
 

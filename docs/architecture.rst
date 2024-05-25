@@ -22,7 +22,9 @@ for more information.
 
 Here's a schema of how architecture looks like with the local mode:
 
-.. thumbnail:: /images/powa_4_local.svg
+.. image:: /images/powa_4_local.svg
+   :width: 800
+   :alt: Local mode diagram
 
 This can be a bit simpler to setupm but it has two majors drawbacks:
 
@@ -42,7 +44,9 @@ Remote mode
 
 Here's a schema for the remote mode architecture:
 
-.. thumbnail:: /images/powa_4_remote.svg
+.. image:: /images/powa_4_remote.svg
+   :width: 800
+   :alt: Remote mode diagram
 
 As you can see, all metrics and performance data are now stored on an external
 server, usually a dedicated serverm that we call the **repository server**.

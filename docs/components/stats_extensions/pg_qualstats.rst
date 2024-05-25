@@ -20,7 +20,9 @@ If the extension is available, you should see a "list of quals" table on the
 query page, as well as explain plans for your query and a list of index
 suggestions:
 
-.. thumbnail:: /images/pg_qualstats.png
+.. image:: /images/pg_qualstats.png
+   :width: 800
+   :alt: pg_qualstats example
 
 From this list, you can then go on to the per-qual page.
 

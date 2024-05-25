@@ -22,8 +22,12 @@ Where is it used in powa-web ?
 If the extension is available, you should see "Physical block" and "CPU time"
 graphs on the query page:
 
-.. thumbnail:: /images/pg_stat_kcache_1.png
-.. thumbnail:: /images/pg_stat_kcache_2.png
+.. image:: /images/pg_stat_kcache_1.png
+   :width: 800
+   :alt: pg_stat_kcache physical disk usage example
+.. image:: /images/pg_stat_kcache_2.png
+   :width: 800
+   :alt: pg_stat_kcache CPU time usage example
 
 The **CPU time** metrics indicate the percentage of query runtime spent
 consuming either *user cpu time* or *system cpu time*.
@@ -39,7 +43,9 @@ metrics :
 The rest of the available metrics will be displayed on a dedicated **System
 Resources** graph:
 
-.. thumbnail:: /images/pg_stat_kcache_system_resources.png
+.. image:: /images/pg_stat_kcache_system_resources.png
+   :width: 800
+   :alt: pg_stat_kcache system resources example
 
 Installation
 ************

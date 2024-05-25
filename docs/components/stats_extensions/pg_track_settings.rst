@@ -48,7 +48,9 @@ Details of the changes will be displayed on mouseover.  You can click on any
 event on the timeline to make the event stay displayed, and draw a vertical
 line on the underlying graph.
 
-.. thumbnail:: /images/pg_track_settings.png
+.. image:: /images/pg_track_settings.png
+   :width: 800
+   :alt: pg_track_settings example
 
 
 Installation
