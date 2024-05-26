@@ -300,12 +300,12 @@ First, the install_all.sql file:
     CREATE EXTENSION IF NOT EXISTS pg_stat_kcache;
     CREATE EXTENSION IF NOT EXISTS pg_qualstats;
     CREATE EXTENSION IF NOT EXISTS pg_wait_sampling;
+    CREATE EXTENSION IF NOT EXISTS pg_track_settings;
     CREATE EXTENSION IF NOT EXISTS powa;
 
 And the main build script:
 
 .. parsed-literal::
-
 
   #!/bin/bash
   # This script is meant to install every PostgreSQL extension compatible with
@@ -333,6 +333,13 @@ And the main build script:
   cd ..
   rm pg_wait_sampling-|pg_wait_sampling_release|.tar.gz
   rm pg_wait_sampling-|pg_wait_sampling_release| -rf
+  wget |pg_track_settings_download| -O pg_track_settings-|pg_track_settings_release|.tar.gz
+  tar zxvf pg_track_settings-|pg_track_settings_release|.tar.gz
+  cd pg_track_settings-|pg_track_settings_release|
+  (make && sudo make install)  > /dev/null 2>&1
+  cd ..
+  rm pg_track_settings-|pg_track_settings_release|.tar.gz
+  rm pg_track_settings-|pg_track_settings_release| -rf
   echo ""
   echo "You should add the following line to your postgresql.conf:"
   echo ''
