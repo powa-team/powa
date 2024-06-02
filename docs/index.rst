@@ -89,6 +89,7 @@ installation and configuration for the "local mode".  You can then look at the
    support
    releases
    contributing
+   debugging
 
 .. _pg_stat_statements: https://www.postgresql.org/docs/current/pgstatstatements.html
 .. _pg_qualstats: https://github.com/powa-team/pg_qualstats
