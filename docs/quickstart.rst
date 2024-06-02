@@ -23,19 +23,18 @@ The following describes the installation of the two main modules of PoWA:
     see additional steps for such a remote setup.
 
 
-Install PoWA from packages (Red Hat/Rocky Linux/Debian/Ubuntu)
-**************************************************************
+Install PoWA related packages
+*****************************
 
-Prerequisites
--------------
+Prerequirements
+---------------
 
 PoWA must be installed on the PostgreSQL instance that you are monitoring.
 
 .. note::
 
     All extensions except **hypopg** only need to be installed once, in the
-    **powa** database (or another database configured by the configuration
-    option **powa.database**).
+    dedicated **powa** database (or another database name that you want to use).
 
     hypopg must be installed in every database on which you want to be able to
     get automatic index suggestion, including the powa database if needed.
@@ -43,13 +42,41 @@ PoWA must be installed on the PostgreSQL instance that you are monitoring.
     powa-web must be configured to connect on the database where you
     installed all the extensions.
 
-We suppose that you are using the packages from the PostgreSQL Development
-Group (https://yum.postgresql.org/ or https://apt.postgresql.org/). For example
-for PostgreSQL 14 on Rocky Linux 8 a cluster is installed with the following
-commands, following `the official
-instructions <https://www.postgresql.org/download/linux/redhat/>`_):
+In these examples, you simply need to replace **14** according to your actual
+PostgreSQL major version (13, 10, 9.5...).
 
-.. code-block:: bash
+What should be installed
+------------------------
+
+PoWA is a modular tool and let you choose which datasource(s) (backed by
+extensions) you want to add, depending on your needs.  In the following
+examples we install all the supported extensions.  You can skip any of them if
+you want, as long as you install the mandatory ones, which are:
+
+  - pg_stat_statements
+  - btree_gist
+  - powa-archivist
+
+The PGDG package extension documentation also contain the necessary
+instructions to install and bootstrap a PostgreSQL instance.  If you already
+have one you should skip this part and only use the documentation on how to add
+the additional extensions.
+
+Setup the PGDG repository and install the pacakges
+--------------------------------------------------
+
+We suppose that you are using the packages from the PostgreSQL Development
+Group (https://yum.postgresql.org/ or https://apt.postgresql.org/).
+
+The following examples show how to install a PostgreSQL 14 cluser on Rocky
+Linux 8, following `the official YUM instructions
+<https://www.postgresql.org/download/linux/redhat/>`_, and any Debian / Ubuntu
+server, following `the official APT instructions
+<https://wiki.postgresql.org/wiki/Apt>`_:
+
+.. tabs::
+
+  .. code-tab:: bash RHEL / Rocky
 
     # Install the repository RPM:
     sudo dnf install -y https://download.postgresql.org/pub/repos/yum/reporpms/EL-8-x86_64/pgdg-redhat-repo-latest.noarch.rpm
@@ -65,83 +92,64 @@ instructions <https://www.postgresql.org/download/linux/redhat/>`_):
     sudo systemctl enable postgresql-14
     sudo systemctl start postgresql-14
 
-
-You will also need the PostgreSQL contrib package to provide the
-`pg_stat_statements` extension:
-
-.. code-block:: bash
-
-    sudo dnf install postgresql14-contrib
-
-On `Debian / Ubuntu <https://wiki.postgresql.org/wiki/Apt>_`, that would be:
-
-.. code-block:: bash
+  .. code-tab:: bash Debian / Ubuntu
 
     sudo apt install curl ca-certificates gnupg
     curl https://www.postgresql.org/media/keys/ACCC4CF8.asc | gpg --dearmor | sudo tee /etc/apt/trusted.gpg.d/apt.postgresql.org.gpg >/dev/null
     sudo sh -c 'echo "deb http://apt.postgresql.org/pub/repos/apt $(lsb_release -cs)-pgdg main" > /etc/apt/sources.list.d/pgdg.list'
     sudo apt update
-    sudo apt install postgresql-14 postgresql-client-14 postgresql-contrib-14
+    sudo apt install postgresql-14 postgresql-client-14
 
-In these examples and the following ones, replace 14 according to your version
-(13, 10, 9.5...).
+You will also need the PostgreSQL contrib package to provide the
+**pg_stat_statements** extension:
 
+.. tabs::
 
-Installation of the PostgreSQL extensions
------------------------------------------
+  .. code-tab:: bash RHEL / Rocky
 
-You can simply install the packages provided by the PGDG
-repository according to your PostgreSQL version. For example on
-Red Hat/Rocky Linux for PostgreSQL 14:
+    sudo dnf install postgresql14-contrib
 
-.. code-block:: bash
+  .. code-tab:: bash Debian / Ubuntu
 
-    sudo dnf install powa_14 pg_qualstats_14 pg_stat_kcache_14 hypopg_14
+    sudo apt install postgresql-contrib-14
 
-On Debian, this will be:
+And the various powa extensions:
 
-.. code-block:: bash
+.. tabs::
 
-   apt-get install postgresql-14-powa postgresql-14-pg-qualstats postgresql-14-pg-stat-kcache postgresql-14-hypopg
+  .. code-tab:: bash RHEL / Rocky
 
-On other systems, or to test newer unpackaged version,
-you will have to compile some extensions manually :ref:`as described in
-the next section<powa-archivist-from-the-sources>`:
+    sudo dnf install powa_14 pg_qualstats_14 pg_stat_kcache_14 hypopg_14 pg_wait_sampling_14 pg_track_settings_14
 
-.. code-block:: bash
+  .. code-tab:: bash Debian / Ubuntu
 
-   apt-get install postgresql-14-powa
+   apt-get install postgresql-14-powa postgresql-14-pg-qualstats postgresql-14-pg-stat-kcache postgresql-14-hypopg postgresql-14-pg-wait-sampling postgresql-14-pg-track-settings
 
+On other systems, or to test newer unpackaged version, you will have to compile
+some extensions manually :ref:`as described in the next
+section<powa-archivist-from-the-sources>`:
+
+Configure the PostgreSQL instance
+---------------------------------
 
 Once all extensions are installed or compiled, add the required modules to
 `shared_preload_libraries` in the `postgresql.conf` of your instance:
 
 .. code-block:: ini
 
-    shared_preload_libraries='pg_stat_statements,powa,pg_stat_kcache,pg_qualstats'
+    shared_preload_libraries='pg_stat_statements,powa,pg_stat_kcache,pg_qualstats.pg_wait_sampling'
 
-.. note::
+Now restart PostgreSQL:
 
-    If you also installed the pg_wait_sampling extension, don't forget to add
-    it to ``shared_preload_libraries`` too.
+.. tabs::
 
-Now restart PostgreSQL. Under RHEL/Rocky Linux (as root):
+  .. code-tab:: bash RHEL / Rocky
 
-.. code-block:: bash
+    sudo systemctl restart postgresql-14
 
-    /etc/init.d/postgresql-14 restart
+  .. code-tab:: bash Debian / Ubuntu
 
-Under RHEL/Rocky Linux:
-
-.. code-block:: bash
-
-    systemctl restart postgresql-14
-
-On Debian:
-
-.. code-block:: bash
-
-    pg_ctlcluster 14 main restart
+    sudo pg_ctlcluster 14 main restart
 
 Log in to your PostgreSQL as a superuser and create a `powa` database:
 
@@ -159,11 +167,8 @@ Create the required extensions in this new database:
     CREATE EXTENSION powa;
     CREATE EXTENSION pg_qualstats;
     CREATE EXTENSION pg_stat_kcache;
-
-.. note::
-
-    If you also installed the pg_wait_sampling extension, don't forget to
-    create the extension too.
+    CREATE EXTENSION pg_wait_sampling;
+    CREATE EXTENSION pg_track_settings;
 
 PoWA needs the `hypopg` extension in all databases of the cluster in order to
 check that the suggested indexes are efficient:
@@ -179,6 +184,13 @@ login to the cluster (use your own credentials):
 
     CREATE ROLE powa SUPERUSER LOGIN PASSWORD 'astrongpassword' ;
 
+.. note::
+
+    This command is just an example. We strongly advise you to look at the
+    `authentication documentation
+    <https://www.postgresql.org/docs/current/client-authentication.html>`_
+    and to properly setup this role and the other roles in a secure way.
+
 The Web UI requires you to log in with a PostgreSQL role that has superuser
 privileges as only a superuser can access to the query text in PostgreSQL. PoWA
 follows the same principle.
@@ -191,7 +203,7 @@ These default settings can be easily changed afterwards.
 Install the Web UI
 ------------------
 
-The RPM packages should work for currently supported Red Hat/Rocky Linux and
+The PGDG packages should work for currently supported Red Hat/Rocky Linux and
 Debian / Ubuntu. For unsupported platforms, see :ref:`the installation through
 pip<powa-web-from-pip>` or :ref:`the full manual installation
 guide<powa-web-manual-installation>`.
@@ -206,13 +218,13 @@ dependencies.
 Again, for example for PostgreSQL 14 on Rocky Linux 8, install the
 `powa_14-web` RPM package with its dependencies using:
 
-.. code-block:: bash
+.. tabs::
+
+  .. code-tab:: bash RHEL / Rocky
 
     sudo dnf install powa_14-web
 
-And on Debian / Ubuntu:
-
-.. code-block:: bash
+  .. code-tab:: bash Debian / Ubuntu
 
     sudo apt install powa-web
 
@@ -249,9 +261,16 @@ Use the role created earlier in PostgreSQL to connect to the UI.
 
 .. _powa-archivist-from-the-sources:
 
-Build and install powa-archivist from the sources
-*************************************************
+Compile and install PoWA related extensions from the sources
+************************************************************
 
+.. warning::
+
+  We **strongly** recomment you to follow the previous section and install the
+  various packages from the PGDG repositories.
+  This section is only meant as a documentation of how to compile the various
+  extensions for very specific needs, like testing a current development
+  version, and is **NOT** the recommended way of installation.
 
 Prerequisites
 -------------
@@ -266,17 +285,15 @@ note that only the following modules are required:
   * btree_gist
   * pg_stat_statements
 
-On Red Hat/Rocky Linux:
+.. tabs::
 
-.. code-block:: bash
+  .. code-tab:: bash RHEL / Rocky
 
-  sudo dng install postgresql14-devel postgresql14-contrib
+    sudo dnf install postgresql14-devel postgresql14-contrib
 
-On Debian/Ubuntu:
+  .. code-tab:: bash Debian / Ubuntu
 
-.. code-block:: bash
-
-  apt-get install postgresql-server-dev-14 postgresql-contrib-14
+    sudo apt install postgresql-server-dev-14 postgresql-contrib-14
 
 Installation
 ------------
@@ -374,23 +391,15 @@ https://github.com/hypopg/hypopg/releases.
 And restart your server, according to your distribution's preferred way of doing
 so, for example:
 
-Init scripts:
+.. tabs::
 
-.. code-block:: bash
+  .. code-tab:: bash RHEL / Rocky
 
-    /etc/init.d/postgresql-14 restart
+    sudo systemctl restart postgresql
 
-Debian pg_ctlcluster wrapper:
+  .. code-tab:: bash Debian / Ubuntu
 
-.. code-block:: bash
-
-    pg_ctlcluster 14 main restart
-
-Systemd:
-
-.. code-block:: bash
-
-    systemctl restart postgresql
+    sudo pg_ctlcluster 14 main restart
 
 The last step is to create a database dedicated to the PoWA repository, and
 create every extension in it. The install_all.sql file performs this task:
@@ -419,21 +428,18 @@ Prerequisites
 
 * The Python language, either 2.6, 2.7 or > 3
 * The Python language headers, either 2.6, 2.7 or > 3
-* The pip installer for Python. It is usually packaged as "python-pip", for example:
+* The pip installer for Python. It is usually packaged as **python-pip**, for
+  example:
 
+.. tabs::
 
-Debian:
+  .. code-tab:: bash RHEL / Rocky
 
-.. code-block:: bash
+    sudo dnf install python-pip python-devel
 
-  sudo apt-get install python-pip python-dev
+  .. code-tab:: bash Debian / Ubuntu
 
-Red Hat/Rocky Linux:
-
-.. code-block:: bash
-
-  sudo yum install python-pip python-devel
-
+    sudo apt-get install python-pip python-dev
 
 Installation
 ------------

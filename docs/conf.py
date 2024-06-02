@@ -34,6 +34,7 @@ sys.path.insert(0, ".")
 extensions = [
     'sphinx.ext.intersphinx',
     'sphinx.ext.todo',
+    'sphinx_tabs.tabs',
 ]
 
 image_config = {
