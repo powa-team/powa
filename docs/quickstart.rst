@@ -10,8 +10,8 @@ Quickstart
   <https://powa.readthedocs.io/en/rel_1_stable/>`_
 
 The following describes the installation of the two main modules of PoWA:
-  * powa-archivist with the PGDG packages (Red Hat/Rocky Linux,
-    Debian/Ubuntu) or from the sources
+  * powa-archivist (and all other supported extensions) using the PGDG packages
+    (Red Hat/Rocky Linux, Debian/Ubuntu)
   * powa-web from the PGDG packages (Red Hat/CentOS/Rocky Linux, Debian/Ubuntu)
     or with python pip
 
@@ -125,8 +125,9 @@ And the various powa extensions:
 
    apt-get install postgresql-14-powa postgresql-14-pg-qualstats postgresql-14-pg-stat-kcache postgresql-14-hypopg postgresql-14-pg-wait-sampling postgresql-14-pg-track-settings
 
-On other systems, or to test newer unpackaged version, you will have to compile
-some extensions manually :ref:`as described in the dedicated
+On other systems, or to test newer unpackaged version, you will have to either
+rely on container images or compile the necessary extensions manually.  Both
+approaches are :ref:`described in the dedicated
 section<powa-archivist-from-the-sources>`:
 
 Configure the PostgreSQL instance

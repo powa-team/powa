@@ -8,8 +8,91 @@ components of PoWA.  For instance if you want to contribute a feature, need to
 test a specific bugfix or if you're using a operating system where no packages
 are available.
 
-This section gives a short introduction on how to compile the various
-components from source or rely on the *-git* version of the container images.
+This section gives a short introduction on the various container images:
+
+- `released version of
+  PoWA <#released-versions-for-distro-where-no-packages-are-available>`_
+- `git version of PoWA <#git-versions-of-powa>`_
+- `PoWA development-oriented images <#development-oriented-images>`_
+
+And how to compile the various components from source or rely on the various
+container images that we provide.
+
+Using the container images
+**************************
+
+.. warning::
+
+  We **strongly** recomment you to follow the previous section and install the
+  various packages from the PGDG repositories.
+  This section is only meant as a documentation of the available container
+  images, which are not recommended for production usage.
+
+The `powa-podman <https://github.com/powa-team/powa-podman>`_ repository
+contains various container images (and compose files) that can be used for
+various purposes.  We assume here that you are familiar enough with **podman**
+or any alternative container management tool build the images and deploy them,
+and will only describe the various images provided.
+
+Released versions for distro where no packages are available
+------------------------------------------------------------
+
+The `powa-archivist directory
+<https://github.com/powa-team/powa-podman/tree/master/powa-archivist>`_
+contains a Containerfile per supported major PostgreSQL version.  It contains
+all the extensions (see the :ref:`components` section for the full
+list) supported by PoWA.  Those images can be used as-is for either a
+repository or remote server in case of a :ref:`remote_setup` or a standalone
+installation.
+
+Then a **powa-web** user interface image can also be built using the files
+under the `powa-web directory
+<https://github.com/powa-team/powa-podman/tree/master/powa-web>`_.
+
+Finally, in case of a :ref:`remote_setup`, you will also need to run the
+:ref:`powa_collector` daemon.  A container file is available for that in the
+`powa-collector directory
+<https://github.com/powa-team/powa-podman/tree/master/powa-collector>`_.
+
+Additionally, the `compose directory
+<https://github.com/powa-team/powa-podman/tree/master/compose>`_ contains a few
+compose files that can be used to setup a fully working environment in either
+the **local mode** or the **remote mode** (see the :ref:`architecture page for
+more details page<architecture>`).  Those are only provided as reference and
+are not intended for production use.  Feel free to adapt them to you own need
+instead.
+
+GIT versions of PoWA
+--------------------
+
+The `powa-podman repository
+<https://github.com/powa-team/powa-podman/tree/master>`_ provides 3 directories
+suffixed with **-git**:
+
+- powa-archivist-git
+- powa-web-git
+- powa-collector-git
+
+They provide the same components as the ones described in the previous section,
+but instead of providing a specific version of the underlying tools, they
+provide the current development version as-is.  This can be useful to test a
+bugfix that hasn't been released yet.  The exact version that those images
+provide depends on the time that they were built.  If you want to ensure that
+you get the latest upstream commit, you should build them locally.
+
+Development-oriented images
+---------------------------
+
+Finally, the `dev directory
+<https://github.com/powa-team/powa-podman/tree/master/dev>`_ contain images and
+compose files that are intended to help working on either the **powa-web** or
+the **powa-collector** project without manually setting up a fully working
+environment.  The idea is that the various compose file will setup the
+environment, but using a **bind-mount** of the local version of the
+**powa-web** and **powa-collector** tools, so that any change made to them can
+be tested very easily.  Please refer to the `documentation
+<https://github.com/powa-team/powa-podman/tree/master/dev/README>`_ for more
+details about it.
 
 Compile and install PoWA related extensions from the sources
 ************************************************************
