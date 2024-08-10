@@ -44,9 +44,8 @@ will be filtered by the database currently displayed if the current page is
 displaying a specific database.  This timeline will be displayed on every graph
 of the page, to easily check if this change had any visible impact.
 
-Details of the changes will be displayed on mouseover.  You can click on any
-event on the timeline to make the event stay displayed, and draw a vertical
-line on the underlying graph.
+Details of the changes will be displayed on mouseover, along with a vertical
+line to show exactly when the change happened.
 
 .. image:: /images/pg_track_settings.png
    :width: 800
