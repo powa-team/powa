@@ -1,5 +1,5 @@
 Copyright (c) 2014-2017, DALIBO
-Copyright (c) 2018-2023, The PoWA-team
+Copyright (c) 2018-2024, The PoWA-team
 
 Permission to use, copy, modify, and distribute this software and its
 documentation for any purpose, without fee, and without a written agreement is
