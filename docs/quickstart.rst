@@ -138,7 +138,7 @@ Once all extensions are installed or compiled, add the required modules to
 
 .. code-block:: ini
 
-    shared_preload_libraries='pg_stat_statements,powa,pg_stat_kcache,pg_qualstats.pg_wait_sampling'
+    shared_preload_libraries='pg_stat_statements,powa,pg_stat_kcache,pg_qualstats,pg_wait_sampling'
 
 Now restart PostgreSQL:
 
