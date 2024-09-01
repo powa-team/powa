@@ -58,7 +58,7 @@ Local mode
 ----------
 
 The local mode was the only available mode before PoWA 4.  In this mode, all
-metrics amd performance data are collected locally, on the same postgres
+metrics and performance data are collected locally, on the same postgres
 instance.  It relies on a **background worker** to do collect the metrics.
 Note that enabling the **background worker** requires restarting the instance.
 This **background worker** will then be automatically managed by postgres
@@ -72,9 +72,9 @@ Here's a schema of how architecture looks like with the local mode:
    :width: 800
    :alt: Local mode diagram
 
-This can be a bit simpler to setupm but it has two majors drawbacks:
+This can be a bit simpler to setup, but it has two majors drawbacks:
 
-  - it adds a non negligeable performance cost, both when collecting data and
+  - it adds a non negligible performance cost, both when collecting data and
     when using the user interface
   - it's not possible to collect data on hot-standby read-only servers
 
@@ -95,7 +95,7 @@ Here's a schema for the remote mode architecture:
    :alt: Remote mode diagram
 
 As you can see, all metrics and performance data are now stored on an external
-server, usually a dedicated serverm that we call the **repository server**.
+server, usually a dedicated server, that we call the **repository server**.
 The monitored server(s) are called the **remote server**, and you can setup as
 many as you want.
 
