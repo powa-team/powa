@@ -3,6 +3,52 @@
 PoWA architecture
 =================
 
+Presentation
+############
+
+PoWA is a tool that relies on multiple components.  Its main purpose is to
+gather metrics for multiple datasources, store them in a central repository and
+provide a UI to present those data in a way that makes it easy to troubleshoot
+problems.
+
+The main components are:
+
+  - :ref:`powa_archivist`, a PostgreSQL extension.  It has 2 purposes:
+
+    - storing the various metrics in an space efficient way and providing any
+      additional related feature (retention...)
+    - providing a consistent view of the metrics, hiding any incompatibility
+      between different version of PostgreSQL or any other data source
+  - :ref:`powa_web`, the dedicated UI
+  - :ref:`powa_collector`, an optional daemon to fetch the metrics from multiple
+    remote hosts in the **Remote mode** (see below)
+
+The main datasource is **pg_stat_statements**, an extension provided by
+PostgreSQL, which is mandatory.  All other datasources are optional and can be
+added or removed dynamically depending on your needs.
+
+The PoWA project project itself provides some additional datasources, and some
+other external datasources are also supported.  The datasources are referred in
+this documentation as :ref:`stat_extensions`.
+
+PoWA can also rely on additional extensions, called **support extensions**.
+Those can be optionally used by PoWA, as they add additional features, but they
+don't provide metrics and are therefore handled differently.  At this time,
+the only support extension is :ref:`hypopg_doc`.
+
+All the used :ref:`stat_extensions` should be installed only once, in the
+dedicated powa database.  In case of remote mode, the same apply for the remote
+nodes and the repository server.  Note that each remote node can have different
+set of extensions installed, and the repository server should contain all the
+extensions that are used on at least one remote node.
+
+The support extensions have different requirements.  You need to install
+:ref:`hypopg_doc` in every database where you want to use the features it
+provides.
+
+Local vs Remote mode
+####################
+
 PoWA can be setup in two different modes, depending on your needs:
 
   - **local mode**, or self-contained mode
