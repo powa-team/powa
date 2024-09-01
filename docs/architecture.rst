@@ -99,6 +99,13 @@ server, usually a dedicated server, that we call the **repository server**.
 The monitored server(s) are called the **remote server**, and you can setup as
 many as you want.
 
+The drawbacks mentioned in the local mode don't exist anymore:
+
+  - there is no overhead on the monitored nodes for either storing or accessing
+    the metrics
+  - you can monitor a physical replication hot-standby server, even though it's
+    read only
+
 Metrics on all the **remote servers** are collected using a new dedicated
 daemon: **powa-collector**.  It replaces the **background worker**, which means
 that restarting postgres is not necessary anymore to start collecting metric on
