@@ -1,6 +1,6 @@
 .. _powa_collector:
 
-PoWA-collector
+powa-collector
 ==============
 
 .. _powa-collector-manual-installation:

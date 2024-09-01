@@ -1,6 +1,6 @@
 .. _powa_archivist:
 
-PoWA archivist
+powa-archivist
 ==============
 
 .. toctree::

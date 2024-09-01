@@ -1,6 +1,6 @@
 .. _powa_web:
 
-PoWA-web
+powa-web
 ========
 
 .. _powa-web-manual-installation:
