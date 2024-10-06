@@ -46,6 +46,8 @@ The support extensions have different requirements.  You need to install
 :ref:`hypopg_doc` in every database where you want to use the features it
 provides.
 
+.. _local_vs_remote:
+
 Local vs Remote mode
 ####################
 
