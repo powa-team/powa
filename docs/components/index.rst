@@ -9,6 +9,7 @@ can use.
 .. toctree::
   :maxdepth: 2
 
+  introduction
   powa-archivist/index
   powa-collector/index
   powa-web/index
