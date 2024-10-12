@@ -27,6 +27,10 @@ catalogs, and can be enabled or disabled at any time, and can even be
 dynamically extended with user-defined information so that PoWA retrieves your
 specific data, without any modification to PoWA itself.
 
+The list of known components, whether they're enabled or not and the rest of
+the associated details is available in the powa-web UI, in the **configuration
+page** for each remote server.
+
 Stat extensions
 ---------------
 
