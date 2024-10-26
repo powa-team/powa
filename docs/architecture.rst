@@ -103,8 +103,9 @@ many as you want.
 
 The drawbacks mentioned in the local mode don't exist anymore:
 
-  - there is no overhead on the monitored nodes for either storing or accessing
-    the metrics
+  - all overhead of metrics storage and requests goes to the dedicated Powa
+    repository server (except for the optional index suggestion and EXPLAIN
+    plan which always go to the target remote server)
   - you can monitor a physical replication hot-standby server, even though it's
     read only
 
