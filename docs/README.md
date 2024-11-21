@@ -13,3 +13,5 @@ Compile the doc
 * Install Sphinx: ``pip install -r requirements.txt``
 
 * Build: ``make html``
+
+* Or serve (live-reloaded):  ``make serve``
