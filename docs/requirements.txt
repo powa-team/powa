@@ -3,3 +3,4 @@ requests
 sphinxcontrib-domaintools
 sphinx_rtd_theme
 sphinx-tabs
+sphinx-autobuild
