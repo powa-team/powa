@@ -10,9 +10,9 @@ See https://powa.readthedocs.io/
 Compile the doc
 -----------------------------------
 
-* Install Sphinx : ``apt-get install python-sphinx``
+* Install Sphinx: ``pip install -r requirements.txt``
 
-* Build : ``make html``
+* Build: ``make html``
 
 Sphinx Theme
 ------------------------------------------------------------
