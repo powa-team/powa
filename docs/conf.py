@@ -63,16 +63,16 @@ copyright = '2014-2017, Dalibo - 2018-2024, The PoWA-team'
 # built documents.
 #
 # The short X.Y version.
-version = '4.2'
+version = '5.0'
 # The full version, including alpha/beta/rc tags.
-release = '4.2.2'
+release = '5.0.0'
 powa_archivist_release = release
 hypopg_release = '1.3.1'
-powa_collector_release = '1.2.0'
-powa_web_release = '4.2.0'
-pg_qualstats_release = '2.1.0'
-pg_stat_kcache_release = 'REL2_2_3'
-pg_wait_sampling_release = 'v1.1.5'
+powa_collector_release = '1.3.0'
+powa_web_release = '5.0.0'
+pg_qualstats_release = '2.1.1'
+pg_stat_kcache_release = 'REL2_3_0'
+pg_wait_sampling_release = 'v1.1.6'
 pg_track_settings_release = '2.1.2'
 
 
