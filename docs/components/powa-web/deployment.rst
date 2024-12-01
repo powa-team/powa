@@ -15,17 +15,27 @@ The easiest option is to rely only on the provided `powa-web` script.  You can
 configure it to serve HTTPS traffic, however it's not recommended to expose it
 directly but instead configure a reverse proxy like NGINX.
 
+When successfully started, you will find the address and port on which the UI
+is available on the standard output. The default is 0.0.0.0:8888, as indicated
+in this example message:
+
+.. code-block::
+
+    [I 161105 20:27:39 powa-web:12] Starting powa-web on https://0.0.0.0:8888
+
 NGINX
 -----
 
 You can use NGINX as a reverse proxy to `powa-web`. It makes it possible to
 bind it to system ports (lower than 1024), and add HTTPS.
 
-Just add a new site to your configuration. Depending on your distribution, it will be
-somewhere like /etc/nginx/sites (RedHat derivatives), /etc/nginx/sites-available
-(Debian derivatives, you'll have to then do a symlink to /etc/nginx/sites-enabled to enable this site).
+Just add a new site to your configuration. Depending on your distribution, it
+will be somewhere like /etc/nginx/sites (RedHat derivatives),
+/etc/nginx/sites-available (Debian derivatives, you'll have to then do a
+symlink to /etc/nginx/sites-enabled to enable this site).
 
-Put this, for example, in the configuration file (if you just want HTTPS proxying, and no virtualhost):
+Put this, for example, in the configuration file (if you just want HTTPS
+proxying, and no virtualhost):
 
 .. code-block:: nginx
 
@@ -46,9 +56,11 @@ Put this, for example, in the configuration file (if you just want HTTPS proxyin
       }
     }
 
-You'll obviously need to produce certificates, which is out of scope of this documentation.
+You'll obviously need to produce certificates, which is out of scope of this
+documentation.
 
-If you just need HTTP, just change listen to 0.0.0.0:80, and remove ssl. Something like this:
+If you just need HTTP, just change listen to 0.0.0.0:80, and remove ssl.
+Something like this:
 
 .. code-block:: nginx
 
