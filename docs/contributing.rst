@@ -11,7 +11,8 @@ Talk
 If you have ideas or feature requests, please post them to our general bug
 tracker: https://github.com/powa-team/powa/issues
 
-You can also join the **#powa** IRC channel on freenode server.
+You can also join the **#powa** IRC channel on the `IRC libera server
+<https://libera.chat/>`_.
 
 Test
 ----
