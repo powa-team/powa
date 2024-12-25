@@ -68,7 +68,7 @@ Setup the PGDG repository and install the pacakges
 We suppose that you are using the packages from the PostgreSQL Development
 Group (https://yum.postgresql.org/ or https://apt.postgresql.org/).
 
-The following examples show how to install a PostgreSQL 14 cluser on Rocky
+The following examples show how to install a PostgreSQL 14 cluster on Rocky
 Linux 8, following `the official YUM instructions
 <https://www.postgresql.org/download/linux/redhat/>`_, and any Debian / Ubuntu
 server, following `the official APT instructions
