@@ -65,13 +65,13 @@ dbname (`text`):
 frequency (`integer`):
   Mandatory, default `300`,
   Snapshot interval for the remote server, in seconds.
-retention (`interval`):
-  Mandatory, default `'1 day'::interval`.
-  Data retention for the remote server.
 powa_coalesce (`integer`):
   Optional, default `100`.
   Defines the amount of records to group together in the table for
   the corresponding remote server.
+retention (`interval`):
+  Mandatory, default `'1 day'::interval`.
+  Data retention for the remote server.
 allow_ui_connection (`boolean`):
   Mandatory, default `true`.
   Specify if the UI is allowed to connect to the remote server to access user
@@ -166,6 +166,60 @@ Example:
 .. code-block:: sql
 
     SELECT powa_deactivate_extension(1, 'extension_name');
+
+powa_activate_module
+--------------------
+
+See :ref:`components_modules` for more details about **modules**.
+
+All the supported modules are enabled by default on all remote servers.  This
+function can be used if you deactivated some modules using
+`powa_deactivate_module` and want to reactivate them.
+
+This function enables the given existing module for the given remote server.
+The arguments are:
+
+_srvid (`integer`):
+  Mandatory, default `NULL`.
+  Interval serveur identifier.  You can find the identifier in the
+  `powa_servers` table, containing the list of remote instances.
+_module (`text`):
+  Mandatory, default `NULL`.
+  The name of the module to activate.
+
+This function return **true** if the module was activated on the given *remote
+server* (or was already activated).
+
+Example:
+
+.. code-block:: sql
+
+    SELECT powa_activate_module(1, 'pg_database');
+
+powa_deactivate_module
+----------------------
+
+See :ref:`components_modules` for more details about **modules**.
+
+This function disables the given existing module for the given remote server.
+The arguments are:
+
+_srvid (`integer`):
+  Mandatory, default `NULL`.
+  Interval serveur identifier.  You can find the identifier in the
+  `powa_servers` table, containing the list of remote instances.
+_module (`text`):
+  Mandatory, default `NULL`.
+  The name of the module to deactivate.
+
+This function return **true** if the module was deactivated on the given
+*remote server* (or was already deactivated).
+
+Example:
+
+.. code-block:: sql
+
+    SELECT powa_deactivate_module(1, 'pg_database');
 
 powa_configure_server
 ---------------------
