@@ -48,6 +48,8 @@ documentation for more details.
 They are available in either the **local mode** or the **remote mode** (see the
 :ref:`local_vs_remote` page for more details).
 
+.. _components_modules:
+
 Modules
 -------
 
@@ -59,10 +61,11 @@ defined in plain SQL.
 Some example of modules are metrics for the **pg_stat_xxx** system views (e.g.
 **pg_stat_archiver**, **pg_stat_bgwriter** or **pg_stat_replication**).  The
 shared catalog caching (**pg_database** and **pg_role**) also rely on this
-infrastructure.
+infrastructure.  The full list is available in the `powa_modules` table.
 
 They are only available in the **remote mode** (see the :ref:`local_vs_remote`
-page for more details).
+page for more details).  Unlike extensions, PoWA doesn't support custom
+modules integration.
 
 Database modules
 ----------------
