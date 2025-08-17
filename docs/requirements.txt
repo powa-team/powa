@@ -1,6 +1,7 @@
-sphinxcontrib-napoleon
+readthedocs-sphinx-search
 requests
 sphinxcontrib-domaintools
+sphinxcontrib-napoleon
 sphinx_rtd_theme
 sphinx-tabs
 sphinx-autobuild
