@@ -35,7 +35,6 @@ extensions = [
     'sphinx.ext.intersphinx',
     'sphinx.ext.todo',
     'sphinx_tabs.tabs',
-    'sphinx_search.extension',
 ]
 
 image_config = {
