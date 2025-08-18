@@ -35,6 +35,7 @@ extensions = [
     'sphinx.ext.intersphinx',
     'sphinx.ext.todo',
     'sphinx_tabs.tabs',
+    'sphinxcontrib.jquery',
 ]
 
 image_config = {
