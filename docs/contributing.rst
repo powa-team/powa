@@ -34,3 +34,22 @@ PoWA is composed of multiples tools:
     * :ref:`hypopg_doc`
     * :ref:`pg_wait_sampling_doc`
     * :ref:`pg_track_settings_doc`
+
+Documentation
+-------------
+
+To build the documentation in HTML format, run:
+
+::
+
+    (.venv) $ make -C docs html
+
+and open ``docs/_build/html/index.html`` to browse the result.
+
+Alternatively, keep the following command running:
+
+::
+
+    (.venv) $ make -C docs serve
+
+to get the documentation rebuilt and along with a live-reloaded Web browser.
