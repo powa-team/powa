@@ -35,6 +35,7 @@ extensions = [
     'sphinx.ext.intersphinx',
     'sphinx.ext.todo',
     'sphinx_tabs.tabs',
+    'sphinx_rtd_theme',
 ]
 
 image_config = {
@@ -117,9 +118,9 @@ pygments_style = 'sphinx'
 
 # -- Options for HTML output ----------------------------------------------
 
-import sphinx_rtd_theme
+# import sphinx_rtd_theme
 html_theme = 'sphinx_rtd_theme'
-html_theme_path = [sphinx_rtd_theme.get_html_theme_path()]
+# html_theme_path = [sphinx_rtd_theme.get_html_theme_path()]
 
 # otherwise, readthedocs.io uses their theme by default, so no need to specify it
 
@@ -133,6 +134,7 @@ html_theme_path = [sphinx_rtd_theme.get_html_theme_path()]
 # documentation.
 html_theme_options = {
     'flyout_display': 'attached',
+    'version_selector': True,
 }
 
 # Add any paths that contain custom themes here, relative to this directory.
@@ -158,8 +160,6 @@ html_theme_options = {
 # relative to this directory. They are copied after the builtin static files,
 # so a file named "default.css" will overwrite the builtin "default.css".
 html_static_path = ['_static']
-
-html_js_files = ['js/versions.js']
 
 # Add any extra paths that contain custom files (such as robots.txt or
 # .htaccess) here, relative to this directory. These files are copied
