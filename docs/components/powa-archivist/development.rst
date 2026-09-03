@@ -20,7 +20,7 @@ Any modification to the background-worker code will need a PostgreSQL restart.
 
 
 In order to contribute another source of data, you will have to implement the
-following infrastructure.  An exemple is provided for each required object,
+following infrastructure.  An example is provided for each required object,
 assuming a very naive datasource called `my_datasource`, that returns a single
 **integer** counter, called `my_counter`.
 
